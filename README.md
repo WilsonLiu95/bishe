@@ -1,0 +1,2 @@
+# qualityOfGraduateDesigning
+基于微信的hust毕设选题系统，毕设项目
