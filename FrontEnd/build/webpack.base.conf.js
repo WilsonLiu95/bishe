@@ -26,7 +26,8 @@ module.exports = {
       'vue$': 'vue/dist/vue.common.js',
       'src': path.resolve(__dirname, '../src'),
       'assets': path.resolve(__dirname, '../src/assets'),
-      'components': path.resolve(__dirname, '../src/components')
+      '_comp': path.resolve(__dirname, '../src/components'),
+      '_views': path.resolve(__dirname, '../src/views'),
     }
   },
   resolveLoader: {
@@ -34,18 +35,18 @@ module.exports = {
   },
   module: {
     preLoaders: [
-      {
-        test: /\.vue$/,
-        loader: 'eslint',
-        include: projectRoot,
-        exclude: /node_modules/
-      },
-      {
-        test: /\.js$/,
-        loader: 'eslint',
-        include: projectRoot,
-        exclude: /node_modules/
-      }
+      // {
+      //   test: /\.vue$/,
+      //   loader: 'eslint',
+      //   include: projectRoot,
+      //   exclude: /node_modules/
+      // },
+      // {
+      //   test: /\.js$/,
+      //   loader: 'eslint',
+      //   include: projectRoot,
+      //   exclude: /node_modules/
+      // }
     ],
     loaders: [
       {
