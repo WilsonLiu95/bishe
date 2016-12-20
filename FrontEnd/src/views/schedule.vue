@@ -5,6 +5,15 @@
       is-link>
       <span style="color: green">{{course.courseArr[n-1].status}}</span>
 </mt-cell>
+<div>
+  <div v-if="userType == 'teacher'" class="schedule-notify">
+    <span>提示：你可以创建6门选修课程，当前还可以创建3们课程</span>
+    <mt-button size="large" type="primary">创建</mt-button>
+  </div>
+  <div v-if="userType == 'student'" class="schedule-notify">
+        <span>提示：你可以创建6门选修课程，当前还可以创建3们课程</span>
+  </div>
+</div>
 </div>
 
 </template>
@@ -50,5 +59,9 @@
 
 </script>
 <style>
-
+.schedule-notify {
+  margin-top: 5px;
+  font-size: 13px;
+  text-align: center;
+}
 </style>

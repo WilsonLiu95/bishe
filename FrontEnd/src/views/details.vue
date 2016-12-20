@@ -8,11 +8,18 @@
     <mt-field label="电话" placeholder="导师姓名" v-model="course.teacherPhone"></mt-field>
     <mt-field label="方向" placeholder="课程所属方向" v-model="course.direction"></mt-field>
     <mt-field label="所需人数" placeholder="所需人数" v-model="course.finalHeadCount"></mt-field>
-    <mt-field label="当前人数" placeholder="当前人数" v-model="course.currentHead"></mt-field>
-    <mt-field label="课程状态" placeholder="课程状态" v-model="course.status"></mt-field>
+    <!--<mt-field label="课程状态" placeholder="课程状态" v-model=""></mt-field>-->
     <mt-field label="简介" placeholder="简介" type="textarea" rows="3" v-model="course.briefIntro"></mt-field>
     <mt-field label="详情" placeholder="课题详情" type="textarea" rows="5" v-model="course.details"></mt-field>
-
+    <div v-if="userType == 'teacher'" class="details-notify">
+      <mt-cell title="当前进度" :value="course.status" label="已有3人选定该课程"></mt-cell>
+      <mt-button size="normal" type="primary">保存</mt-button>
+      <mt-button size="normal" type="primary">发布</mt-button>
+    </div>
+    <div v-if="userType == 'student'" class="details-notify">
+      <mt-cell title="当前进度" :value="course.status" label="已有3人选定该课程"></mt-cell>
+      <mt-button size="large" type="primary">选定</mt-button>
+    </div>
   </div>
 </template>
 <script>
@@ -20,6 +27,7 @@
     name: "index",
     data() {
       return {
+        userType: window._const.userType,
         course: {
           // 课程信息
           teacherName: "许炜",  // 允许数据冗余，减少查表操作

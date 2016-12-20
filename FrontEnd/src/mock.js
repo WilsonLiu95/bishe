@@ -47,11 +47,12 @@ for (var i = 0; i < 31; i++) {
 for (var i = 0; i < student.message.totalMsg; i++) {
   var classExample = {
     title: "退选通知",
-    time: new Date().getDay(),
+    time: "2015-05-05",
     content: "你选择的《进击的巨人》课程已互选结束，很遗憾您并未成功互选，系统已自动帮您退选。",
     status: 0,
   }
   classExample.title = "退选通知" + i
+  classExample.time = "2015-" + (Math.random() * 12).toFixed(0) + "-" + i
   classExample.status = Math.random() > 0.5;
   student.message.msgArr.push(classExample)
 }
