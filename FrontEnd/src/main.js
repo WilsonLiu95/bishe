@@ -27,6 +27,10 @@ var router = new VueRouter(routerConfig)
 window._const = {
   userType: '',
 }
+
+var hashArr = location.hash.split("/")
+window._const.userType = hashArr[1]
+
 window.teacher = teacher
 window.student = student
 

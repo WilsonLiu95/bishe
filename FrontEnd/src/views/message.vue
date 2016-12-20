@@ -1,37 +1,37 @@
 <template>
   <div class="tab-page-container">
-    <h1>message页面</h1>
-
-
-
+    <mt-cell v-for="n in msg.totalMsg" :title="msg.msgArr[n-1].title" :label="msg.msgArr[n-1].content.substr(0,20)" @click.native="getMsgDeatils(n-1)" >
+      <span :class="{hasRead: !msg.msgArr[n-1].status }" >{{msg.msgArr[n-1].time}}</span>
+    </mt-cell>
   </div>
 
 </template>
-<scirpt>
+<script>
+  import { MessageBox } from 'mint-ui';
 
-</scirpt>
+  export default {
+    name: "message-tab",
+    data() {
+      return {
+        userType: window._const.userType,
+        msg: window.student.message
+      }
+    },
+    created() {
+    },
+    methods: {
+      getMsgDeatils(index) {
+        MessageBox.alert(this.msg.msgArr[index].content, this.msg.msgArr[index].title);
+        this.msg.msgArr[index].status = 1
+      },
+
+    },
+
+  };
+
+</script>
 <style>
-        .mint-swipe {
-        height: 60px;
-        color: #0089dc;
-        text-align: center;
-        margin-top: 40px;
-      }
-      .mint-swipe-item {
-        line-height: 20px;
-      }
-      /*.slide1 {
-        background-color: #0089dc;
-        color: #fff;
-      }
-      .slide2 {
-        background-color: #ffd705;
-        color: #000;
-      }
-      .slide3 {
-        background-color: #ff2d4b;
-        color: #fff;
-      }*/
-
-
+.hasRead {
+  color: red
+}
 </style>

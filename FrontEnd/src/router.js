@@ -14,7 +14,7 @@ export default {
       ]
     },
     {
-      path: '/(student|teacher)/details', component: require('_views/details.vue'),
+      path: '/(student|teacher)/details/:id', component: require('_views/details.vue'),
     },
     { path: '*', component: require('_views/not-found.vue') }
   ]

@@ -17,8 +17,9 @@
       <div class="page-tab-container">
         <mt-tab-container class="page-tabbar-tab-container" v-model="active" :swipeable=true>
           <mt-tab-container-item v-for="m in totalPage " :id="'tab-container' + m">
-            <mt-cell v-for="n in course.totalCourse" :title="course.courseArr[n-1].title" :label="course.courseArr[n-1].person" :to='"./detail?index="+m' is-link>
-              {{m + "页第" + n + "个"}}
+            <mt-cell v-for="n in 10" v-if="course.courseArr[10 * (m-1) + n-1]" :title="course.courseArr[10 * (m-1) + n-1].title" :label="course.courseArr[10 * (m-1) + n-1].person"
+              :to="userType + '/details/' + course.courseArr[10 * (m-1) + n-1].id" is-link>
+              {{m + "页第" + n + "个" + course.courseArr[10 * (m-1) + n-1].teacher}}
             </mt-cell>
           </mt-tab-container-item>
         </mt-tab-container>
@@ -35,14 +36,15 @@
     name: "course-tab",
     data() {
       return {
+        userType: window._const.userType,
         isPopupVisible: false,
         active: "tab-container1",
         isSearch: false,
         search: "",
-        totalPage: 1,
+        totalPage: 4,
         activePage: 1,
         course: {
-          totalCourse: 3,
+          totalCourse: 31,
           courseArr: []
 
         },
