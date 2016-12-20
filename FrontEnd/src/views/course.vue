@@ -61,9 +61,9 @@
     created() {
       this.slots[0].values = getArray(this.totalPage)
       this.course.courseArr = window.student.course;
-      this.$http.get("/CI/index.php/pages/view/").then(function (res) {
-        console.log(res)
-      })
+      // this.$http.get("/CI/index.php/pages/view/").then(function (res) {
+      //   console.log(res)
+      // })
     },
     methods: {
       pickerPage(picker, n) {
