@@ -11,7 +11,7 @@
     <mt-button size="large" type="primary">创建</mt-button>
   </div>
   <div v-if="userType == 'student'" class="schedule-notify">
-        <span>提示：你可以创建6门选修课程，当前还可以创建3们课程</span>
+        <span>提示：按照院系规定你最多可同时向3门课程发出意向,</span>
   </div>
 </div>
 </div>
