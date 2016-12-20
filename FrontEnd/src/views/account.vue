@@ -40,6 +40,7 @@
 <script>
 
   export default {
+    name: "account-page",
     data() {
       return {
         isDiabled: true,

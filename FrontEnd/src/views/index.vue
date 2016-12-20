@@ -41,6 +41,7 @@
 <script>
 
   export default {
+    name: "index",
     data() {
       return {
         selected: "course", // 默认课程页面

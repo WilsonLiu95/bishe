@@ -7,6 +7,9 @@
   </div>
 
 </template>
+<scirpt>
+
+</scirpt>
 <style>
         .mint-swipe {
         height: 60px;

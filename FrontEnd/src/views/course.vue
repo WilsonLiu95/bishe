@@ -1,28 +1,29 @@
 <template>
   <div class="tab-page-container">
-    <mt-search  v-model="value"   placeholder="按导师姓名，或课题查询课程" :show=true @input="inputSearch">
-    <div class="nav tab-line">
-      <mt-button @click.native="jumpPage(-1)" size="normal">
-        <img src="../assets/previous.svg" height="20" width="20" slot="icon">
-      </mt-button>
-      <mt-button @click.native="isPopupVisible = true" size="normal">第{{activePage}}页/共{{totalPage}}页</mt-button>
-      <mt-button @click.native="jumpPage(+1)" size="normal">
-        <img src="../assets/next.svg" height="20" width="20" slot="icon">
-      </mt-button>
+    <mt-search v-model="value" placeholder="按导师姓名，或课题查询课程" :show=true @input="inputSearch">
+      <div class="nav tab-line">
+        <mt-button @click.native="jumpPage(-1)" size="normal">
+          <img src="../assets/previous.svg" height="20" width="20" slot="icon">
+        </mt-button>
+        <mt-button @click.native="isPopupVisible = true" size="normal">第{{activePage}}页/共{{totalPage}}页</mt-button>
+        <mt-button @click.native="jumpPage(+1)" size="normal">
+          <img src="../assets/next.svg" height="20" width="20" slot="icon">
+        </mt-button>
 
-      <mt-popup v-model="isPopupVisible" position="bottom" class="mint-popup">
-        <mt-picker :slots="slots" @change="pickerPage" :visible-item-count="5"></mt-picker>
-      </mt-popup>
-    </div>
-    <div class="page-tab-container">
-      <mt-tab-container class="page-tabbar-tab-container" v-model="active" :swipeable=true>
-        <mt-tab-container-item v-for="m in totalPage " :id="'tab-container' + m">
-          <mt-cell v-for="n in 10" :title="courser.courseArr.title" :label="courser.courseArr.teacher" :to='"./detail?index="+m' is-link :value="courser.courseArr.person">
-          </mt-cell>
-        </mt-tab-container-item>
-      </mt-tab-container>
-    </div>
-</mt-search>
+        <mt-popup v-model="isPopupVisible" position="bottom" class="mint-popup">
+          <mt-picker :slots="slots" @change="pickerPage" :visible-item-count="5"></mt-picker>
+        </mt-popup>
+      </div>
+      <div class="page-tab-container">
+        <mt-tab-container class="page-tabbar-tab-container" v-model="active" :swipeable=true>
+          <mt-tab-container-item v-for="m in totalPage " :id="'tab-container' + m">
+            <mt-cell v-for="n in course.totalCourse" :title="course.courseArr[n-1].title" :label="course.courseArr[n-1].person" :to='"./detail?index="+m' is-link>
+              {{m + "页第" + n + "个"}}
+            </mt-cell>
+          </mt-tab-container-item>
+        </mt-tab-container>
+      </div>
+    </mt-search>
 
 
 
@@ -31,6 +32,7 @@
   import { Toast } from 'mint-ui';
 
   export default {
+    name: "course-tab",
     data() {
       return {
         isPopupVisible: false,
@@ -39,9 +41,9 @@
         search: "",
         totalPage: 1,
         activePage: 1,
-        courser: {
+        course: {
           totalCourse: 3,
-          courserArr: []
+          courseArr: []
 
         },
         slots: [
@@ -56,14 +58,17 @@
     },
     created() {
       this.slots[0].values = getArray(this.totalPage)
-      this.courser.courseArr = window.student.course;
+      this.course.courseArr = window.student.course;
+      this.$http.get("/CI/index.php/pages/view/").then(function (res) {
+        console.log(res)
+      })
     },
     methods: {
       pickerPage(picker, n) {
         this.active = "tab-container" + n[0]
         this.activePage = + n[0]
       },
-      inputSearch(){
+      inputSearch() {
 
       },
       jumpPage(n) {
