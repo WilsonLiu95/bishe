@@ -1,2 +1,4 @@
-# qualityOfGraduateDesigning
-基于微信的hust毕设选题系统，毕设项目
+# 基于微信的华科毕设选题系统
+## 毕设课题
+
+
