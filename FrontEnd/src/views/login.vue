@@ -26,14 +26,6 @@
     watch: {
 
     },
-    created(){
-              this.$http.post("/login", this.$data.data).then(function (res) {
-          console.log(res)
-        }).catch(function (error) {
-          debugger
-          console.log(error);
-        })
-    },
     computed: {
     },
     methods: {

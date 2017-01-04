@@ -1,9 +1,9 @@
 <template>
-<h1>微信授权</h1>
-</div>
+  <div class="wechat-page">
+    <h1>微信授权</h1>
+  </div>
 
 
-</div>
 </template>
 <script>
   export default {
@@ -12,7 +12,6 @@
       return {
       }
     },
-
     created() {
       var code = location.search.split("&")[0].split("=")[1];
       if (code) {
@@ -27,3 +26,8 @@
   };
 
 </script>
+<style>
+  .wechat-page {
+    text-align: center;
+  }
+</style>

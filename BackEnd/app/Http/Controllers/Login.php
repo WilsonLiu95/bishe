@@ -26,8 +26,13 @@ class Login extends Controller
         $res = $client->request('GET', $getUrl);
         $body = \GuzzleHttp\json_decode($res->getBody());
 
+
+        $this->redirect['type'] = "url";
+        $this->redirect['url'] = "http://192.168.2.1:8080/#/login";
         if (isset($body->errcode)){
-            return response()->json(array_merge($this->error,(array)$body));
+            // 说明验证码无效
+            $this->redirect['msg'] = "验证码无效";
+            return response()->json($this->redirect);
         }
         // 微信授权成功
         session()->put("access_token",$body->access_token);
@@ -35,38 +40,39 @@ class Login extends Controller
         session()->put("openid",$body->openid);
 
         $student = Model\Student::where("openid",$body->openid);
+
         if ($student->count()){
             session()->put("type","student");
             session()->put("info",$student->get()[0]);
             $this->redirect['url'] = "http://192.168.2.1:8080/#/student/course";
-            $this->redirect['type'] = "url";
-            $this->redirect['msg'] = session()->all();
             return response()->json($this->redirect);
         }
         $teacher = Model\Teacher::where("openid",$body->openid);
         if ($teacher->count()){
             session()->put("type","teacher");
-            session()->put("info",$teacher);
-            $this->redirect['type'] = "url";
+            session()->put("info",$teacher->get()[0]);
+
             $this->redirect['url'] = "http://192.168.2.1:8080/#/teacher/course";
             return response()->json($this->redirect);
         }
 
         // 该微信用户未注册
-        $this->success['msg'] = "尚未注册";
-        return response()->json($this->success);
+        $this->redirect['msg'] = "尚未注册";
+        $this->redirect['type'] = "url";
+
+        return response()->json($this->redirect);
     }
     public function postIndex(Request $request)
     {
         $isExist = 0;
-        if (Model\Student::where("student_num", $request->student_num)->count()) {
+
+        if (Model\Student::where("student_num", $request->student_num)->where("name", $request->name)->count()) {
             $isExist = 1;
             $user = Model\Student::where("student_num", $request->student_num)
                 ->where("name", $request->name);
-
             $request->session()->put("type", "student");
 
-        } else if (Model\Teacher::where("teacher_num", $request->student_num)->count()) {
+        } else if (Model\Teacher::where("teacher_num", $request->student_num)->where("name", $request->name)->count()) {
             $isExist = 1;
 
             $user = Model\Teacher::where("teacher_num", $request->student_num)
@@ -84,8 +90,9 @@ class Login extends Controller
             "openid" => $request->session()->get("openid")]);
         session()->put("id",$user->get()[0]["id"]);
         session()->put("info",$user->get()[0]);
-        $this->success["data"] = session()->all();
-        return response()->json($this->success);
+        $this->redirect['url'] = session()->get("type");
+        $this->redirect["data"] = session()->all();
+        return response()->json($this->redirect);
 
 
     }

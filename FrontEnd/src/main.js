@@ -55,13 +55,11 @@ axios.interceptors.request.use(function (config) {
 axios.interceptors.response.use(function (response) {
   if (response.data.state == 301) {
     if (response.data.type == "url") {
-      debugger
       location.href = response.data.url;
     } else if (response.data.type == "route") {
-      debugger
       router.push({
         path: response.data.url,
-        query: {"test":"eee"}
+        query: response.data.query
       })
     }
 
