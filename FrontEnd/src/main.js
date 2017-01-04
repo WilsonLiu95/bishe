@@ -51,7 +51,21 @@ axios.interceptors.request.use(function (config) {
 });
 
 // Add a response interceptor
+
 axios.interceptors.response.use(function (response) {
+  if (response.data.state == 301) {
+    if (response.data.type == "url") {
+      debugger
+      location.href = response.data.url;
+    } else if (response.data.type == "route") {
+      debugger
+      router.push({
+        path: response.data.url,
+        query: {"test":"eee"}
+      })
+    }
+
+  }
   // Do something with response data
   Indicator.close();
   return response;
@@ -62,6 +76,8 @@ axios.interceptors.response.use(function (response) {
 
 axios.defaults.baseURL = (process.env.NODE_ENV !== 'production' ? config.dev.httpUrl : config.build.httpUrl);
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+axios.defaults.withCredentials = true;
+
 Vue.prototype.$http = axios
 /* eslint-disable no-new */
 new Vue({

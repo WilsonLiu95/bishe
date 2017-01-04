@@ -1,6 +1,8 @@
 export default {
   base: __dirname,
   routes: [
+    { path: '/', component: require('_views/login.vue') },
+    { path: '/wechat', component: require('_views/wechat.vue') },
     { path: '/login', component: require('_views/login.vue') },
     {
       path: '/(student|teacher)', component: require('_views/index.vue'), // 通过这个识别老师和学生

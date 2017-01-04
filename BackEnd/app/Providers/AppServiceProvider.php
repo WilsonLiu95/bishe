@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Providers;
-use App\Model;
+use App;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
 class AppServiceProvider extends ServiceProvider
@@ -15,9 +15,9 @@ class AppServiceProvider extends ServiceProvider
     {
 
         Relation::morphMap([
-            "2" => Model\Admin::class,
-            '1' => Model\Teacher::class,
-            '0' => Model\Student::class,
+            '1' => App\Model\Admin::class,
+            '2' => App\Model\Teacher::class,
+            '3' => App\Model\Student::class,
         ]);
     }
 
