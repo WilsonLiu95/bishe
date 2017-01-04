@@ -58,11 +58,11 @@
 
       },
     },
-    created(){
-      if(this.userType) {
+    created() {
+      if (window._const.userType) {
+        console.log(window[this.userType].account)
         this.account = window[this.userType].account // 获取伪造的数据
       }
-
     }
 
   }

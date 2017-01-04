@@ -1,24 +1,9 @@
 <template>
   <div class="index-page">
-    <!--对应四栏tab的页面-->
-    <mt-tab-container v-model="selected" :swipeable=false class="tab-item-container">
-      <mt-tab-container-item id="course" class="tab-item">
-        <router-view name="course">
-        </router-view>
-      </mt-tab-container-item class="tab-item">
-      <mt-tab-container-item id="schedule" class="tab-item">
-        <router-view name="schedule">
-        </router-view>
-      </mt-tab-container-item>
-      <mt-tab-container-item id="message" class="tab-item">
-        <router-view name="message">
-        </router-view>
-      </mt-tab-container-item>
-      <mt-tab-container-item id="account" class="tab-item">
-        <router-view name="account">
-        </router-view>
-      </mt-tab-container-item>
-    </mt-tab-container>
+
+    <!--路由-->
+    <router-view>
+    </router-view>
 
     <!--四栏tab-->
     <mt-tabbar v-model="selected" :fixed=true>
@@ -29,7 +14,6 @@
         <img slot="icon" src="../assets/schedule.svg"> <span>进度</span>
       </mt-tab-item>
       <mt-tab-item id="message" style="position: relative">
-<!-- relative用来帮助msg-notify定位-->
 <img slot="icon" src="../assets/message.svg">
 <span>消息</span>
 <mt-badge class="msg-notify" size="normal" type="error">2</mt-badge>

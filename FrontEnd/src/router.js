@@ -8,11 +8,11 @@ export default {
       path: '/(student|teacher)', component: require('_views/index.vue'), // 通过这个识别老师和学生
       children: [
         // 基本的四个
-        { path: '',redirect: "course"}, // 重定向到默认的course
-        { path: 'course', components: { course: require('_views/course.vue') } },
-        { path: 'schedule', components: { schedule: require('_views/schedule.vue') } },
-        { path: 'message', components: { message: require('_views/message.vue') } },
-        { path: 'account', components: { account: require('_views/account.vue') } },
+        { path: '', redirect: "course" }, // 重定向到默认的course
+        { path: 'course', component: require('_views/course.vue') },
+        { path: 'schedule', component:  require('_views/schedule.vue')  },
+        { path: 'message', component: require('_views/message.vue')  },
+        { path: 'account', component:  require('_views/account.vue')  },
       ]
     },
     {

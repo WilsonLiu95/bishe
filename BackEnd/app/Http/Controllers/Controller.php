@@ -27,7 +27,6 @@ abstract class Controller extends BaseController
             "state" => 301,
             "url" => "",
             "type"=>"route",
-            "query"=>array(),
         );
 
     }

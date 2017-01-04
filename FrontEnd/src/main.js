@@ -57,10 +57,7 @@ axios.interceptors.response.use(function (response) {
     if (response.data.type == "url") {
       location.href = response.data.url;
     } else if (response.data.type == "route") {
-      router.push({
-        path: response.data.url,
-        query: response.data.query
-      })
+      router.push(response.data.url)
     }
 
   }
