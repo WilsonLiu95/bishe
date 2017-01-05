@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\Student;
+use App\Model\Teacher;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -11,8 +13,13 @@ abstract class Controller extends BaseController
     use DispatchesJobs, ValidatesRequests;
     public $error, $redirect;
     public $success;
+//    public $userClass;
+
     public function __construct(Request $request)
     {
+//        if(session()->get("type")){
+//            $this->userClass = session()->get("type") == "student" ? Student::class : Teacher::class;
+//        }
         $this->error = array(
             "state" => 0,
             "msg"=> "出错",

@@ -36,7 +36,8 @@ class Register extends Controller
         $user->update(["phone" => $request->phone,
             "openid" => $request->session()->get("openid")]);
         session()->put("id",$user->get()[0]["id"]);
-        session()->put("info",$user->get()[0]);
+//        session()->put("info",$user->get()[0]);
+
         $this->redirect['url'] = session()->get("type");
         $this->redirect["data"] = session()->all();
         return response()->json($this->redirect);

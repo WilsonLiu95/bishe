@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Student extends Model
 {
@@ -20,6 +21,19 @@ class Student extends Model
      * @var array
      */
     protected $guarded = ['created_at','updated_at'];
+
+    public function getAccountAttribute(){
+         $data =  array(
+            "direction" => $this->direction()->get()[0]["name"],
+             "institute" =>$this->institute()->get()[0]["name"]
+         );
+        $orign = $this->all()->toArray()[0];
+
+        $orign = array_except($orign,["id","openid","created_at","updated_at","direction_id","institute_id"]);
+        return array_merge($orign,$data);
+    }
+
+    // 关联
     public function institute()
     {
         return $this->belongsTo('App\Model\Institute');

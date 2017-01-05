@@ -34,6 +34,7 @@ class Wechat extends Controller
             return response()->json($this->redirect);
         }
         // 微信授权成功
+
         session()->put("access_token",$body->access_token);
         session()->put("refresh_token",$body->refresh_token);
         session()->put("openid",$body->openid);
@@ -42,15 +43,17 @@ class Wechat extends Controller
 
         if ($student->count()){
             session()->put("type","student");
-            session()->put("info",$student->get()[0]);
+//            session()->put("info",$student->get()[0]);
+            session()->put("id",$student->get()[0]["id"]);
+            $this->redirect["session"] = session()->all();
             $this->redirect['url'] = config()->get("config")["basepath"] . "/#/student/course";
             return response()->json($this->redirect);
         }
         $teacher = Model\Teacher::where("openid",$body->openid);
         if ($teacher->count()){
             session()->put("type","teacher");
-            session()->put("info",$teacher->get()[0]);
-
+//            session()->put("info",$teacher->get()[0]);
+            session()->put("id",$teacher->get()[0]["id"]);
             $this->redirect['url'] = config()->get("config")["basepath"] . "/#/teacher/course";
             return response()->json($this->redirect);
         }

@@ -31,6 +31,7 @@
     methods: {
       register() {
         this.$http.post("register", this.$data.data).then(function (res) {
+          // debugger
           console.log(res)
         }).catch(function (error) {
           debugger

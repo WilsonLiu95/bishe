@@ -17,7 +17,7 @@
       if (code) {
         this.$http.get("wechat?code=" + code).then(function (res) {
           console.log(res)
-          debugger
+
         }).catch(function (error) {
           console.log(error);
         })

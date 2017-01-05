@@ -21,6 +21,18 @@ class Teacher extends Model
      */
     protected $guarded = ['created_at','updated_at'];
 
+
+    // get与set
+    public function getAccountAttribute(){
+        $data =  array(
+            "institute" =>$this->institute()->get()[0]["name"]
+        );
+        $orign = $this->all()->toArray()[0];
+
+        $orign = array_except($orign,["id","openid","created_at","updated_at","direction_id","institute_id"]);
+        return array_merge($orign,$data);
+    }
+    // 关联
     public function institute()
     {
         return $this->belongsTo('App\Model\Institute');

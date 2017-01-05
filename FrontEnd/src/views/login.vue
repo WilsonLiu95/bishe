@@ -1,9 +1,10 @@
 <template>
   <div class="login-page">
-    <el-menu theme="dark" class="el-menu-demo" mode="horizontal" style="margin: 0 0 10px 0">
+    <!--<el-menu theme="dark" class="el-menu-demo" mode="horizontal" style="margin: 0 0 10px 0">
 <el-menu-item index="1">华科毕设选题系统管理端</el-menu-item>
-</el-menu>
+</el-menu>-->
 <div class="form-section">
+  <h1>华科毕设选题系统管理端</h1>
   <el-input placeholder="账号" v-model="data.account" class="login-input">
     <template slot="prepend">账号</template>
   </el-input>
@@ -50,8 +51,7 @@
 </script>
 <style>
   .form-section{
-
-    width: 300px;
+    width: 450px;
     margin: 150px auto;
   }
   .login-input {

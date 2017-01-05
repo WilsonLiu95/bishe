@@ -6,7 +6,6 @@ import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
 import VueRouter from 'vue-router'
 import axios from 'axios'
-import mock from 'mockjs'
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
@@ -20,7 +19,7 @@ import { student, teacher } from './mock'
 Vue.use(VueRouter)
 Vue.use(MintUI)
 Vue.use(ElementUI)
-window.mock  = mock
+
 //开启debug模式
 Vue.config.debug = true;
 

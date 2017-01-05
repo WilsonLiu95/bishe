@@ -7,13 +7,12 @@
 
     <!--学生列表-->
     <div v-if="userType=='student'">
-      <mt-field label="学校" v-model="account.school" placeholder="学校" disabled></mt-field>
+
       <mt-field label="院系" v-model="account.institute" placeholder="院系" disabled></mt-field>
-      <mt-field label="专业" v-model="account.major" placeholder="专业" disabled></mt-field>
       <mt-field label="专业方向" v-model="account.direction" placeholder="专业方向" disabled></mt-field>
 
       <mt-field label="姓名" v-model="account.name" placeholder="请输入用户名" disabled></mt-field>
-      <mt-field label="学号" v-model="account.student_no" placeholder="请输入学号" disabled></mt-field>
+      <mt-field label="学号" v-model="account.student_num" placeholder="请输入学号" disabled></mt-field>
       <mt-field label="手机号" placeholder="请输入手机号" type="tel" v-model="account.phone" :disabled=isDiabled></mt-field>
       <mt-field label="邮箱" placeholder="请输入邮箱" type="email" v-model="account.email" :disabled=isDiabled></mt-field>
 
@@ -21,13 +20,12 @@
     </div>
     <!--老师列表-->
     <div v-else-if="userType == 'teacher'">
-      <mt-field label="学校" v-model="account.school" placeholder="学校" disabled></mt-field>
       <mt-field label="院系" v-model="account.institute" placeholder="院系" disabled></mt-field>
       <mt-field label="职称" v-model="account.level" placeholder="职称" disabled></mt-field>
       <mt-field label="专业方向" v-model="account.direction" placeholder="专业方向" disabled></mt-field>
 
       <mt-field label="姓名" v-model="account.name" placeholder="请输入用户名" disabled></mt-field>
-      <mt-field label="工号" v-model="account.teacher_no" placeholder="请输入学号" disabled></mt-field>
+      <mt-field label="工号" v-model="account.teacher_num" placeholder="请输入学号" disabled></mt-field>
       <mt-field label="手机号" placeholder="请输入手机号" type="tel" v-model="account.phone" :disabled=isDiabled></mt-field>
       <mt-field label="邮箱" placeholder="请输入邮箱" type="email" v-model="account.email" :disabled=isDiabled></mt-field>
 
@@ -55,14 +53,18 @@
       saveAccount() {
         // 保存修改，post数据到线上
         this.isDiabled = true
-
+        this.$http.post("account/modify",this.account).then(function(res){
+          debugger
+        })
       },
     },
     created() {
-      if (window._const.userType) {
-        console.log(window[this.userType].account)
-        this.account = window[this.userType].account // 获取伪造的数据
-      }
+      var that = this
+      this.$http.get("account").then(function(res){
+        console.log(res.data)
+        that.account = res.data
+        // debugger
+      })
     }
 
   }
