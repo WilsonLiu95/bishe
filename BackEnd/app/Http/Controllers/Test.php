@@ -16,8 +16,7 @@ class Test extends Controller
     }
     public function getSet(Request $request)
     {
-        session()->set("setud","2222");
-
+        var_dump(request()->segment(1));
         $this->success['data'] =session()->all();
         return response()->json($this->success);
     }
@@ -27,4 +26,5 @@ class Test extends Controller
         $this->success['sid'] =session()->getid();
         return response()->json($this->success);
     }
+
 }

@@ -1,10 +1,8 @@
 <template>
   <div class="index-page">
-
     <!--路由-->
     <router-view>
     </router-view>
-
     <!--四栏tab-->
     <mt-tabbar v-model="selected" :fixed=true>
       <mt-tab-item id="course">
@@ -13,16 +11,16 @@
       <mt-tab-item id="schedule">
         <img slot="icon" src="../assets/schedule.svg"> <span>进度</span>
       </mt-tab-item>
-      <mt-tab-item id="message" style="position: relative">
-<img slot="icon" src="../assets/message.svg">
-<span>消息</span>
-<mt-badge class="msg-notify" size="normal" type="error">2</mt-badge>
-</mt-tab-item>
-<mt-tab-item id="account">
-  <img slot="icon" src="../assets/account.svg"> <span>我的</span>
-</mt-tab-item>
-</mt-tabbar>
-</div>
+      <mt-tab-item id="message">
+        <img slot="icon" src="../assets/message.svg">
+        <span>消息</span>
+        <mt-badge class="msg-notify" size="normal" type="error">2</mt-badge>
+      </mt-tab-item>
+      <mt-tab-item id="account">
+        <img slot="icon" src="../assets/account.svg"> <span>我的</span>
+      </mt-tab-item>
+    </mt-tabbar>
+  </div>
 </template>
 
 <script>
@@ -43,6 +41,7 @@
       // 创建的时候监听路由变化，以编程方式响应跳转到相应的页面
       var hashArr = location.hash.split("/")
       this.selected = hashArr[2]
+      window._const.userType = ["student", "teacher"].indexOf(hashArr[1]) == -1 ? "" : hashArr[1]
     },
     computed: {
     },
@@ -62,6 +61,8 @@
   top: 5px;
   left: 55%;
 }
-
+.message {
+  position: relative;
+}
 
 </style>

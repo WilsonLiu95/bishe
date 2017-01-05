@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "axios": "^0.15.3",
+    "element-ui": "^1.1.2",
     "i": "^0.3.5",
     "mint-ui": "^2.0.6",
     "npm": "^4.0.5",
@@ -18,6 +19,7 @@
     "vue-router": "^2.1.1"
   },
   "devDependencies": {
+    "mockjs": "^1.0.1-beta3",
     "autoprefixer": "^6.4.0",
     "babel-core": "^6.0.0",
     "babel-eslint": "^7.0.0",

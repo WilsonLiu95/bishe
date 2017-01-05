@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use App\Model;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Psy\Util\Json;
 
-class Login extends Controller
+class Wechat extends Controller
 {
     public function getIndex(Request $request)
     {
@@ -21,14 +20,14 @@ class Login extends Controller
 
         $wechat = config()->get("config")["wechat"];
         $getUrl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" . $wechat['appid'] ."&secret=" .
-                $wechat['secret'] . "&code=$code&grant_type=authorization_code";
+            $wechat['secret'] . "&code=$code&grant_type=authorization_code";
         $client = new \GuzzleHttp\Client();
         $res = $client->request('GET', $getUrl);
         $body = \GuzzleHttp\json_decode($res->getBody());
 
 
         $this->redirect['type'] = "url";
-        $this->redirect['url'] = "http://192.168.2.1:8080/#/login";
+        $this->redirect['url'] = config()->get("config")["basepath"] . "/#/register";
         if (isset($body->errcode)){
             // 说明验证码无效
             $this->redirect['msg'] = "验证码无效";
@@ -44,7 +43,7 @@ class Login extends Controller
         if ($student->count()){
             session()->put("type","student");
             session()->put("info",$student->get()[0]);
-            $this->redirect['url'] = "http://192.168.2.1:8080/#/student/course";
+            $this->redirect['url'] = config()->get("config")["basepath"] . "/#/student/course";
             return response()->json($this->redirect);
         }
         $teacher = Model\Teacher::where("openid",$body->openid);
@@ -52,7 +51,7 @@ class Login extends Controller
             session()->put("type","teacher");
             session()->put("info",$teacher->get()[0]);
 
-            $this->redirect['url'] = "http://192.168.2.1:8080/#/teacher/course";
+            $this->redirect['url'] = config()->get("config")["basepath"] . "/#/teacher/course";
             return response()->json($this->redirect);
         }
 
@@ -62,39 +61,4 @@ class Login extends Controller
 
         return response()->json($this->redirect);
     }
-    public function postIndex(Request $request)
-    {
-        $isExist = 0;
-
-        if (Model\Student::where("student_num", $request->student_num)->where("name", $request->name)->count()) {
-            $isExist = 1;
-            $user = Model\Student::where("student_num", $request->student_num)
-                ->where("name", $request->name);
-            $request->session()->put("type", "student");
-
-        } else if (Model\Teacher::where("teacher_num", $request->student_num)->where("name", $request->name)->count()) {
-            $isExist = 1;
-
-            $user = Model\Teacher::where("teacher_num", $request->student_num)
-                ->where("name", $request->name);
-            $request->session()->put("type","teacher");
-        };
-        // 不存在对应的账号
-        if (!$isExist) {
-            $this->error['msg'] = "不存在该账户,请确认姓名与学号";
-            return response()->json($this->error);
-        }
-
-        // 如果存在,则更新openid
-        $user->update(["phone" => $request->phone,
-            "openid" => $request->session()->get("openid")]);
-        session()->put("id",$user->get()[0]["id"]);
-        session()->put("info",$user->get()[0]);
-        $this->redirect['url'] = session()->get("type");
-        $this->redirect["data"] = session()->all();
-        return response()->json($this->redirect);
-
-
-    }
-
 }

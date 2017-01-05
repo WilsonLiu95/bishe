@@ -1,11 +1,16 @@
 <template>
   <div class="login-page">
-    <h5 style="text-align: center;">请如实填写个人信息，填写后不允许修改</h5>
-<div>
-  <mt-field label="姓名" placeholder="请输入姓名" v-model="data.name"></mt-field>
-  <mt-field label="学号" placeholder="请输入学号" v-model="data.student_num"></mt-field>
-  <mt-field label="电话" placeholder="请输入电话" v-model="data.phone"></mt-field>
-  <mt-button size="large" type="primary" @click="login">确认</mt-button>
+    <el-menu theme="dark" class="el-menu-demo" mode="horizontal" style="margin: 0 0 10px 0">
+<el-menu-item index="1">华科毕设选题系统管理端</el-menu-item>
+</el-menu>
+<div class="form-section">
+  <el-input placeholder="账号" v-model="data.account" class="login-input">
+    <template slot="prepend">账号</template>
+  </el-input>
+  <el-input placeholder="密码" type="password" v-model="data.password" class="login-input">
+    <template slot="prepend">密码</template>
+  </el-input>
+  <el-button type="primary" size="large" @click="login" class="login-btn">登录</el-button>
 </div>
 
 
@@ -17,9 +22,8 @@
     data() {
       return {
         data: {
-          name: "刘盛",
-          student_num: "U201313759",
-          phone: "12211",
+          account: "19951995",
+          password: "19951995"
         }
       }
     },
@@ -30,10 +34,12 @@
     },
     methods: {
       login() {
-        this.$http.post("/login", this.$data.data).then(function (res) {
-          console.log(res)
+        var that = this;
+        this.$http.post("login", this.$data.data).then(function (res) {
+          if (!res.data.state) {
+            that.$message.error(res.data.msg);
+          }
         }).catch(function (error) {
-          debugger
           console.log(error);
         })
       }
@@ -42,3 +48,17 @@
   };
 
 </script>
+<style>
+  .form-section{
+
+    width: 300px;
+    margin: 150px auto;
+  }
+  .login-input {
+    margin: 10px 0 ;
+  }
+  .login-btn {
+
+    width: 100%
+  }
+</style>

@@ -6,6 +6,10 @@ import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
 import VueRouter from 'vue-router'
 import axios from 'axios'
+import mock from 'mockjs'
+
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-default/index.css'
 
 import routerConfig from './router'
 import config from '../config'
@@ -15,8 +19,8 @@ import { student, teacher } from './mock'
 
 Vue.use(VueRouter)
 Vue.use(MintUI)
-
-
+Vue.use(ElementUI)
+window.mock  = mock
 //开启debug模式
 Vue.config.debug = true;
 
@@ -25,11 +29,8 @@ var router = new VueRouter(routerConfig)
 
 // ======================配置mock数据和全局常量===============================
 window._const = {
-  userType: '',
-}
 
-var hashArr = location.hash.split("/")
-window._const.userType = hashArr[1]
+}
 
 window.teacher = teacher
 window.student = student

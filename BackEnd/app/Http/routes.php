@@ -11,7 +11,18 @@
 |
 */
 
+Route::group(['middleware' => 'auth'], function(){
+    Route::controller("/register","Auth\Register");
 
 
-Route::controller("/login","Login");
+    Route::group(['prefix' => 'admin'], function(){
+        // 管理员的接口走这里
+
+    });
+});
+
 Route::controller("/test","Test");
+
+Route::controller("/login","Auth\Login");
+Route::controller("/wechat","Auth\Wechat");
+

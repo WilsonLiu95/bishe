@@ -15,8 +15,9 @@
     created() {
       var code = location.search.split("&")[0].split("=")[1];
       if (code) {
-        this.$http.get("/login?code=" + code).then(function (res) {
+        this.$http.get("wechat?code=" + code).then(function (res) {
           console.log(res)
+          debugger
         }).catch(function (error) {
           console.log(error);
         })
