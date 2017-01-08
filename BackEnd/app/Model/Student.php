@@ -38,16 +38,18 @@ class Student extends Model
     {
         return $this->belongsTo('App\Model\Institute');
     }
-    public function direction()
+    public function grade()
     {
-        return $this->belongsTo('App\Model\Direction');
+        return $this->belongsTo('App\Model\Grade');
     }
-
     public function schedule()
     {
         return $this->hasMany('App\Model\Schedule');
     }
-
+    public function course()
+    {
+        return $this->hasMany('App\Model\Course');
+    }
     public function message_from()
     {
         return $this->morphMany('App\Model\Message','from');

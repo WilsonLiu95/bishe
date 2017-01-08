@@ -4,9 +4,9 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Direction extends Model
+class Major extends Model
 {
-    protected $table = 'direction';
+    protected $table = 'major';
 
     /**
      * 可以被批量赋值的属性。

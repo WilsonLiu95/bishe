@@ -16,6 +16,7 @@ import App from './App'
 import { Indicator } from 'mint-ui';
 import { student, teacher } from './mock'
 
+
 Vue.use(VueRouter)
 Vue.use(MintUI)
 Vue.use(ElementUI)

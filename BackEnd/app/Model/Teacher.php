@@ -37,6 +37,10 @@ class Teacher extends Model
     {
         return $this->belongsTo('App\Model\Institute');
     }
+    public function major()
+    {
+        return $this->belongsTo('App\Model\Major');
+    }
     public function course()
     {
         return $this->hasMany('App\Model\Course');

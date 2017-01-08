@@ -17,14 +17,15 @@ class Register extends Controller
             $isExist = 1;
             $user = Model\Student::where("student_num", $request->student_num)
                 ->where("name", $request->name);
-            $request->session()->put("type", "student");
-
+            $request->session()->put("type", 2);
+            $this->redirect['url'] = "student";
         } else if (Model\Teacher::where("teacher_num", $request->student_num)->where("name", $request->name)->count()) {
             $isExist = 1;
 
             $user = Model\Teacher::where("teacher_num", $request->student_num)
                 ->where("name", $request->name);
-            $request->session()->put("type","teacher");
+            $request->session()->put("type",1); // admin类型为0,老师类型为1,学生的类型为2
+            $this->redirect['url'] = "teacher";
         };
         // 不存在对应的账号
         if (!$isExist) {
@@ -36,9 +37,8 @@ class Register extends Controller
         $user->update(["phone" => $request->phone,
             "openid" => $request->session()->get("openid")]);
         session()->put("id",$user->get()[0]["id"]);
-//        session()->put("info",$user->get()[0]);
 
-        $this->redirect['url'] = session()->get("type");
+
         $this->redirect["data"] = session()->all();
         return response()->json($this->redirect);
     }

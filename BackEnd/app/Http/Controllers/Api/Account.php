@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Model\Student;
-use App\Model\Teacher;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -12,28 +10,26 @@ use Illuminate\Support\Facades\Input;
 
 class Account extends Controller
 {
-    private $userClass;
     public function __construct(Request $request)
     {
         parent::__construct($request);
-        if(session()->get("type")){
-            $this->userClass = session()->get("type") == "student" ? Student::class : Teacher::class;
-        }
-
     }
 
     public function getIndex()
     {
-        $id = session()->get("id");
-
-        $a = $this->userClass::find($id);
-        return response()->json($a);
+        return response()->json($this->getUser()->account);
     }
     public function postModify()
     {
+        if($this->getSessionInfo("type") == 1 ){
+            // 老师
+            $update = Input::only("intro","qq","email","phone");
+        } else if($this->getSessionInfo("type") == 2){
+          // 学生
+            $update = Input::only("intro","qq","email","phone");
+        }
 
-        $update = Input::only("intro","qq","email","phone");
-        $this->user->update($update);
+        $this->getUser()->update($update);
         return $this->success;
     }
 }

@@ -15,12 +15,11 @@ class CreateCourseTable extends Migration
         Schema::create('course', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('teacher_id');
-            $table->char('grade',4);
+            $table->integer('grade_id');
             $table->integer('institute_id');
-            $table->integer('direction_id');
+            $table->integer('major_id');
             $table->string('title',32);
             $table->tinyInteger('status');
-            $table->tinyInteger('need');
             $table->string('details',512);
             $table->timestamps();
         });

@@ -28,4 +28,12 @@ class Institute extends Model
     {
         return $this->hasMany('App\Model\Student');
     }
+    public function grade()
+    {
+        return $this->hasMany('App\Model\Grade');
+    }
+    public function major()
+    {
+        return $this->hasMany('App\Model\Major');
+    }
 }

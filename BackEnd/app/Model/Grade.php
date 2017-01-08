@@ -4,9 +4,9 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Course extends Model
+class Grade extends Model
 {
-    protected $table = 'course';
+    protected $table = 'grade';
 
     /**
      * 可以被批量赋值的属性。
@@ -20,26 +20,12 @@ class Course extends Model
      * @var array
      */
     protected $guarded = ['created_at','updated_at'];
-
-    public function teacher()
+    public function student()
     {
-        return $this->belongsTo('App\Model\Teacher');
+        return $this->hasMany('App\Model\Student');
     }
     public function institute()
     {
         return $this->belongsTo('App\Model\Institute');
     }
-    public function major()
-    {
-        return $this->belongsTo('App\Model\Major');
-    }
-    public function grade()
-    {
-        return $this->belongsTo('App\Model\Grade');
-    }
-    public function schedule()
-    {
-        return $this->hasMany('App\Model\Schedule');
-    }
-
 }

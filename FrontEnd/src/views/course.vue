@@ -75,14 +75,12 @@
         if (n == 1 && this.activePage == this.totalPage) {
           Toast({
             message: '已到最后一页',
-            iconClass: 'icon icon-success'
           });
           return
         }
         if (n == -1 && this.activePage == 1) {
           Toast({
             message: '已到第一页',
-            iconClass: 'icon icon-success'
           });
           return
         }
@@ -108,7 +106,8 @@
     flex-direction:row;
     justify-content: center;
     background-color: #f6f8fa;
-    padding: 5px 0 5px 0;
+
+    padding: 20px 0 5px 0;
   }
   .mint-popup {
     width: 100%;

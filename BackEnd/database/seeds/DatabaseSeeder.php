@@ -14,8 +14,23 @@ class DatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-         $this->call(UserTableSeeder::class);
+        factory(\App\Model\Institute::class)->create();
+        factory(\App\Model\Grade::class)->create();
+        factory(\App\Model\Major::class,4)->create();
+        factory(\App\Model\Admin::class)->create();
 
+
+
+        factory(\App\Model\Teacher::class,37)->create();
+
+        factory(\App\Model\Message::class,1000)->create();
+
+        factory(\App\Model\Course::class,1000)->create()->each(function($course){
+            $schedule = factory(\App\Model\Schedule::class)->make();
+            $course->schedule()->save($schedule);
+        });
+
+        factory(\App\Model\Student::class,100)->create();
         Model::reguard();
     }
 }

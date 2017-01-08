@@ -18,7 +18,7 @@ class Login extends Controller
         if($admin->count()){
             session()->flush();
             session()->set("isLogin",true);
-//            session()->put("info",$admin->get()[0]);
+            session()->set("type",0);
             $this->redirect['url'] = "admin";
            return response()->json($this->redirect);
         }
