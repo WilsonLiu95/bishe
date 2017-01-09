@@ -80,17 +80,17 @@ $factory->define(\App\Model\Schedule::class, function ($faker) {
     return [
         "course_id"=> $faker->numberBetween($min = 1, $max = 100),
         'status' => $faker->shuffle([0,1,2])[0],
-        'student_id' => $faker->numberBetween($min = 1, $max = 17),
+        'student_id' => $faker->numberBetween($min = 1, $max = 100),
     ];
 });
 
 $factory->define(\App\Model\Course::class, function ($faker) {
     return [
         'institute_id' => 1,
-        'teacher_id' => $faker->randomNumber($nbDigits = NULL) ,
+        'teacher_id' => $faker->numberBetween(1,100),
         'grade_id' => 1,
         'major_id' => $faker->shuffle([1,2,3,4])[0],
-        'title'=>$faker->title,
+        'title'=>$faker->word,
         'status' => $faker->shuffle([0,1,2])[0],
         'details' => $faker->text,
     ];

@@ -13,16 +13,16 @@ class Register extends Controller
     {
         $isExist = 0;
 
-        if (Model\Student::where("student_num", $request->student_num)->where("name", $request->name)->count()) {
+        if (Model\Student::where("job_num", $request->job_num)->where("name", $request->name)->count()) {
             $isExist = 1;
-            $user = Model\Student::where("student_num", $request->student_num)
+            $user = Model\Student::where("job_num", $request->job_num)
                 ->where("name", $request->name);
             $request->session()->put("type", 2);
             $this->redirect['url'] = "student";
-        } else if (Model\Teacher::where("teacher_num", $request->student_num)->where("name", $request->name)->count()) {
+        } else if (Model\Teacher::where("job_num", $request->job_num)->where("name", $request->name)->count()) {
             $isExist = 1;
 
-            $user = Model\Teacher::where("teacher_num", $request->student_num)
+            $user = Model\Teacher::where("job_num", $request->job_num)
                 ->where("name", $request->name);
             $request->session()->put("type",1); // admin类型为0,老师类型为1,学生的类型为2
             $this->redirect['url'] = "teacher";

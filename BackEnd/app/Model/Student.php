@@ -22,15 +22,11 @@ class Student extends Model
      */
     protected $guarded = ['created_at','updated_at'];
 
-    public function getAccountAttribute(){
-         $data =  array(
-            "direction" => $this->direction()->get()[0]["name"],
-             "institute" =>$this->institute()->get()[0]["name"]
-         );
-        $orign = $this->all()->toArray()[0];
-
+    public function account($id){
+        $orign = Student::find($id)->toArray();
+        $orign['institute'] = $this->institute()->first()["name"];
         $orign = array_except($orign,["id","openid","created_at","updated_at","direction_id","institute_id"]);
-        return array_merge($orign,$data);
+        return $orign;
     }
 
     // 关联

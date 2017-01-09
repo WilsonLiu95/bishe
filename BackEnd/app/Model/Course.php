@@ -21,6 +21,7 @@ class Course extends Model
      */
     protected $guarded = ['created_at','updated_at'];
 
+
     public function teacher()
     {
         return $this->belongsTo('App\Model\Teacher');

@@ -7,10 +7,9 @@
     <!--学生列表-->
     <div v-if="userType=='student'">
       <mt-field label="院系" v-model="account.institute" placeholder="院系" disabled></mt-field>
-      <mt-field label="专业方向" v-model="account.direction" placeholder="专业方向" disabled></mt-field>
 
       <mt-field label="姓名" v-model="account.name" placeholder="请输入用户名" disabled></mt-field>
-      <mt-field label="学号" v-model="account.student_num" placeholder="请输入学号" disabled></mt-field>
+      <mt-field label="学号" v-model="account.job_num" placeholder="请输入学号" disabled></mt-field>
       <mt-field label="手机号" placeholder="请输入手机号" type="tel" v-model="account.phone" :disabled=isDiabled></mt-field>
       <mt-field label="QQ" placeholder="请输入QQ号" type="tel" v-model="account.qq" :disabled=isDiabled></mt-field>
       <mt-field label="邮箱" placeholder="请输入邮箱" type="email" v-model="account.email" :disabled=isDiabled></mt-field>
@@ -21,7 +20,7 @@
     <div v-else-if="userType == 'teacher'">
       <mt-field label="院系" v-model="account.institute" placeholder="院系" disabled></mt-field>
       <mt-field label="姓名" v-model="account.name" placeholder="请输入用户名" disabled></mt-field>
-      <mt-field label="工号" v-model="account.teacher_num" placeholder="请输入工号" disabled></mt-field>
+      <mt-field label="工号" v-model="account.job_num" placeholder="请输入工号" disabled></mt-field>
       <mt-field label="手机号" placeholder="请输入手机号" type="tel" v-model="account.phone" :disabled=isDiabled></mt-field>
       <mt-field label="QQ" placeholder="请输入QQ号" type="tel" v-model="account.qq" :disabled=isDiabled></mt-field>
       <mt-field label="邮箱" placeholder="请输入邮箱" type="email" v-model="account.email" :disabled=isDiabled></mt-field>

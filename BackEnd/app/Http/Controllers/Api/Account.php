@@ -17,7 +17,9 @@ class Account extends Controller
 
     public function getIndex()
     {
-        return response()->json($this->getUser()->account);
+        $id = $this->getSessionInfo("id");
+        $data = $this->getUser()->account($id);
+        return response()->json($data);
     }
     public function postModify()
     {

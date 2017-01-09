@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
 
 
 
-        factory(\App\Model\Teacher::class,37)->create();
+        factory(\App\Model\Teacher::class,100)->create();
 
         factory(\App\Model\Message::class,1000)->create();
 
