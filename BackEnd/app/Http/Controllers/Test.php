@@ -17,7 +17,6 @@ class Test extends Controller
     {
 
 
-//        var_dump($teacher->course()->save($course));
     }
 
     public function getSet(Request $request)

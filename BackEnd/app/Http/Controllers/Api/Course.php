@@ -17,23 +17,36 @@ use Psy\Util\Json;
 
 class Course extends Controller
 {
-
     public function getIndex()
     {
         $page = Input::get('page', 1);
         $search = Input::get('search', "");
         $paginate = 8;
         $dataTwo = \App\Model\Course::where(["course.status"=>2])
-            
+
+            ->join("teacher",'course.teacher_id','=',"teacher.id") // 时间换空间
+            ->select("course.*","teacher.name as teacher_name")
+            ->where("teacher.name","like","%". $search ."%")
+            ->orWhere("course.title","like","%". $search ."%")
+
             ->orderBy("updated_at","desc")
         ;
         $data = \App\Model\Course::where(["course.status"=>1])
+
+            ->join("teacher",'course.teacher_id','=',"teacher.id") // 时间换空间
+            ->select("course.*","teacher.name as teacher_name")
+            ->where("teacher.name","like","%". $search ."%")
+            ->orWhere("course.title","like","%". $search ."%")
             ->orderBy("updated_at","desc")
             ->union($dataTwo)
             ->get()->toArray()
         ;
-        $slice = array_slice($data, $paginate * ($page - 1), $paginate);
-
+        $slice = array();
+        if (!empty($data)){
+            // 如果为空则返回一个空数组,不进行array_slice否则会报错
+//            return response()->json($data);
+            $slice = array_slice($data, $paginate * ($page - 1), $paginate);
+        }
         $result = (new LengthAwarePaginator($slice, count($data), $paginate, $page))->toArray();
         $res = array();
         foreach ($result['data'] as $item) {
@@ -51,8 +64,8 @@ class Course extends Controller
             $orign["student_id"][]=  $s['student_id'];
         }
         // 老师相关数据
-        $teacher = Teacher::find($orign['teacher_id']);
-        $orign['teacher_name'] = $teacher['name'] ? $teacher['name']: ""  ;
+//        $teacher = Teacher::find($orign['teacher_id']);
+//        $orign['teacher_name'] = $teacher['name'] ? $teacher['name']: ""  ;
 
         return $orign;
         

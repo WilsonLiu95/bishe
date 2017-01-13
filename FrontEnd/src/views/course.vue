@@ -1,6 +1,6 @@
 <template>
   <div class="tab-page-container">
-    <mt-search v-model="search" placeholder="按导师姓名，或课题查询课程" :result.sync="course" :show=true @input="inputSearch">
+    <mt-search v-model="search" placeholder="按导师姓名，或课题查询课程" :result.sync="course.data" :show=true @input="inputSearch">
       <!--start 上一页-->
       <div class="nav tab-line">
         <mt-button @click.native="jumpPage(-1)" size="normal">
@@ -73,6 +73,7 @@
         })
       },
       search: function (search) {
+        var that = this
         this.$http.get("/course?page=" + this.current_page +"&search="+this.search).then(function (res) {
           that.slots[0].values = getArray(res.data.last_page)
           that.course = res.data
