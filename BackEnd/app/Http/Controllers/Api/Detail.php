@@ -16,6 +16,8 @@ class Detail extends Controller
     {
         $id =  request()->input("id");
         $course = Model\Course::find($id);
+
+        $course->detail(); // 补充详情
         if($course->status == 1 ){
             // 在互选中
             $course->isSelected = $course->schedule()

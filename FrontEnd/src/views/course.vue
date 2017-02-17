@@ -1,6 +1,6 @@
 <template>
   <div class="tab-page-container">
-    <mt-search v-model="search" placeholder="按导师姓名，或课题查询课程" :result.sync="course.data" :show=true @input="inputSearch">
+    <mt-search v-model="search" placeholder="按导师姓名，或课题查询课程" :result.sync="course.data" :show=true >
       <!--start 上一页-->
       <div class="nav tab-line">
         <mt-button @click.native="jumpPage(-1)" size="normal">
@@ -14,9 +14,10 @@
       <!--end 下一页-->
 
       <!--start 课表清单-->
+      <!--start 课表清单-->
       <div class="page-tab-container" v-if="isInit">
         <mt-cell v-for="n in course.per_page" v-if="course.data[n-1]" :title="course.data[n-1].title" :label="'已有' + course.data[n-1].num + '人选择'"
-          :to="userType + '/details/' + course.data[n-1].id" is-link>
+          :to="'/'+ userType + '/details/' + course.data[n-1].id" is-link>
           {{ course.data[n-1].teacher_name}}
         </mt-cell>
       </div>
@@ -37,7 +38,7 @@
     name: "course-tab",
     data() {
       return {
-        userType: window.util.getUserType(),
+        userType: util.getUserType(),
         isInit: false, // 用来说明组件是否初始化
         isPopupVisible: false,
         search: "",
@@ -87,8 +88,11 @@
         _const.page = String(n)
         this.current_page = String(n)
       },
-      inputSearch() {
 
+      jumpToDetail(){
+        debugger
+        alert(3)
+        // router.push({ path: this.userType + '/details/'+ index})
       },
       jumpPage(n) {
         n = Number(n)

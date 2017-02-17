@@ -22,21 +22,24 @@ class Course extends Controller
         $page = Input::get('page', 1);
         $search = Input::get('search', "");
         $paginate = 8;
-        $dataTwo = \App\Model\Course::where(["course.status"=>2])
+        $dataTwo = \App\Model\Course::where("status",0)
 
             ->join("teacher",'course.teacher_id','=',"teacher.id") // 时间换空间
             ->select("course.*","teacher.name as teacher_name")
-            ->where("teacher.name","like","%". $search ."%")
-            ->orWhere("course.title","like","%". $search ."%")
-
+            ->where(function($query) use ($search) {
+                $query->where("teacher.name","like","%". $search ."%")
+                    ->orWhere("course.title","like","%". $search ."%");
+            })
             ->orderBy("updated_at","desc")
         ;
-        $data = \App\Model\Course::where(["course.status"=>1])
+        $data = \App\Model\Course::where("status",1)
 
             ->join("teacher",'course.teacher_id','=',"teacher.id") // 时间换空间
             ->select("course.*","teacher.name as teacher_name")
-            ->where("teacher.name","like","%". $search ."%")
-            ->orWhere("course.title","like","%". $search ."%")
+            ->where(function($query) use ($search) {
+                $query->where("teacher.name","like","%". $search ."%")
+                    ->orWhere("course.title","like","%". $search ."%");
+            })
             ->orderBy("updated_at","desc")
             ->union($dataTwo)
             ->get()->toArray()
@@ -59,13 +62,7 @@ class Course extends Controller
         // 进度相关数据
         $schedule = Schedule::where('course_id',$orign['id']);
         $orign['num'] = $schedule->count();
-        foreach($schedule->get() as $s){
-            $orign['student_name'][] = Student::find($s['student_id'])->name;
-            $orign["student_id"][]=  $s['student_id'];
-        }
-        // 老师相关数据
-//        $teacher = Teacher::find($orign['teacher_id']);
-//        $orign['teacher_name'] = $teacher['name'] ? $teacher['name']: ""  ;
+
 
         return $orign;
         
