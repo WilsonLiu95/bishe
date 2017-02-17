@@ -1,8 +1,11 @@
 <template>
   <div class="details-page">
-    <h1>student-list</h1>
     <div>
-      <mt-cell v-for="student in studentList" :title="student.student_name" to="'/teacher/detail/student/'+student.id" is-link :value="student.job_num">
+      <mt-cell  title="姓名"  style="background-color: #26a2ff;">
+        <span style="color:#000">学号</span>
+      </mt-cell>
+      <!--学生的链接使用index是为了-->
+      <mt-cell v-for="(student,index) in studentList" :title="student.student_name" :to="'/teacher/detail/student/'+index" is-link :value="student.job_num">
       </mt-cell>
     </div>
   </div>

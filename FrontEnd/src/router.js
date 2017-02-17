@@ -23,6 +23,7 @@ export default {
     // 其他页面
     { path: '/(student|teacher)/details/:id', component: require('_views/wechat/page/details.vue') },
     { path: '/teacher/student-list/:id', component: require('_views/wechat/page/student-list.vue') },
+    { path: '/teacher/detail/student/:id', component: require('_views/wechat/page/detail-student.vue') },
 
     // ========================================PC管理系统========================================
     { path: '/login', component: require('_views/pc/login.vue') },

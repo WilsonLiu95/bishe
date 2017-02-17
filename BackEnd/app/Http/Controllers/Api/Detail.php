@@ -108,7 +108,7 @@ class Detail extends Controller
     public function getStudentList(){
         $course = Model\Course::find(request()->id)
             ->schedule()->where("status",1)->get();
-
+        
         return response()->json($course);
 
 
