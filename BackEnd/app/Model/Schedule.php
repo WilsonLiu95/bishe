@@ -20,6 +20,7 @@ class Schedule extends Model
      * @var array
      */
     protected $guarded = ['created_at','updated_at'];
+    protected $appends = ['student_name'];
 
     public function student()
     {
@@ -28,5 +29,9 @@ class Schedule extends Model
     public function course()
     {
         return $this->belongsTo('App\Model\Course');
+    }
+    public function getStudentNameAttribute()
+    {
+        return $this->student()->get()[0]['name'];
     }
 }

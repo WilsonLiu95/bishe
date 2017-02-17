@@ -37,7 +37,7 @@
     name: "course-tab",
     data() {
       return {
-        userType: window._const.userType,
+        userType: window.util.getUserType(),
         isInit: false, // 用来说明组件是否初始化
         isPopupVisible: false,
         search: "",
@@ -55,6 +55,7 @@
     },
     created() {
       var that = this
+      // debugger
       // 为了达到记忆用户在哪个页面的功能，将page保存在全局变量中
       if (_const.page) {
         this.current_page = _const.page

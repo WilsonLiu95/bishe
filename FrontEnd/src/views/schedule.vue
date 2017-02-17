@@ -24,7 +24,7 @@
     name: "schedule-tab",
     data() {
       return {
-        userType: window._const.userType,
+        userType: window.util.getUserType(),
         course: {
           totalCourse: 3,
           courseArr: [{

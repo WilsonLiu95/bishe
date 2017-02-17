@@ -40,7 +40,7 @@ class Authenticate
         if (!session()->has("openid")){
             $wechat = config()->get("config")["wechat"];
             $res_data = array(
-                "url" =>"https://open.weixin.qq.com/connect/oauth2/authorize?appid=" . $wechat['appid'] . "&redirect_uri=". urlencode(config()->get("config")["basepath"] . '/wechat') . "&response_type=code&scope=snsapi_base#wechat_redirect",
+                "url" =>"https://open.weixin.qq.com/connect/oauth2/authorize?appid=" . $wechat['appid'] . "&redirect_uri=". urlencode(config()->get("config")["basepath"] . '/#/wechat') . "&response_type=code&scope=snsapi_base#wechat_redirect",
                 "state" => 301,
                 "type" => "url",
             );

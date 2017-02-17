@@ -41,7 +41,6 @@
       // 创建的时候监听路由变化，以编程方式响应跳转到相应的页面
       var hashArr = location.hash.split("/")
       this.selected = hashArr[2]
-      window._const.userType = ["student", "teacher"].indexOf(hashArr[1]) == -1 ? "" : hashArr[1]
     },
     computed: {
     },

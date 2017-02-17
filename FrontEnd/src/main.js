@@ -31,7 +31,16 @@ var router = new VueRouter(routerConfig)
 window._const = {
 
 }
-
+window.util = {
+  getUserType: function(){
+    var hashArr = location.hash.split("/")
+    return ["student", "teacher"].indexOf(hashArr[1]) == -1 ? "" : hashArr[1]
+  },
+  hashArr: function(num) {
+    var hashArr = location.hash.split("/")
+    return hashArr[num]
+  }
+}
 window.teacher = teacher
 window.student = student
 

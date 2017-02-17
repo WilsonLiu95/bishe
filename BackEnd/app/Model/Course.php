@@ -20,8 +20,8 @@ class Course extends Model
      * @var array
      */
     protected $guarded = ['created_at','updated_at'];
-
-
+    protected $appends = ['teacher', "teacher_phone","student_num","student_list"];
+//    关联关系
     public function teacher()
     {
         return $this->belongsTo('App\Model\Teacher');
@@ -42,5 +42,31 @@ class Course extends Model
     {
         return $this->hasMany('App\Model\Schedule');
     }
+//
+    public function getTeacherAttribute(){
+        $id = $this->teacher_id;
+        return Teacher::find($id)->name;
+    }
+    public function getTeacherPhoneAttribute(){
+        $id = $this->teacher_id;
+        return Teacher::find($id)->phone;
+    }
+    public function getStudentNumAttribute(){
+        $schedule = $this->schedule()->where("status",1);
+        return $schedule->count();
+    }
+    public function getStudentListAttribute(){
+        $res = "";
+        if($this->status == 2) {
+            return $res;
+        }
+        // 互选完成
+        $schedule = $this->schedule()->where("status",$this->status)->get();
+        foreach ($schedule as $item){
+            $res .= $item->student_name .",";
+        }
+        return $res;
+    }
+
 
 }

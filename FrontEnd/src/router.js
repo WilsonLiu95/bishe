@@ -3,18 +3,19 @@ export default {
   routes: [
     { path: '/',  redirect: "/register" },
     { path: '/wechat', component: require('_views/wechat.vue') },
-    { path: '/login', component: require('_views/login.vue') },
+    { path: '/login', component: require('_views/pc-login.vue') },
     { path: '/register', component: require('_views/register.vue') },
-    {
-      path: '/admin', component: require('_views/admin.vue'), // 通过这个识别老师和学生
+
+    { // PC管理系统
+      path: '/admin', component: require('_views/pc-admin.vue'), // 通过这个识别老师和学生
       children: [
         { path: '', redirect: "deal" }, // 重定向到默认的course
-        { path: "deal", component: require('_views/deal.vue') },
-        { path: "export", component: require('_views/export.vue') },
+        { path: "deal", component: require('_views/pc-deal.vue') },
+        { path: "export", component: require('_views/pc-export.vue') },
       ]
     },
 
-    {
+    { // 微信端
       path: '/(student|teacher)', component: require('_views/index.vue'), // 通过这个识别老师和学生
       children: [
         // 基本的四个

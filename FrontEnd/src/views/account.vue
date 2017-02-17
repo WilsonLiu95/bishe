@@ -35,7 +35,7 @@
     data() {
       return {
         isDiabled: true,
-        userType: window._const.userType,
+        userType: window.util.getUserType(),
         account: {},
       }
     },

@@ -13,7 +13,7 @@
     name: "message-tab",
     data() {
       return {
-        userType: window._const.userType,
+        userType: window.util.getUserType(),
         msg: window.student.message
       }
     },

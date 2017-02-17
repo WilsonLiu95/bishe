@@ -14,15 +14,16 @@
 Route::group(['middleware' => 'auth'], function(){
 
     Route::controller("/register","Auth\Register");
-
+    Route::controller("/account","Api\Account");
+    Route::controller("/course","Api\Course");
+    Route::controller("/detail","Api\Detail");
 
     Route::group(['prefix' => 'admin'], function(){
         // 管理员的接口走这里
 
     });
 });
-Route::controller("/account","Api\Account");
-Route::controller("/course","Api\Course");
+
 
 Route::controller("/test","Test");
 
