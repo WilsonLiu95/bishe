@@ -91,7 +91,7 @@ $factory->define(\App\Model\Course::class, function ($faker) {
         'grade_id' => 1,
         'major_id' => $faker->shuffle([1,2,3,4])[0],
         'title'=>$faker->word,
-        'status' => $faker->shuffle([0,1,2])[0],
+        'status' => $faker->shuffle([0,1,2,3])[0],
         'details' => $faker->text,
     ];
 });

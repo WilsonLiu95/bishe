@@ -16,7 +16,7 @@ class CreateScheduleTable extends Migration
             $table->increments('id');
             $table->integer('course_id');
             $table->string('student_id',32);
-            $table->tinyInteger('status'); // 0为互选成功，1为学生选定该课程，2为选定后退选课程
+            $table->tinyInteger('status'); // 0为选定后退选课程,1为学生选定该课程，2为互选成功，
             $table->timestamps();
         });
     }

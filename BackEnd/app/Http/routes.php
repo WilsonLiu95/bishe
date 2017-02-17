@@ -13,6 +13,10 @@
 
 Route::group(['middleware' => 'auth'], function(){
 
+    Route::controller("/register","Auth\Register");
+    Route::controller("/account","Api\Account");
+    Route::controller("/course","Api\Course");
+    Route::controller("/detail","Api\Detail");
 
 
     Route::group(['prefix' => 'admin'], function(){
@@ -20,10 +24,6 @@ Route::group(['middleware' => 'auth'], function(){
 
     });
 });
-Route::controller("/register","Auth\Register");
-Route::controller("/account","Api\Account");
-Route::controller("/course","Api\Course");
-Route::controller("/detail","Api\Detail");
 
 Route::controller("/test","Test");
 

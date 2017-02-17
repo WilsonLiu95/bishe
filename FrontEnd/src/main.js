@@ -16,7 +16,7 @@ import App from './App'
 import { Indicator } from 'mint-ui';
 import { student, teacher } from './mock'
 
-
+import { Toast,MessageBox } from 'mint-ui';
 Vue.use(VueRouter)
 Vue.use(MintUI)
 Vue.use(ElementUI)
@@ -32,14 +32,16 @@ window._const = {
 
 }
 window.util = {
-  getUserType: function(){
+  getUserType: function () {
     var hashArr = location.hash.split("/")
     return ["student", "teacher"].indexOf(hashArr[1]) == -1 ? "" : hashArr[1]
   },
-  hashArr: function(num) {
+  hashArr: function (num) {
     var hashArr = location.hash.split("/")
     return hashArr[num]
-  }
+  },
+  toast:Toast,
+  box: MessageBox,
 }
 window.teacher = teacher
 window.student = student

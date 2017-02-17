@@ -76,5 +76,11 @@ abstract class Controller extends BaseController
         $User = $this->getUserClass();
         return $User::find($id);
     }
+    public function isTeacher(){
+        return session()->get('type') == 1;
+    }
+    public function isStudent(){
+        return session()->get('type') == 2;
+    }
 
 }

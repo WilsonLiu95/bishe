@@ -49,20 +49,21 @@ class Course extends Model
         $tc = Teacher::find($id);
         $this->teacher = $tc->name;
         $this->teacher_phone = $tc->phone;
-        //
-        $schedule = $this->schedule()->where("status",1);
-        $this->student_num = $schedule->count();
 
-        $res = "";
-        if($this->status == 2) {
-            return $res;
+
+        // 课程 状态包含 0:已删除,1:待审核,2:互选中,3:互选完成
+        if($this->status==2){
+            // schedule状态包含 0:为选定后退选课程,1:为学生选定该课程，2:为互选成功，
+            $schedule = $this->schedule()->where("status",1)->get();
+            $this->student_num = $schedule->count();
+
+            $schedule->each(function ($item){
+                $this->student_list  .= $item->student_name .",";
+            });
+        }else if ($this->status==3){
+            $schedule = $this->schedule()->where("status",2)->first();
+            $this->student_list = $schedule->student_name;
         }
-        // 互选完成
-        $schedule = $this->schedule()->where("status",$this->status)->get();
-        foreach ($schedule as $item){
-            $res .= $item->student_name .",";
-        }
-        $this->student_list = $res;
         return $this;
     }
 

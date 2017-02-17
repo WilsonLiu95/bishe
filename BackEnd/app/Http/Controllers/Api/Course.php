@@ -22,7 +22,7 @@ class Course extends Controller
         $page = Input::get('page', 1);
         $search = Input::get('search', "");
         $paginate = 8;
-        $dataTwo = \App\Model\Course::where("status",0)
+        $dataTwo = \App\Model\Course::where("status",3)
 
             ->join("teacher",'course.teacher_id','=',"teacher.id") // 时间换空间
             ->select("course.*","teacher.name as teacher_name")
@@ -32,7 +32,7 @@ class Course extends Controller
             })
             ->orderBy("updated_at","desc")
         ;
-        $data = \App\Model\Course::where("status",1)
+        $data = \App\Model\Course::where("status",2)
 
             ->join("teacher",'course.teacher_id','=',"teacher.id") // 时间换空间
             ->select("course.*","teacher.name as teacher_name")
@@ -59,11 +59,13 @@ class Course extends Controller
         return response()->json($result);
     }
     private function fullCourse($orign){
-        // 进度相关数据
-        $schedule = Schedule::where('course_id',$orign['id']);
-        $orign['num'] = $schedule->count();
-
-
+        if($orign['status']==2){
+            // 互选中
+            $schedule = Schedule::where('course_id',$orign["id"])
+                ->where("status",1)
+                ->get();
+            $orign['student_num'] = $schedule->count();
+        }
         return $orign;
         
     }

@@ -20,7 +20,7 @@ class Schedule extends Model
      * @var array
      */
     protected $guarded = ['created_at','updated_at'];
-    protected $appends = ['student_name'];
+    protected $appends = ['student_name','job_num'];
 
     public function student()
     {
@@ -34,4 +34,9 @@ class Schedule extends Model
     {
         return $this->student()->get()[0]['name'];
     }
+    public function getJobNumAttribute()
+    {
+        return $this->student()->get()[0]['job_num'];
+    }
+
 }
