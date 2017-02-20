@@ -1,12 +1,16 @@
 <template>
   <div class="details-page">
-    <div>
-      <mt-cell  title="姓名"  style="background-color: #26a2ff;">
-        <span style="color:#000">学号</span>
-      </mt-cell>
+    <mt-cell title="姓名" style="background-color: #26a2ff;">
+      <span style="color:#000">学号</span>
+    </mt-cell>
+    <div v-if="studentList.length">
       <!--学生的链接使用index是为了-->
-      <mt-cell v-for="(student,index) in studentList" :title="student.student_name" :to="'/teacher/detail/student/'+index" is-link :value="student.job_num">
-      </mt-cell>
+      <mt-cell v-for="(student,index) in studentList" :title="student.student_name" :to="'/teacher/details/'+ $route.params.courseId +'/student-info/'+index"
+        is-link :value="student.job_num">
+        </mt-cell>
+    </div>
+    <div v-else style="text-align: center">
+      <h2>当前并无学生选中该课程</h2>
     </div>
   </div>
 </template>
@@ -30,7 +34,7 @@
       getStudentList() {
         this.$http.get("detail/student-list", {
           params: {
-            id: util.hashArr(3),
+            id: this.$route.params.courseId,
           }
         }).then((res) => {
           this.studentList = res.data

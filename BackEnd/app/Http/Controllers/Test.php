@@ -15,7 +15,7 @@ class Test extends Controller
 {
     public function getIndex(Request $request)
     {
-
+        return "test";
 
     }
 

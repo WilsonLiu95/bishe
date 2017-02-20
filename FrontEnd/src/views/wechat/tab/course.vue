@@ -42,7 +42,7 @@
         userType: util.getUserType(),
         isInit: false, // 用来说明组件是否初始化
         isPopupVisible: false,
-        search: "",
+        search: window._const.search ? window._const.search : "",
         current_page: "0",
         course: {
         },
@@ -56,6 +56,9 @@
       }
     },
     created() {
+      if (window._const.search && this.search != window._const.search) {
+        this.search = window._const.search
+      }
       // 为了达到记忆用户在哪个页面的功能，将page保存在全局变量中
       if (_const.page) {
         this.current_page = _const.page
@@ -73,8 +76,14 @@
         })
       },
       search: function (search) {
-        this.current_page = 1;
+        window._const.search = this.search
         this.$http.get("/course?page=" + this.current_page + "&search=" + this.search).then((res) => {
+          if (res.data.last_page < this.current_page) {
+            // 有数据,才重置页面,可减少重复请求
+            if (res.data.last_page != 0) {
+              this.current_page = res.data.last_page;
+            }
+          }
           this.slots[0].values = this.getArray(res.data.last_page)
           this.course = res.data
           this.isInit = true

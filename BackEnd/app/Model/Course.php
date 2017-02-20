@@ -61,8 +61,14 @@ class Course extends Model
                 $this->student_list  .= $item->student_name .",";
             });
         }else if ($this->status==3){
-            $schedule = $this->schedule()->where("status",2)->first();
-            $this->student_list = $schedule->student_name;
+            $sc = $this->schedule()->where("status",2);
+            if($sc->exists()){ // 如果存在
+                $this->student_list = $sc->first()->student_name;
+            }else{
+                // 出错情况
+                $this->student_list  = "数据错误";
+            }
+
         }
         return $this;
     }

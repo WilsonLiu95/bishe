@@ -108,10 +108,53 @@ class Detail extends Controller
     public function getStudentList(){
         $course = Model\Course::find(request()->id)
             ->schedule()->where("status",1)->get();
-        
         return response()->json($course);
+    }
 
+    public function getStudentInfo(){
+        $student_id = Model\Course::find(request()->id)
+            ->schedule()->where("status",1)->get()[request()->index]->student_id;
+        $student = Model\Student::find($student_id)->account();
+        return response()->json($student);
 
+    }
+
+    public function getTeacherInfo(){
+        $teacher_id = Model\Course::find(request()->id)
+            ->teacher_id;
+        $teacher = Model\Teacher::find($teacher_id)->account();
+        return response()->json($teacher);
+
+    }
+    public function getSelectStudent(){
+    // 选中学生
+        $course = Model\Course::find(request()->id);
+        $course->status = 3;
+        $course->save();
+
+        $course->schedule()
+            ->where("status",1)
+            ->update(["status"=>0]);
+        $course->schedule()
+            ->where("student_id",request()->student_id)
+            ->update(["status"=>2])
+        ;
+    }
+    public function getDeleteStudent(){
+        $course = Model\Course::find(request()->id);
+        $course->update(["status"=>2]);
+        $course->schedule()
+            ->where("status",2)
+            ->update(['status'=>0]); // 老师方面退选学生,学生回到退选状态。
+
+    }
+    public function getCancelSelect(){
+        $student_id = $this->getSessionInfo("id");
+        Model\Course::find(request()->id)
+        ->schedule()
+            ->where("student_id",$student_id)
+        ->first()->update(['status'=>0])
+        ;
     }
     // 判断是否为该课程的主人,以鉴定权限
     private function isOwner($course_id){

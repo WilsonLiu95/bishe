@@ -23,12 +23,12 @@ class Teacher extends Model
 
 
     // get与set
-    public function account($id){
+    public function account(){
         $data =  array(
             "major" =>$this->major()->first()["name"],
             "institute" =>$this->institute()->first()["name"]
         );
-        $orign = Teacher::find($id)->toArray();
+        $orign = $this->toArray();
 
         $orign = array_except($orign,["id","openid","created_at","updated_at","direction_id","institute_id"]);
         return array_merge($orign,$data);

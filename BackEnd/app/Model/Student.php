@@ -22,8 +22,8 @@ class Student extends Model
      */
     protected $guarded = ['created_at','updated_at'];
 
-    public function account($id){
-        $orign = Student::find($id)->toArray();
+    public function account(){
+        $orign = $this->toArray();
         $orign['institute'] = $this->institute()->first()["name"];
         $orign = array_except($orign,["id","openid","created_at","updated_at","direction_id","institute_id"]);
         return $orign;

@@ -18,8 +18,8 @@
     data() {
       return {
         data: {
-          name: "李军",
-          job_num: "370",
+          name: "",
+          job_num: "",
           phone: "12211",
         }
       }
