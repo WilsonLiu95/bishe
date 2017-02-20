@@ -49,8 +49,7 @@ class Detail extends Controller
         if ($sc->exists){
             if($sc->status == 0){
                 // 2代表选定后退选
-                $sc->status = 1;
-                $sc->save(); // 更新字段为1
+                $sc->update(['status'=>1]); // 更新字段为1
             }else if($sc->status == 1){
                 $this->success['msg'] = "您已经选定了该门课程,无需再选";
             }
@@ -60,8 +59,7 @@ class Detail extends Controller
 
         } else {
             // 用户尚未选定过该课程
-            $sc->status = 1;
-            $sc->save();
+            $sc->update(['status'=>1]); // 更新字段为1
         }
         return response()->json($this->success);
 
@@ -129,12 +127,11 @@ class Detail extends Controller
     public function getSelectStudent(){
     // 选中学生
         $course = Model\Course::find(request()->id);
-        $course->status = 3;
-        $course->save();
+        $course->update(['status'=>3]);
 
         $course->schedule()
-            ->where("status",1)
-            ->update(["status"=>0]);
+            ->where("student_id","!=",request()->student_id)
+            ->update(["status"=>0]); // 首先将其他所有人置为0,再将选中的个体置为2
         $course->schedule()
             ->where("student_id",request()->student_id)
             ->update(["status"=>2])
