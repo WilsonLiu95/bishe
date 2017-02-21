@@ -15,7 +15,7 @@ class CreateStudentTable extends Migration
         Schema::create('student', function (Blueprint $table) {
             $table->increments('id');
             $table->char('openid',28); // 微信的uid来标识唯一的微信号
-            $table->char('grade_id',4);
+            $table->integer('grade_id');
             $table->integer('institute_id');
 
             $table->string('name',32);

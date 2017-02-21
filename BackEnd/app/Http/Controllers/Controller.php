@@ -82,5 +82,25 @@ abstract class Controller extends BaseController
     public function isStudent(){
         return session()->get('type') == 2;
     }
+    public function getGrade(){
+        return $this->getUser()
+            ->institute()->first()
+            ->grade()->first();
+    }
+    public function json($data){
+        $res = array(
+            "state"=>1,
+            "data"=>$data
+        );
+        return response()->json($res);
+    }
+    public function toast($msg ,$data=array()){
+        $toast = array(
+            "state"=>0,
+            "msg"=>$msg,
+            "data"=>$data
+        );
+        return response()->json($toast);
+    }
 
 }

@@ -16,7 +16,7 @@ import App from './App'
 import { Indicator } from 'mint-ui';
 import { student, teacher } from './mock'
 
-import { Toast,MessageBox } from 'mint-ui';
+import { Toast, MessageBox } from 'mint-ui';
 Vue.use(VueRouter)
 Vue.use(MintUI)
 Vue.use(ElementUI)
@@ -40,7 +40,7 @@ window.util = {
     var hashArr = location.hash.split("/")
     return hashArr[num]
   },
-  toast:Toast,
+  toast: Toast,
   box: MessageBox,
 }
 window.teacher = teacher
@@ -71,7 +71,9 @@ axios.interceptors.response.use(function (response) {
     } else if (response.data.type == "route") {
       router.push(response.data.url)
     }
-
+  } else if (response.data.state == 0) {
+    // 后台返回成功，但是请求有误，直接toast出内容，不做逻辑处理
+    util.toast({message: response.data.msg})
   }
   // Do something with response data
   Indicator.close();

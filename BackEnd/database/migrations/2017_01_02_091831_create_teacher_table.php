@@ -17,6 +17,9 @@ class CreateTeacherTable extends Migration
             $table->char('openid',28);
             $table->integer('institute_id');
             $table->integer('major_id');
+            $table->tinyInteger('is_admin')
+                ->default(0) // 默认并非管理员
+                ->comment("是否为该专业的管理员,管理员具有审核权限");
             $table->string('name',32);
             $table->string('job_num',32);
             $table->char('phone',11);

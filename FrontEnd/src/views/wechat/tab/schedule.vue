@@ -1,56 +1,62 @@
 <template>
   <div class="tab-page-container">
-
-    <mt-cell v-for="n in course.totalCourse" :title="course.courseArr[n-1].title" :label="course.courseArr[n-1].person" :to="userType + '/details/' + course.courseArr[n-1].id"
-      is-link>
-      <span style="color: green">{{course.courseArr[n-1].status}}</span>
-</mt-cell>
-<div>
-  <div v-if="userType == 'teacher'" class="schedule-notify">
-    <span>提示：你可以创建6门选修课程，当前还可以创建3们课程</span>
-    <mt-button size="large" type="primary">创建</mt-button>
+    <div v-if="userType == 'teacher'">
+      <mt-cell v-for="(item,index) in course" :title="item.title" :label="getLabel(item,index)" :to="{name:'details', params:{'0': userType,courseId:item.id}}"
+        is-link>
+        <span>{{getStatus(item,index)}}</span>
+        </mt-cell>
+        <div class="schedule-notify">
+          <span>提示：你可以创建{{max}}个毕业课题，当前还可以创建{{max - course.length}}个课题</span>
+          <mt-button size="large" type="primary" @click="$router.push({name:'create-course'})">创建</mt-button>
+        </div>
+    </div>
+    <div v-if="userType == 'student'">
+      <mt-cell v-for="(item,index) in course" :title="item.title" :label="getLabel(item,index)" :to="{name:'details', params:{'0': userType,courseId:item.id}}"
+        is-link>
+        <span>{{getStatus(item,index)}}</span>
+        </mt-cell>
+        <div class="schedule-notify">
+          <span>提示：按照院系规定你最多可同时向{{max}}个课题发出意向,</span>
+        </div>
+    </div>
   </div>
-  <div v-if="userType == 'student'" class="schedule-notify">
-        <span>提示：按照院系规定你最多可同时向3门课程发出意向,</span>
-  </div>
-</div>
-</div>
 
 </template>
 <script>
-
   export default {
     name: "schedule-tab",
     data() {
       return {
         userType: window.util.getUserType(),
-        course: {
-          totalCourse: 3,
-          courseArr: [{
-            title: "《基于微信的选课系统》",
-            person: "3/1",
-            teacher: "许炜",
-            status: "已完成",
-            id: "11121254"
-          }, {
-            title: "《人脸识别的设计》",
-            person: "3/1",
-            teacher: "许炜",
-            status: "待发布",
-            id: "23456789"
-          }, {
-            title: "《给我个面子》",
-            person: "3/1",
-            teacher: "许炜",
-            status: "双选中",
-            id: "456232789"
-          }]
-        },
+        course: [],
+        max: 3,
       }
     },
     created() {
+      this.getCourse()
     },
     methods: {
+
+      getCourse() {
+        this.$http.get("schedule").then((res) => {
+          this.course = res.data.data.course
+          this.max =   res.data.data.max
+
+        })
+      },
+      getStatus(item, index) {
+        if (item.status == 1) {
+          return ['待审核', '未通过审核', '通过审核'][item.check_status]
+        }
+        return ["已删除", "审核中", "互选中", "互选完成"][item.status]
+      },
+      getLabel(item, index) {
+        if (item.status == 1) {
+          // 如果在审核中，则不显示label
+          return ""
+        }
+        return item.student_list ? ('名单：' + item.student_list) : '尚未有人选中'
+      },
 
     },
 
@@ -58,9 +64,9 @@
 
 </script>
 <style>
-.schedule-notify {
-  margin-top: 5px;
-  font-size: 13px;
-  text-align: center;
-}
+  .schedule-notify {
+    margin-top: 15px;
+    font-size: 13px;
+    text-align: center;
+  }
 </style>

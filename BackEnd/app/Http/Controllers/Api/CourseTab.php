@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Psy\Util\Json;
 
-class Course extends Controller
+class CourseTab extends Controller
 {
     public function getIndex()
     {
@@ -50,7 +50,9 @@ class Course extends Controller
 //            return response()->json($data);
             $slice = array_slice($data, $paginate * ($page - 1), $paginate);
         }
-        $result = (new LengthAwarePaginator($slice, count($data), $paginate, $page))->toArray();
+        $result = (new LengthAwarePaginator($slice, count($data), $paginate, $page))
+            ->toArray();
+
         $res = array();
         foreach ($result['data'] as $item) {
             $res[] = $this->fullCourse($item);

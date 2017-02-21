@@ -59,7 +59,8 @@ class Detail extends Controller
 
         } else {
             // 用户尚未选定过该课程
-            $sc->update(['status'=>1]); // 更新字段为1
+            $sc->status = 1;
+            $sc->save(); // 更新字段为1
         }
         return response()->json($this->success);
 

@@ -50,6 +50,8 @@ class Course extends Model
         $this->teacher = $tc->name;
         $this->teacher_phone = $tc->phone;
 
+        $this->student_num = 0; // 设置默认为0
+        $this->student_list = "";
 
         // 课程 状态包含 0:已删除,1:待审核,2:互选中,3:互选完成
         if($this->status==2){

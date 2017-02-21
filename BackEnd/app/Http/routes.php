@@ -14,10 +14,11 @@
 Route::group(['middleware' => 'auth'], function(){
 
     Route::controller("/register","Auth\Register");
-    Route::controller("/account","Api\Account");
-    Route::controller("/course","Api\Course");
-    Route::controller("/detail","Api\Detail");
+    Route::controller("/account","Api\AccountTab");
+    Route::controller("/course","Api\CourseTab");
+    Route::controller("/schedule","Api\ScheduleTab");
 
+    Route::controller("/detail","Api\Detail");
 
     Route::group(['prefix' => 'admin'], function(){
         // 管理员的接口走这里

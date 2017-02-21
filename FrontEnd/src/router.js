@@ -27,6 +27,7 @@ export default {
     { name: "student-list", path: '/teacher/details/:courseId/student-list', component: require('_views/wechat/page/student-list.vue') },
     { path: '/teacher/details/:courseId/student-info/:index', component: require('_views/wechat/page/student-info.vue') },
     { name: "select-student",path: '/teacher/details/:courseId/select-student', component: require('_views/wechat/page/select-student.vue')},
+    { name: "create-course",path: '/teacher/create-course', component: require('_views/wechat/page/create-course.vue')},
 
     // ========================================PC管理系统========================================
     { path: '/login', component: require('_views/pc/login.vue') },

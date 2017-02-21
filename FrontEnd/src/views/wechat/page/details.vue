@@ -3,17 +3,17 @@
 
     <!--表单部分-->
     <div class="part-one course-form">
-      <mt-field label="课程" placeholder="课程名称" v-model="course.title" :readonly="!course.isowner" :disabled=isDiabled></mt-field>
-      <mt-field label="导师" placeholder="导师姓名" v-model="course.teacher" :readonly="!course.isowner" disabled>
+      <mt-field label="课程" placeholder="课程名称" v-model="course.title" :readonly="!course.isowner || isDiabled" ></mt-field>
+      <mt-field label="导师" placeholder="导师姓名" v-model="course.teacher" readonly >
         <mt-button @click="jumpTeacherInfo" style="margin: 4px">查看</mt-button>
       </mt-field>
-      <mt-field label="电话" placeholder="导师电话" v-model="course.teacher_phone" :readonly="!course.isowner" disabled>
+      <mt-field label="电话" placeholder="导师电话" v-model="course.teacher_phone" readonly>
 
         <mt-button style="margin: 4px" @click="concact">
           联系
         </mt-button>
       </mt-field>
-      <mt-field label="详情" placeholder="课题详情" type="textarea" rows="8" v-model="course.details" :readonly="!course.isowner" :disabled=isDiabled></mt-field>
+      <mt-field label="详情" placeholder="课题详情" type="textarea" rows="8" v-model="course.details" :readonly="!course.isowner || isDiabled" ></mt-field>
     </div>
 
     <!--根据用户以及课程的status展示不同的部分-->

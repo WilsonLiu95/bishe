@@ -41,6 +41,11 @@
     },
 
     methods: {
+      getAccount() {
+        this.$http.get("account").then((res) => {
+          this.account = res.data
+        })
+      },
       modifyAccount() {
         this.isDiabled = false // 使得表单部分属性可以修改
       },
@@ -57,10 +62,7 @@
       },
     },
     created() {
-      var that = this
-      this.$http.get("account").then(function (res) {
-        that.account = res.data
-      })
+      this.getAccount();
     }
 
   }

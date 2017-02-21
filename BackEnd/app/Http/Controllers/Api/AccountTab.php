@@ -8,7 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 
-class Account extends Controller
+class AccountTab extends Controller
 {
     public function __construct(Request $request)
     {

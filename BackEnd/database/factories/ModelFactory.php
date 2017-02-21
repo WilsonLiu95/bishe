@@ -29,6 +29,9 @@ $factory->define(\App\Model\Major::class, function ($faker) {
     return [
         'id'=>1,
         'name' => 2013,
+        'status'=> 1,
+        'max_create_class'=>6,
+        'max_select_class'=>2,
         'institute_id' => 1,
 
     ];
@@ -85,13 +88,24 @@ $factory->define(\App\Model\Schedule::class, function ($faker) {
 });
 
 $factory->define(\App\Model\Course::class, function ($faker) {
+
+    // 将课程状态与审核状态对应
+    $status = $faker->shuffle([0,1,2,3])[0];
+    if($status !=1){
+        $check_status = 2;
+    }else{
+        $check_status = $faker->shuffle([0,1])[0];
+    }
     return [
         'institute_id' => 1,
         'teacher_id' => $faker->numberBetween(1,100),
         'grade_id' => 1,
         'major_id' => $faker->shuffle([1,2,3,4])[0],
         'title'=>$faker->word,
-        'status' => $faker->shuffle([0,1,2,3])[0],
+        'status' => $status,
         'details' => $faker->text,
+
+        'check_status'=> $check_status,
+        'check_advice'=>$faker->word,
     ];
 });
