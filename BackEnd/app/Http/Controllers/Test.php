@@ -33,7 +33,11 @@ class Test extends Controller
         $sc = Schedule::where("student_id",$id)->get(); // 获取所有相关的进度信息
         $sc->each(function($item){
             // 首先看有无该课程
-            $course = $item->course()->exists() ? $item->course()->first() : $item->delete(); // 如果课程不存在,则必然是错误数据
+            if(!$item->course()->exists() ){
+                $item->delete();
+                return true;
+            }
+            $course = $item->course()->first();
             // 有该课程情况下
 //            var_dump($item->course()->first()['status']);
             if($course->status == 0){
