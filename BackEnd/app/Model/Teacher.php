@@ -34,6 +34,9 @@ class Teacher extends Model
         return array_merge($orign,$data);
     }
     // 关联
+    public function  isMajorAdmin(){
+        return $this->is_admin;
+    }
     public function institute()
     {
         return $this->belongsTo('App\Model\Institute');

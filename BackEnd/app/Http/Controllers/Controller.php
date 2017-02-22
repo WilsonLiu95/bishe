@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Model;
 use App\Model\Admin;
 use App\Model\Student;
 use App\Model\Teacher;
@@ -70,8 +70,10 @@ abstract class Controller extends BaseController
     }
     public function getGrade(){
         return $this->getUser()
-            ->institute()->first()
-            ->grade()->first();
+            ->institute
+            ->grade()
+            ->where('status',1) // 目前生效的年级
+            ->first();
     }
     public function json($state=1,$data){
         $res = array(
@@ -90,4 +92,86 @@ abstract class Controller extends BaseController
         return response()->json($toast);
     }
 
+    public function checkOneStudent($id){
+        $sc = Model\Schedule::where("student_id",$id)->get(); // 获取所有相关的进度信息
+        $sc->each(function($item) {
+            $this->checkOneSchdule($item->id);
+        });
+    }
+
+    public function checkOneSchdule($id){
+        $item = Model\Schedule::find($id);
+        // 首先看有无该课程
+        if(!$item->course()->exists() ){
+            $item->delete();
+            return true;
+        }
+        $course = $item->course()->first();
+        // 有该课程情况下
+//            var_dump($item->course()->first()['status']);
+        if($course->status == 0){
+            if($course->check_status!=2){
+                // 未通过审核情况下删除,此时不可能有人选中过
+                $item->delete(); // 审核中的课程不可能被选择
+            }
+            if($item->status != 0 ){
+                $item->delete(); // 课程被删除的情况下,不可能还有人在 "互选中"or"完成互选"
+            }
+        }
+        if($course->status == 1){
+            $item->delete(); // 审核中的课程不可能被选择
+        }
+        if($course->status == 2){
+            if($item->status == 2){
+                $item->delete(); // 互选中的课程,不可能有人已经变成"完成互选"
+            }
+        }
+        if($course->status == 3){
+            if($item->status == 1){
+                $item->delete(); // 完成互选的课程,不可能有人还在互选中
+            }
+        }
+    }
+    public  function checkOneTeacher($id){
+        // 课程信息必须一致保持一致,即使出错也只能恢复到待审核状态,不可直接删除
+        $course_list = Model\Course::where("teacher_id",$id)->get();
+        $course_list->each(function($item){
+            $this->checkOneCourse($item->id);
+        });
+
+    }
+    public function checkOneCourse($id){
+        $item = Model\Course::find($id);
+        if($item->status == 0){ // 课程已被删除,则将所有选课的状态恢复到退选
+            $item->schedule()->whereIn("status",[1,2])
+                ->update(['status'=>0]);
+        }
+        if($item->status == 1){
+            // 如果是还在审核的课程,则不可能被选上
+            $item->schedule()->update(["status"=>0]);
+            if($item->check_status == 2){
+                $item->update(['check_status'=>1]); // 课程处于审核中状态下,不可能审核状态变为"通过审核"
+            }
+        }
+        if($item->status == 2){ // 课程处于互选中
+            $item->schedule()->where("status",2)
+                ->update(["status"=>1]); // 互选中的课程如果有人已经选上,则更正为"选定中"
+        }
+        if($item->status == 3){ // 课程已完成互选
+            if($item->schedule()->where("status",2)->count() == 1){
+                // 如果存在互选人,且胡选人为一则情况正常
+                $item->schedule()->where("status",1)
+                    ->update(["status"=>0]); // 已完成互选的课程,将所有"选定中"的人改为退选
+            }else if($item->schedule()->where("status",2)->count() == 0){
+                // 不存在胡选人,则将课程恢复到互选中
+                $item->update(['status'=>2]);
+            }else{
+                // 人数>1,出错,将所有人及课程恢复到 互选中
+                $item->update(['status'=>2]);
+                $item->schedule()->where("status",2)
+                    ->update(["status"=>1]);
+
+            }
+        }
+    }
 }

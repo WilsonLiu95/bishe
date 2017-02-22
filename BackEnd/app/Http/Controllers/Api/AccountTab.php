@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Model;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -33,4 +34,20 @@ class AccountTab extends Controller
         $this->getUser()->update($update);
         return $this->toast(1,"账户信息修改成功");
     }
+    public function getInfo(){
+        if(Input::get("type") == "teacher"){
+            $teacher_id = Model\Course::find(request()->id)
+                ->teacher_id;
+            $account = Model\Teacher::find($teacher_id)->account();
+        }else{
+            $student_id = Model\Course::find(request()->id)
+                ->schedule()->where("status",1)->get()[request()->index]->student_id;
+            $account = Model\Student::find($student_id)->account();
+
+        }
+        return $this->json(1,$account);
+
+    }
+
+
 }

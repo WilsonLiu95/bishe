@@ -1,13 +1,11 @@
 <template>
   <div>
-    <!--<mt-header title="导师信息">    </mt-header>-->
-    <!--学生列表-->
     <div>
       <mt-field label="院系" v-model="account.institute" placeholder="院系" readonly></mt-field>
       <mt-field label="姓名" v-model="account.name" placeholder="请输入用户名" readonly></mt-field>
       <mt-field label="工号" v-model="account.job_num" placeholder="请输入工号" readonly></mt-field>
       <mt-field label="手机号" placeholder="请输入手机号" type="tel" v-model="account.phone" readonly>
-        <mt-button style="margin: 4px" @click="concact">
+        <mt-button class="inline-filed-btn" size="small" @click="concact">
           联系
         </mt-button>
       </mt-field>
@@ -30,7 +28,13 @@
     methods: {
       getAccount() {
         // 请求数据
-        this.$http.get("detail/teacher-info?id=" + this.$route.params.courseId).then((res) => {
+        this.$http.get("account/info", {
+          params: {
+            id: this.$route.params.courseId,
+            type: "teacher",
+            index: this.$route.params.index
+          }
+        }).then((res) => {
           this.account = res.data.data
         })
       },

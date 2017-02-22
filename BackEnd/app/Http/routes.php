@@ -26,7 +26,7 @@ Route::group(['middleware' => 'auth'], function(){
     });
 });
 
-Route::controller("/test","Test");
+Route::controller("/test/:page","Test");
 
 Route::controller("/login","Auth\Login");
 Route::controller("/wechat","Auth\Wechat");

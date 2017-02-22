@@ -15,6 +15,8 @@ class Detail extends Controller
     public function getIndex()
     {
         $id =  request()->input("id");
+        $this->checkOneCourse($id);// 校验课程数据
+
         $course = Model\Course::find($id);
 
         $course->detail(); // 补充详情
@@ -22,6 +24,7 @@ class Detail extends Controller
         // 查询是否是发布课题的老师
         if($this->isTeacher()){
             $course->isowner = $this->isOwner($id);
+            $course->isadmin = $this->isCourseAdmin($id);
         } else if($course->status == 2 ){
             // 学生,课程在互选中
             $course->isSelected = $course->schedule()
@@ -31,7 +34,10 @@ class Detail extends Controller
         return $this->json(1,$course);
     }
 
-    public function getSelect(){
+    public function getSelectCourse(){
+        if($this->isMaxSelectCourse()){
+            return $this->toast(0,"已达到最大课程数,不可再选定课程");
+        }
         $id =  request()->input("id");
         $course = Model\Course::find($id);
         // 首先检验该课程是否可以被选定
@@ -57,28 +63,30 @@ class Detail extends Controller
         } else {
             // 用户尚未选定过该课程
             $sc->status = 1;
-            $sc->save(); // 更新字段为1
+            $sc->save(); // 新建schedule
         }
         return $this->toast(1,"选定成功,请主动联系老师,完成互选");
 
     }
 
-    public function postModify()
+    public function postModifyCourse()
     {
         if (!$this->isOwner(request()->id) || is_null(request()->id))
         {
             return $this->toast(0,'不可修改不属于您的课程');
         }
-
         $course = Model\Course::find(request()->id);
 
-        $course->title = request()->title;
-        $course->details = request()->details;
-
-        $course->save();
+        $course->update([
+            "title"=>request()->title,
+            "details"=>request()->details
+        ]);
+        if($course->status==1 && $course->check_status ==1){ // 未通过审核的课程修改后,即重新回到待审核
+            $course->update(["check_status"=>0]);
+        }
         return $this->toast(1,"修改成功");
     }
-    public function getDelete(){
+    public function getDeleteCourse(){
         $course = Model\Course::find(request()->id);
 
         if ($course->status == 3){
@@ -86,18 +94,18 @@ class Detail extends Controller
             return $this->toast(0,"已完成互选,不能直接删除");
         }
 
-        // 0代表删除该课程
-        $course->status = 0;
-        $course->save();
-
-        // 接着退选选中该门课的学生
-        $schedule_list = $course->schedule()->where("status",1)->get();
-        $schedule_list->each(function ($item) {
-            // 将所有学生退选
-           $item->status = 0;
-            // message 向所有学生发送消息
-           $item->save();
-        });
+        if($course->status == 2){ // 互选中的课程
+            // 接着退选选中该门课的学生
+            $schedule_list = $course->schedule()
+                ->where("status",1)->get();
+            $schedule_list->each(function ($item) {
+                // 将所有学生退选
+                // message 向所有学生发送消息
+                $item->update(['status'=>0]);
+            });
+        }
+        // 最后删除课程,不可先删除课程否则 status始终为0 上面2个if将无效
+        $course->update(['status'=>0]);// 0代表删除该课程
         return $this->toast(1,"课程删除成功");
     }
     public function getStudentList(){
@@ -106,21 +114,7 @@ class Detail extends Controller
         return $this->json(1,$course);
     }
 
-    public function getStudentInfo(){
-        $student_id = Model\Course::find(request()->id)
-            ->schedule()->where("status",1)->get()[request()->index]->student_id;
-        $student = Model\Student::find($student_id)->account();
-        return $this->json(1,$student);
 
-    }
-
-    public function getTeacherInfo(){
-        $teacher_id = Model\Course::find(request()->id)
-            ->teacher_id;
-        $teacher = Model\Teacher::find($teacher_id)->account();
-        return $this->json(1,$teacher);
-
-    }
     public function getSelectStudent(){
     // 选中学生
         $course = Model\Course::find(request()->id);
@@ -143,7 +137,7 @@ class Detail extends Controller
             ->update(['status'=>0]); // 老师方面退选学生,学生回到退选状态。
         return $this->toast(1,"退选学生成功");
     }
-    public function getCancelSelect(){
+    public function getCancelSelectCourse(){
         $student_id = $this->getSessionInfo("id");
         Model\Course::find(request()->id)
         ->schedule()
@@ -152,9 +146,24 @@ class Detail extends Controller
         ;
         return $this->toast(1,"退选课程成功");
     }
+
+    private function isMaxSelectCourse(){
+        $num = $this->getUser()->schedule()->whereIn('status',[1,2])->count();
+        $max = $this->getGrade()->max_select_class;
+        return $num < $max ? false: true;
+    }
     // 判断是否为该课程的主人,以鉴定权限
     private function isOwner($course_id){
         $course = Model\Course::find($course_id);
         return $course->teacher_id == $this->getSessionInfo("id");
+    }
+    private function isCourseAdmin($course_id){
+        $course = Model\Course::find($course_id);
+        if(!$this->isTeacher() || !$this->getUser()->isMajorAdmin() ||
+            $course->major_id != $this->getUser()->major_id
+        ){ // 不是老师 or 不是管理员 or 专业不同
+            return false;
+        }
+        return true;
     }
 }

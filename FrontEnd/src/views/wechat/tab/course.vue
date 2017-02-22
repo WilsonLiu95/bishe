@@ -15,9 +15,9 @@
 
       <!--start 课表清单-->
       <div class="page-tab-container" v-if="isInit">
-        <mt-cell v-for="n in course.per_page" v-if="course.data[n-1]" :title="course.data[n-1].title" :label=" course.data[n-1].status ==2 ? '互选中，' + course.data[n-1].student_num + '人选择' : '已互选完成'"
-          :to="'/'+ userType + '/details/' + course.data[n-1].id" is-link>
-          {{ course.data[n-1].teacher_name}}
+        <mt-cell v-for="item in course.data" :title="item.title" :label="getLabel(item) " :to="'/'+ userType + '/details/' + item.id"
+          is-link>
+          {{ item.teacher_name}}
           </mt-cell>
       </div>
       <!--end 课表清单-->
@@ -120,6 +120,19 @@
         }
         _const.page = String(current_page + n)
         this.current_page = String(current_page + n)
+      },
+      getLabel(item) {
+        var stateArr = [
+          "已删除", "审核中", '互选中，' + item.student_num + '人选择', '完成互选:' + item.student_name
+        ]
+        var checkStatusArr = [
+          "待审核", "未通过", "已通过"
+        ]
+        if (item.status == 1) { // 审核中的状态
+          stateArr[1] = checkStatusArr[item.check_status]
+        }
+
+        return stateArr[item.status]
       }
     },
 

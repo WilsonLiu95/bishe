@@ -13,7 +13,6 @@
       <div v-else style="text-align: center">
         <h2>当前并无学生选中该课程</h2>
       </div>
-
     </div>
   </div>
 </template>

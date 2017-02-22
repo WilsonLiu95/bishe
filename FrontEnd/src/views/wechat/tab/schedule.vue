@@ -7,10 +7,10 @@
         </mt-cell>
         <div class="schedule-notify">
           <div v-if="max - course.length > 0">
-            <span>提示：你可以创建{{max}}个毕业课题，当前还可以创建{{max - course.length}}个课题</span>
             <mt-button size="large" type="primary" @click="$router.push({name:'create-course'})">创建</mt-button>
+            <span>提示：你可以创建{{max}}个毕业课题，当前还可以创建{{max - course.length}}个课题</span>
           </div>
-          <div v-if="max - course.length == 0">
+          <div v-else-if="max - course.length == 0">
             <span>提示：你可以创建{{max}}个毕业课题，已达到最大课题数</span>
           </div>
           <div v-else>
@@ -19,7 +19,7 @@
         </div>
     </div>
     <div v-if="userType == 'student'">
-      <mt-cell v-for="(item,index) in course" :title="item.title" :label="getLabel(item,index)" :to="{name:'details', params:{'0': userType,courseId:item.id}}"
+      <mt-cell v-for="(item,index) in course" :title="item.title" :label="item.teacher" :to="{name:'details', params:{'0': userType,courseId:item.id}}"
         is-link>
         <span>{{getStatus(item,index)}}</span>
         </mt-cell>

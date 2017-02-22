@@ -1,7 +1,7 @@
 <template>
   <div class="index-page">
     <!--路由-->
-    <router-view>
+    <router-view class="test">
     </router-view>
     <!--四栏tab-->
     <mt-tabbar v-model="selected" :fixed=true>
@@ -58,17 +58,15 @@
 
 </script>
 
-<style>
-  .tab-item {
-    margin-bottom: 65px;
+<style scoped>
+  .test {
+    padding-bottom: 50px;
   }
-
   .msg-notify {
     position: absolute;
     top: 5px;
     left: 55%;
   }
-
   .message {
     position: relative;
   }

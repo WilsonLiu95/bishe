@@ -12,12 +12,15 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Psy\Util\Json;
 
 class Test extends Controller
 {
     public function getIndex(Request $request)
     {
+        $data = DB::table('student')->paginate(15);
+        return $this->json(1,$data);
     }
 
 

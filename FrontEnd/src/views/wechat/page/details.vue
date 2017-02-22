@@ -1,81 +1,67 @@
 <template>
   <div class="details-page">
-
-    <!--表单部分-->
+    <!--第一部分 start 基本课程信息-->
     <div class="part-one course-form">
-      <mt-field label="课程" placeholder="课程名称" v-model="course.title" :readonly="!course.isowner || isDiabled" ></mt-field>
-      <mt-field label="导师" placeholder="导师姓名" v-model="course.teacher" readonly >
-        <mt-button @click="jumpTeacherInfo" style="margin: 4px">查看</mt-button>
+      <mt-field label="课程" placeholder="课程名称" v-model="course.title" :readonly="!course.isowner || isDiabled"></mt-field>
+      <mt-field label="导师" placeholder="导师姓名" v-model="course.teacher" readonly>
+        <mt-button @click="jumpTeacherInfo" size="small" class="inline-filed-btn">查看</mt-button>
       </mt-field>
       <mt-field label="电话" placeholder="导师电话" v-model="course.teacher_phone" readonly>
 
-        <mt-button style="margin: 4px" @click="concact">
+        <mt-button class="inline-filed-btn" size="small" @click="concact">
           联系
         </mt-button>
       </mt-field>
-      <mt-field label="详情" placeholder="课题详情" type="textarea" rows="8" v-model="course.details" :readonly="!course.isowner || isDiabled" ></mt-field>
+      <mt-field label="详情" placeholder="课题详情" type="textarea" rows="8" v-model="course.details" :readonly="!course.isowner || isDiabled"></mt-field>
     </div>
+    <!--第一部分 end 基本课程信息-->
+    <!--第二部分 start 审核结果 与 当前进度-->
+    <div v-if="course.isowner || course.isadmin" class="part-two">
+        <mt-cell title="审核进度">{{["待审核","未通过审核","已通过"][course.check_status]}}</mt-cell>
+        <mt-field label="审核意见" placeholder="有待完善" type="textarea" rows="4" v-model="course.check_advice" readonly></mt-field>
+        <div v-if="course.status ==2 || course.status ==3">
+          <mt-cell title="进度" :value="course.status ==2?('互选中,已有' + course.student_num+'人选定该课程'): '完成互选'"></mt-cell>
+          <mt-cell title="名单" :label="course.student_list">
+            <mt-button v-if="course.isowner && course.student_num " @click="jumpStudentList">
+              查看
+            </mt-button>
+          </mt-cell>
+        </div>
 
-    <!--根据用户以及课程的status展示不同的部分-->
-    <div class="part-two">
+    </div>
+    <!--第二部分 end 审核结果-->
+
+    <!--第三部分 start根据用户以及课程的status展示不同的部分-->
+    <div class="part-three">
       <!--已删除-->
       <div v-if="course.status == 0">
-        <mt-button size="large" class="details-notify-btn" type="default">课程已被删除</mt-button>
+        <mt-button size="large"  type="default">课程已被删除</mt-button>
       </div>
       <!--课程审核中-->
       <div v-else-if="course.status == 1">
-        <mt-button size="large" class="details-notify-btn" type="default">课程审核中</mt-button>
+        <mt-button v-if="!course.isowner && !course.isadmin" size="large" >课程审核中</mt-button>
+        <mt-button v-if="!course.isowner && course.isadmin" size="large" >审核课程</mt-button>
       </div>
-      <!--未删除-->
-      <div v-else>
-        <!--老师界面-->
-        <div v-if="userType == 'teacher'" class="details-notify">
-          <!-- 课程进度为互选中-->
-          <div v-if="course.status == 2">
-            <mt-cell title="进度" :value="'互选中,已有' + course.student_num+'人选定该课程'"></mt-cell>
-            <mt-cell title="名单" :label="course.student_list">
-              <mt-button v-if="course.isowner && course.student_num " @click="jumpStudentList">
-                查看
-              </mt-button>
-            </mt-cell>
-            <div v-if="course.isowner" style="float: right;margin-top:10px">
-              <mt-button type="primary" v-if="isDiabled" @click="modifyCourse" size="normal">修改</mt-button>
-              <mt-button type="primary" v-if="!isDiabled" @click="saveCourse" size="normal">保存</mt-button>
-              <mt-button type="primary" v-if="course.student_num" class="details-notify-btn" @click="jumpSelectStudent" size="normal">选定学生</mt-button>
-              <mt-button type="danger" class="details-notify-btn" size="normal" @click="deleteCourse">删除</mt-button>
-            </div>
-          </div>
-          <!--课程状态为已互选-->
-          <div v-if="course.status == 3">
-            <mt-cell title="进度" value="已完成互选"></mt-cell>
-            <mt-cell title="互选学生" :value="course.student_list"></mt-cell>
-            <mt-button type="danger" class="details-notify-btn" size="large" @click="deleteStudent">退选已互选的学生</mt-button>
-          </div>
+      <!--互选与已完成-->
+      <div v-if="course.status == 2 && userType == 'student'">
+        <div v-if="course.isSelected">
+          <mt-cell title="提示">已选定，请主动联系老师，完成互选</mt-cell>
+          <mt-button size="large"  type="danger" @click="cancelSelect">退选</mt-button>
         </div>
-
-        <!-- 学生界面-->
-        <div v-if="userType == 'student'" class="details-notify">
-          <!-- 课程进度为互选中-->
-          <div v-if="course.status == 2">
-            <mt-cell title="进度" :value="'互选中,已有' + course.student_num+'人选定该课程'"></mt-cell>
-            <mt-cell title="名单" :label="course.student_list"></mt-cell>
-            <div v-if="course.isSelected">
-              <mt-cell title="提示">已选定，请主动联系老师，完成互选</mt-cell>
-              <mt-button size="large" class="details-notify-btn" type="danger" @click="cancelSelect">退选</mt-button>
-            </div>
-
-            <mt-button v-else="course.isSelected" size="large" class="details-notify-btn" type="primary" @click="select">选定</mt-button>
-          </div>
-          <!--课程状态为已互选-->
-          <div v-if="course.status == 3">
-            <mt-cell title="进度" value="已完成互选"></mt-cell>
-            <mt-cell title="互选学生" :value="course.student_list"></mt-cell>
-          </div>
-
-        </div>
+        <mt-button v-else="course.isSelected" size="large"  type="primary" @click="select">选定</mt-button>
       </div>
     </div>
+    <!--第三部分 end 根据用户以及课程的status展示不同的部分-->
+    <!--第四部分 start 操作课程的按键组 如果是课程主人-->
+    <div class="part-four group-btn-right" v-if="course.isowner && course.status != 0">
+      <mt-button type="primary" v-if="isDiabled" @click="modifyCourse" size="normal">修改</mt-button>
+      <mt-button type="primary" v-if="!isDiabled" @click="saveCourse" size="normal">保存</mt-button>
+      <mt-button type="primary" v-if="course.student_num && course.status == 2"  @click="jumpSelectStudent"
+        size="normal">选定学生</mt-button>
+        <mt-button type="danger" v-if="course.status == 3"  size="normal" @click="deleteStudent">退选已互选的学生</mt-button>
+        <mt-button type="danger" size="normal" @click="deleteCourse">删除</mt-button>
 
+    </div>
   </div>
 </template>
 <script>
@@ -103,7 +89,7 @@
         })
       },
       select() {
-        this.$http.get("detail/select?id=" + this.$route.params.courseId).then((res) => {
+        this.$http.get("detail/select-course?id=" + this.$route.params.courseId).then((res) => {
           this.getDetail();
           util.toast({
             message: res.data.msg,
@@ -122,13 +108,14 @@
           "title": this.course.title,
           "details": this.course.details,
         }
-        this.$http.post("detail/modify", data).then((res) => {
+        this.$http.post("detail/modify-course", data).then((res) => {
           this.isDiabled = true
+          this.getDetail();
         })
       },
       deleteCourse() {
         util.box.confirm('确定删除此课程?').then(action => {
-          this.$http.get("detail/delete?id=" + this.$route.params.courseId).then((res) => {
+          this.$http.get("detail/delete-course?id=" + this.$route.params.courseId).then((res) => {
             this.getDetail()
           })
         }, action => {
@@ -182,7 +169,7 @@
       },
       cancelSelect() {
         util.box.confirm('确定退选该学生?退选后课程将重新回到“互选中”。').then(action => {
-          this.$http.get("detail/cancel-select?id=" + this.$route.params.courseId).then((res) => {
+          this.$http.get("detail/cancel-select-course?id=" + this.$route.params.courseId).then((res) => {
             this.getDetail()
           })
         }, action => {
@@ -198,7 +185,4 @@
 
 </script>
 <style>
-  .details-notify-btn {
-    margin-top: 10px;
-  }
 </style>
