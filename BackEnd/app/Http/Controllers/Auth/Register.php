@@ -29,8 +29,7 @@ class Register extends Controller
         };
         // 不存在对应的账号
         if (!$isExist) {
-            $this->error['msg'] = "不存在该账户,请确认姓名与学号";
-            return response()->json($this->error);
+            $this->toast(0,"不存在该账户,请确认姓名与学号");
         }
 
         // 如果存在,则更新openid

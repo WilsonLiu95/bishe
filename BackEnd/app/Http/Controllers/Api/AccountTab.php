@@ -17,13 +17,12 @@ class AccountTab extends Controller
 
     public function getIndex()
     {
-        $id = $this->getSessionInfo("id");
-        $data = $this->getUser()->account($id);
-        return response()->json($data);
+        $data = $this->getUser()->account();
+        return $this->json(1,$data);
     }
     public function postModify()
     {
-        if($this->getSessionInfo("type") == 1 ){
+        if($this->isTeacher()){
             // 老师
             $update = Input::only("intro","qq","email","phone");
         } else if($this->getSessionInfo("type") == 2){
@@ -32,6 +31,6 @@ class AccountTab extends Controller
         }
 
         $this->getUser()->update($update);
-        return $this->success;
+        return $this->toast(1,"账户信息修改成功");
     }
 }

@@ -22,7 +22,6 @@ class Login extends Controller
             $this->redirect['url'] = "admin";
            return response()->json($this->redirect);
         }
-        $this->error["msg"] = "账号密码错误,请重试";
-        return response()->json($this->error);
+        return $this->toast(0,"账号密码错误,请重试");
     }
 }

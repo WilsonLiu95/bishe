@@ -16,17 +16,6 @@ abstract class Controller extends BaseController
 
     public function __construct(Request $request)
     {
-
-        $this->error = array(
-            "state" => 0,
-            "msg"=> "出错",
-            "data"=> array()
-        );
-        $this->success = array(
-            "state" => 1,
-            "msg"=> "操作成功",
-            "data"=> array()
-        );
         $this->redirect= array(
             "state" => 301,
             "url" => "",
@@ -79,26 +68,24 @@ abstract class Controller extends BaseController
     public function isTeacher(){
         return session()->get('type') == 1;
     }
-    public function isStudent(){
-        return session()->get('type') == 2;
-    }
     public function getGrade(){
         return $this->getUser()
             ->institute()->first()
             ->grade()->first();
     }
-    public function json($data){
+    public function json($state=1,$data){
         $res = array(
-            "state"=>1,
+            "state"=>$state,
             "data"=>$data
         );
         return response()->json($res);
     }
-    public function toast($msg ,$data=array()){
+    public function toast($state=1,$msg="",$data=array()){
         $toast = array(
-            "state"=>0,
+            "state"=>$state,
             "msg"=>$msg,
-            "data"=>$data
+            "data"=>$data,
+
         );
         return response()->json($toast);
     }

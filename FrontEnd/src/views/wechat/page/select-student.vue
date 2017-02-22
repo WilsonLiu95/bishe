@@ -36,11 +36,11 @@
           }
         }).then((res) => {
           // 校验，若无学生则为空
-          if (res.data.length == 0) {
+          if (res.data.data.length == 0) {
             return
           }
           var list = []
-          res.data.forEach((item, index) => {
+          res.data.data.forEach((item, index) => {
             list[index] = {
               label: item.job_num + " " + item.student_name,
               value: item.student_id
@@ -59,12 +59,6 @@
               student_id: this.finalStudent
             }
           }).then(res => {
-
-            window.util.toast({
-              message: "已完成互选，马上为您自动跳转",
-              duration: 1500
-            })
-
             setTimeout(() => {
               this.$router.push({
                 name: "details",

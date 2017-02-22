@@ -31,14 +31,7 @@
     },
     methods: {
       register() {
-        this.$http.post("register", this.$data.data).then(function (res) {
-          util.toast({
-            message: res.data.msg,
-            duration: 1500
-          });
-        }).catch(function (error) {
-          console.log(error);
-        })
+        this.$http.post("register", this.$data.data)
       }
     },
 

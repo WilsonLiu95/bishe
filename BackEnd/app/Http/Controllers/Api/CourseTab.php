@@ -47,7 +47,6 @@ class CourseTab extends Controller
         $slice = array();
         if (!empty($data)){
             // 如果为空则返回一个空数组,不进行array_slice否则会报错
-//            return response()->json($data);
             $slice = array_slice($data, $paginate * ($page - 1), $paginate);
         }
         $result = (new LengthAwarePaginator($slice, count($data), $paginate, $page))
@@ -58,7 +57,7 @@ class CourseTab extends Controller
             $res[] = $this->fullCourse($item);
         }
         $result['data'] = $res;
-        return response()->json($result);
+        return $this->json(1,$result);
     }
     private function fullCourse($orign){
         if($orign['status']==2){

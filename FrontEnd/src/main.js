@@ -65,15 +65,20 @@ axios.interceptors.request.use(function (config) {
 // Add a response interceptor
 
 axios.interceptors.response.use(function (response) {
+  if (typeof (response.data.msg) == "string") {
+    // 如果msg存在，且不为空，则弹出
+    util.toast({
+      message: response.data.msg,
+      duration: 2000
+     })
+  }
+
   if (response.data.state == 301) {
     if (response.data.type == "url") {
       location.href = response.data.url;
     } else if (response.data.type == "route") {
       router.push(response.data.url)
     }
-  } else if (response.data.state == 0) {
-    // 后台返回成功，但是请求有误，直接toast出内容，不做逻辑处理
-    util.toast({message: response.data.msg})
   }
   // Do something with response data
   Indicator.close();

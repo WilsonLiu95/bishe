@@ -31,7 +31,7 @@
       getAccount() {
         // 请求数据
         this.$http.get("detail/teacher-info?id=" + this.$route.params.courseId).then((res) => {
-          this.account = res.data
+          this.account = res.data.data
         })
       },
       concact() {

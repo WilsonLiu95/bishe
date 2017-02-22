@@ -96,11 +96,10 @@
     computed: {
     },
     methods: {
-
       getDetail() {
         // 请求数据
         this.$http.get("detail?id=" + this.$route.params.courseId).then((res) => {
-          this.course = res.data
+          this.course = res.data.data
         })
       },
       select() {
@@ -124,20 +123,12 @@
           "details": this.course.details,
         }
         this.$http.post("detail/modify", data).then((res) => {
-          util.toast({
-            message: res.data.msg,
-            iconClass: 'mintui mintui-success'
-          });
           this.isDiabled = true
         })
       },
       deleteCourse() {
         util.box.confirm('确定删除此课程?').then(action => {
           this.$http.get("detail/delete?id=" + this.$route.params.courseId).then((res) => {
-            util.toast({
-              message: res.data.msg,
-              iconClass: 'mintui mintui-success'
-            });
             this.getDetail()
           })
         }, action => {
@@ -180,10 +171,6 @@
       deleteStudent() {
         util.box.confirm('确定退选该学生?退选后课程将重新回到“互选中”。').then(action => {
           this.$http.get("detail/delete-student?id=" + this.$route.params.courseId).then((res) => {
-            util.toast({
-              message: res.data.msg,
-              iconClass: 'mintui mintui-success'
-            });
             this.getDetail()
           })
         }, action => {

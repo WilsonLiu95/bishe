@@ -43,7 +43,7 @@
     methods: {
       getAccount() {
         this.$http.get("account").then((res) => {
-          this.account = res.data
+          this.account = res.data.data
         })
       },
       modifyAccount() {
@@ -53,10 +53,6 @@
         var that = this
         // 保存修改，post数据到线上
         this.$http.post("account/modify", this.account).then(function (res) {
-          util.toast({
-            message: res.data.msg,
-            iconClass: 'mintui mintui-success'
-          });
           that.isDiabled = true
         })
       },

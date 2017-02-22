@@ -28,7 +28,7 @@ class Detail extends Controller
                 ->where("student_id",$this->getSessionInfo("id"))
                 ->where("status",1)->exists();
         }
-        return response()->json($course);
+        return $this->json(1,$course);
     }
 
     public function getSelect(){
@@ -36,11 +36,8 @@ class Detail extends Controller
         $course = Model\Course::find($id);
         // 首先检验该课程是否可以被选定
         if ($course->status != 2) {
-            $this->error['msg'] = "课程未进入互选阶段";
-            return response()->json($this->error);
+            return $this->toast(0,"课程未进入互选阶段");
         }
-
-        $this->success['msg'] = "选定成功,请主动联系老师,完成互选";
         // 可以被选定,再校验该用户是否已经选定
         $sc = Model\Schedule::firstOrNew([
             "course_id" => $id,
@@ -51,7 +48,7 @@ class Detail extends Controller
                 // 2代表选定后退选
                 $sc->update(['status'=>1]); // 更新字段为1
             }else if($sc->status == 1){
-                $this->success['msg'] = "您已经选定了该门课程,无需再选";
+                return $this->toast(0,"您已经选定了该门课程,无需再选");
             }
 //            else if ($sc->status == 2){
 //                $this->success['msg'] = "已完成互选,请勿再选定";  // 理论上,如果完成互选是走不到这里来的。先保留
@@ -62,7 +59,7 @@ class Detail extends Controller
             $sc->status = 1;
             $sc->save(); // 更新字段为1
         }
-        return response()->json($this->success);
+        return $this->toast(1,"选定成功,请主动联系老师,完成互选");
 
     }
 
@@ -70,8 +67,7 @@ class Detail extends Controller
     {
         if (!$this->isOwner(request()->id) || is_null(request()->id))
         {
-            $this->error['msg']='不可修改不属于您的课程';
-            return response()->json($this->error);
+            return $this->toast(0,'不可修改不属于您的课程');
         }
 
         $course = Model\Course::find(request()->id);
@@ -80,14 +76,14 @@ class Detail extends Controller
         $course->details = request()->details;
 
         $course->save();
-        return response()->json($this->success);
+        return $this->toast(1,"修改成功");
     }
     public function getDelete(){
         $course = Model\Course::find(request()->id);
 
         if ($course->status == 3){
             // 已完成互选,不能直接删除,需要先退选学生恢复到"互选中",才可以继续删除
-            return response()->json($this->error);
+            return $this->toast(0,"已完成互选,不能直接删除");
         }
 
         // 0代表删除该课程
@@ -102,19 +98,19 @@ class Detail extends Controller
             // message 向所有学生发送消息
            $item->save();
         });
-        return response()->json($this->success);
+        return $this->toast(1,"课程删除成功");
     }
     public function getStudentList(){
         $course = Model\Course::find(request()->id)
             ->schedule()->where("status",1)->get();
-        return response()->json($course);
+        return $this->json(1,$course);
     }
 
     public function getStudentInfo(){
         $student_id = Model\Course::find(request()->id)
             ->schedule()->where("status",1)->get()[request()->index]->student_id;
         $student = Model\Student::find($student_id)->account();
-        return response()->json($student);
+        return $this->json(1,$student);
 
     }
 
@@ -122,7 +118,7 @@ class Detail extends Controller
         $teacher_id = Model\Course::find(request()->id)
             ->teacher_id;
         $teacher = Model\Teacher::find($teacher_id)->account();
-        return response()->json($teacher);
+        return $this->json(1,$teacher);
 
     }
     public function getSelectStudent(){
@@ -135,8 +131,9 @@ class Detail extends Controller
             ->update(["status"=>0]); // 首先将其他所有人置为0,再将选中的个体置为2
         $course->schedule()
             ->where("student_id",request()->student_id)
-            ->update(["status"=>2])
-        ;
+            ->update(["status"=>2]);
+
+        return $this->toast(1,"已完成互选，马上为您自动跳转");
     }
     public function getDeleteStudent(){
         $course = Model\Course::find(request()->id);
@@ -144,7 +141,7 @@ class Detail extends Controller
         $course->schedule()
             ->where("status",2)
             ->update(['status'=>0]); // 老师方面退选学生,学生回到退选状态。
-
+        return $this->toast(1,"退选学生成功");
     }
     public function getCancelSelect(){
         $student_id = $this->getSessionInfo("id");
@@ -153,6 +150,7 @@ class Detail extends Controller
             ->where("student_id",$student_id)
         ->first()->update(['status'=>0])
         ;
+        return $this->toast(1,"退选课程成功");
     }
     // 判断是否为该课程的主人,以鉴定权限
     private function isOwner($course_id){

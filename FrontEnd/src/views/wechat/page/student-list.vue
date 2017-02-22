@@ -37,7 +37,7 @@
             id: this.$route.params.courseId,
           }
         }).then((res) => {
-          this.studentList = res.data
+          this.studentList = res.data.data
         })
       }
     }

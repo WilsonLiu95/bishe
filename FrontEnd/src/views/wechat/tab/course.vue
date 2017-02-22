@@ -70,22 +70,22 @@
       // 如果 current_page 发生改变，就向后端发送请求。因为并非通过URL方式记录页面，所以无法通过链接保留页面参数
       current_page: function (page) {
         this.$http.get("/course?page=" + page + "&search=" + this.search).then((res) => {
-          this.slots[0].values = this.getArray(res.data.last_page)
-          this.course = res.data
+          this.slots[0].values = this.getArray(res.data.data.last_page)
+          this.course = res.data.data
           this.isInit = true
         })
       },
       search: function (search) {
         window._const.search = this.search
         this.$http.get("/course?page=" + this.current_page + "&search=" + this.search).then((res) => {
-          if (res.data.last_page < this.current_page) {
+          if (res.data.data.last_page < this.current_page) {
             // 有数据,才重置页面,可减少重复请求
-            if (res.data.last_page != 0) {
-              this.current_page = res.data.last_page;
+            if (res.data.data.last_page != 0) {
+              this.current_page = res.data.data.last_page;
             }
           }
-          this.slots[0].values = this.getArray(res.data.last_page)
-          this.course = res.data
+          this.slots[0].values = this.getArray(res.data.data.last_page)
+          this.course = res.data.data
           this.isInit = true
         })
       }

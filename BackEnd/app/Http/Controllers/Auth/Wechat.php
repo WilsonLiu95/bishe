@@ -14,8 +14,7 @@ class Wechat extends Controller
         $code = $request->query("code");
         // 请求中需要带上code,否则无法进行微信认证
         if (!isset($code)){
-            $this->error['msg'] = "code不存在";
-            return response()->json($this->error);
+            return $this->toast(0,"code不存在");
         }
 
         $wechat = config()->get("config")["wechat"];

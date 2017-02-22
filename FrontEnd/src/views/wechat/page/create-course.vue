@@ -30,15 +30,18 @@
       createCourse() {
         util.box.confirm('确定创建该课题？并提交审核？').then(action => {
           this.$http.post("schedule/create-course", this.course).then((res) => {
-
+            if (res.data.state == 1) {
+              // 操作成功
+              this.$router.push({path:"./schedule"})
+            }
           })
         },
-         action => {
-          // 取消删除
-          util.toast({
-            message: "已取消删除操作"
-          });
-        }
+          action => {
+            // 取消删除
+            util.toast({
+              message: "已取消删除操作"
+            });
+          }
         )
 
 

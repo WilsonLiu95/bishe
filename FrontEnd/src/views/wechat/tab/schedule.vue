@@ -6,8 +6,16 @@
         <span>{{getStatus(item,index)}}</span>
         </mt-cell>
         <div class="schedule-notify">
-          <span>提示：你可以创建{{max}}个毕业课题，当前还可以创建{{max - course.length}}个课题</span>
-          <mt-button size="large" type="primary" @click="$router.push({name:'create-course'})">创建</mt-button>
+          <div v-if="max - course.length > 0">
+            <span>提示：你可以创建{{max}}个毕业课题，当前还可以创建{{max - course.length}}个课题</span>
+            <mt-button size="large" type="primary" @click="$router.push({name:'create-course'})">创建</mt-button>
+          </div>
+          <div v-if="max - course.length == 0">
+            <span>提示：你可以创建{{max}}个毕业课题，已达到最大课题数</span>
+          </div>
+          <div v-else>
+            <span>提示：您多创建了{{course.length-max}}个课题，请删除！</span>
+          </div>
         </div>
     </div>
     <div v-if="userType == 'student'">
@@ -40,7 +48,7 @@
       getCourse() {
         this.$http.get("schedule").then((res) => {
           this.course = res.data.data.course
-          this.max =   res.data.data.max
+          this.max = res.data.data.max
 
         })
       },
