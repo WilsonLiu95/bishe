@@ -146,7 +146,30 @@ class Detail extends Controller
         ;
         return $this->toast(1,"退选课程成功");
     }
+    public function postCheckCourse(){
+        $course = Model\Course::find(request()->id);
+        if(request()->is_pass){
+            // 通过审核
+            $course->update([
+                    'check_status'=>2,
+                    'check_advice'=>request()->check_advice,
+                    'status'=>2
+                ]
+            );
+        }else{
+            // 通过审核
+            $course->update([
+                    'check_status'=>1,
+                    'check_advice'=>request()->check_advice,
+                    'status'=>1
+                ]
+            );
+        }
+        return $this->toast(1,"审核完成");
 
+
+
+    }
     private function isMaxSelectCourse(){
         $num = $this->getUser()->schedule()->whereIn('status',[1,2])->count();
         $max = $this->getGrade()->max_select_class;
