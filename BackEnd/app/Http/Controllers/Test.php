@@ -19,8 +19,8 @@ class Test extends Controller
 {
     public function getIndex(Request $request)
     {
-        $data = DB::table('student')->paginate(15);
-        return $this->json(1,$data);
+
+        return 111;
     }
 
 

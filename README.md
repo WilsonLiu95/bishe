@@ -14,7 +14,11 @@
 ## 时间
 1. 2016-12-16号开始
 
+grant all privileges on *.* to admin@localhost identified by 'admin' with grant option 
+grant all privileges on *.* to admin@"%" identified by 'admin' with grant option
 
+
+grant all PRIVILEGES on *.* to wilson@'119.29.173.208' identified by 'wilson';
 
 ## 消息系统
 ### 对于老师

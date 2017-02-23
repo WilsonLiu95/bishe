@@ -16,7 +16,7 @@ class Cors
     public function handle($request, Closure $next)
     {
         header('Access-Control-Allow-Headers: Content-Type,Accept');
-        header('Access-Control-Allow-Origin: '. config()->get("config")["basepath"]);
+        header('Access-Control-Allow-Origin: '. env('CORS_ORIGN');
         header('Access-Control-Allow-Credentials:true');
         header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, HEAD');
 

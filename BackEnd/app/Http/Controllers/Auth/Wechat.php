@@ -16,17 +16,16 @@ class Wechat extends Controller
         if (!isset($code)){
             return $this->toast(0,"code不存在");
         }
-
-        $wechat = config()->get("config")["wechat"];
-        $getUrl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" . $wechat['appid'] ."&secret=" .
-            $wechat['secret'] . "&code=$code&grant_type=authorization_code";
+        
+        $getUrl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" . env("WE_APPID") ."&secret=" .
+            env('WE_SECRET') . "&code=$code&grant_type=authorization_code";
         $client = new \GuzzleHttp\Client();
         $res = $client->request('GET', $getUrl);
         $body = \GuzzleHttp\json_decode($res->getBody());
 
 
         $this->redirect['type'] = "url";
-        $this->redirect['url'] = config()->get("config")["basepath"] . "/#/register";
+        $this->redirect['url'] = env('BASE_PATH') . "/#/register"; 
         if (isset($body->errcode)){
             // 说明验证码无效
             $this->redirect['msg'] = "验证码无效";
@@ -44,14 +43,14 @@ class Wechat extends Controller
             session()->put("type",2);
             session()->put("id",$student->get()[0]["id"]);
             $this->redirect["session"] = session()->all();
-            $this->redirect['url'] = config()->get("config")["basepath"] . "/#/student/course";
+            $this->redirect['url'] = env('BASE_PATH') . "/#/student/course";
             return response()->json($this->redirect);
         }
         $teacher = Model\Teacher::where("openid",$body->openid);
         if ($teacher->count()){
             session()->put("type",1);
             session()->put("id",$teacher->get()[0]["id"]);
-            $this->redirect['url'] = config()->get("config")["basepath"] . "/#/teacher/course";
+            $this->redirect['url'] = env('BASE_PATH') . "/#/teacher/course";
             return response()->json($this->redirect);
         }
 

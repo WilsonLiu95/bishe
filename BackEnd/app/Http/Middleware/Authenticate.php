@@ -28,7 +28,7 @@ class Authenticate
                 return $next($request);
             } else {
                 $res_data = array(
-                    "url" =>config()->get("config")["basepath"] . "login",
+                    "url" =>env('BASE_PATH') . "login",
                     "state" => 301,
                     "type" => "url",
                 );
@@ -38,9 +38,8 @@ class Authenticate
         }
 
         if (!session()->has("openid")){
-            $wechat = config()->get("config")["wechat"];
             $res_data = array(
-                "url" =>"https://open.weixin.qq.com/connect/oauth2/authorize?appid=" . $wechat['appid'] . "&redirect_uri=". urlencode(config()->get("config")["basepath"] . '/#/wechat') . "&response_type=code&scope=snsapi_base#wechat_redirect",
+                "url" =>"https://open.weixin.qq.com/connect/oauth2/authorize?appid=" . env('WE_APPID') . "&redirect_uri=". urlencode(env('BASE_PATH') . '/#/wechat') . "&response_type=code&scope=snsapi_base#wechat_redirect",
                 "state" => 301,
                 "type" => "url",
             );
