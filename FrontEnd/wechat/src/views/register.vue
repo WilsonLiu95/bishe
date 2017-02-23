@@ -7,8 +7,6 @@
       <mt-field label="电话" placeholder="请输入电话" v-model="data.phone"></mt-field>
       <mt-button size="large" type="primary" @click="register">确认</mt-button>
     </div>
-
-
   </div>
 </template>
 <script>

@@ -19,7 +19,8 @@ class Wechat extends Controller
         
         $getUrl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" . env("WE_APPID") ."&secret=" .
             env('WE_SECRET') . "&code=$code&grant_type=authorization_code";
-        $client = new \GuzzleHttp\Client();
+        
+        $client = new \GuzzleHttp\Client(['base_uri'=>'https://api.weixin.qq.com','verify' => false]); // 省去SSL的证书，防止某些机子没有SSL证书造成请求失败
         $res = $client->request('GET', $getUrl);
         $body = \GuzzleHttp\json_decode($res->getBody());
 
