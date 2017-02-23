@@ -12,13 +12,14 @@
 */
 
 Route::group(['middleware' => 'auth'], function(){
-
-    Route::controller("/register","Auth\Register");
-    Route::controller("/account","Api\AccountTab");
-    Route::controller("/course","Api\CourseTab");
-    Route::controller("/schedule","Api\ScheduleTab");
-
-    Route::controller("/detail","Api\Detail");
+    Route::group(['prefix' => 'wechat'], function(){
+        // 微信接口 如下
+        Route::controller("/register","Wechat\Register");
+        Route::controller("/account","Wechat\AccountTab");
+        Route::controller("/course","Wechat\CourseTab");
+        Route::controller("/schedule","Wechat\ScheduleTab");
+        Route::controller("/detail","Wechat\Detail");
+    });
 
     Route::group(['prefix' => 'admin'], function(){
         // 管理员的接口走这里
@@ -26,8 +27,9 @@ Route::group(['middleware' => 'auth'], function(){
     });
 });
 
+Route::controller("admin/login","Admin\Login"); // 管理端登录
+
+Route::controller("/wechat","Wechat\Wechat"); // 微信授权
+
+
 Route::controller("/test","Test");
-
-Route::controller("/login","Auth\Login");
-Route::controller("/wechat","Auth\Wechat");
-

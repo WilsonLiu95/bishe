@@ -23,6 +23,8 @@ class Authenticate
     public function handle($request, Closure $next)
     {
         // 判断是否微信授权过
+
+        // 如果是PC管理端，第一段URL需要为admin
         if(request()->segment(1) =="admin"){
             if(session()->get("isLogin")){
                 return $next($request);
@@ -34,7 +36,6 @@ class Authenticate
                 );
                 return response()->json($res_data);
             }
-
         }
 
         if (!session()->has("openid")){

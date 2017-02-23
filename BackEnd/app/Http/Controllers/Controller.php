@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 abstract class Controller extends BaseController
 {
     use DispatchesJobs, ValidatesRequests;
-    public $error, $redirect,$success;
 
     public function __construct(Request $request)
     {
