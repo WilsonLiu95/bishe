@@ -24,7 +24,6 @@ class Wechat extends Controller
         $res = $client->request('GET', $getUrl);
         $body = \GuzzleHttp\json_decode($res->getBody());
 
-
         $this->redirect['type'] = "url";
         $this->redirect['url'] = env('BASE_PATH') . "/#/register"; 
         if (isset($body->errcode)){
