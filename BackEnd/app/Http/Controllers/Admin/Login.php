@@ -10,18 +10,18 @@ use App\Http\Controllers\Controller;
 
 class Login extends Controller
 {
-    public function postIndex()
-    {
-        $account = request()->input("account");
-        $password = request()->input("password");
-        $admin = Admin::where("account",$account)->where("password",$password);
-        if($admin->count()){
-            session()->flush();
-            session()->set("isLogin",true);
-            session()->set("type",0);
-            $this->redirect['url'] = "admin";
-           return response()->json($this->redirect);
-        }
-        return $this->toast(0,"账号密码错误,请重试");
-    }
+	public function postIndex()
+	    {
+		$account = request()->input("account");
+		$password = request()->input("password");
+		$admin = Admin::where("account",$account)->where("password",$password);
+		if($admin->count()){
+			session()->flush();
+			session()->set("isLogin",true);
+			session()->set("type",0);
+			$this->redirect['url'] = "admin";
+			return response()->json($this->redirect);
+		}
+		return $this->toast(0,"账号密码错误,请重试");
+	}
 }

@@ -37,11 +37,6 @@ class CourseTab extends Controller
         }
         $result['data'] = $res;
 
-//        array_map(function($item){
-//            return $this->fullCourse($item);
-//        },$result['data']);
-
-
         return $this->json(1,$result);
     }
     private function getStudentCourse($search){

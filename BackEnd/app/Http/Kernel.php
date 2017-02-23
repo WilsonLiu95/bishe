@@ -29,7 +29,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth' => \App\Http\Middleware\Authenticate::class,
-
+        'AuthOfWechat' => \App\Http\Middleware\AuthOfWechat::class,
+        'AuthOfAdmin'=>\App\Http\Middleware\AuthOfAdmin::class,
     ];
 }

@@ -5,8 +5,8 @@
 4. `php artisan  key:generate` 重置`.env`中的密钥
 5. 检测并改正`.env`中相应的数据库配置及其他配置 
 6. `php artisan db:seed` 重置数据库
-7. `php artisan serve` 启动服务器，访问 `http://localhost:8000/test` 看是否启动成功
-
+7. `php artisan serve --host=127.0.0.1` 启动服务器，访问 `http://localhost:8000/test` 看是否启动成功
+8. 本地配置host， 将`bishe.wilsonliu.cn`映射到`127.0.0.1` 
 
 ## 记录出现过的问题
 ###  小问题
