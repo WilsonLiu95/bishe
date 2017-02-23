@@ -35,10 +35,9 @@
     },
     methods: {
       login() {
-        var that = this;
-        this.$http.post("login", this.$data.data).then(function (res) {
+        this.$http.post("login", this.$data.data).then((res)=> {
           if (!res.data.state) {
-            that.$message.error(res.data.msg);
+            this.$message.error(res.data.msg);
           }
         }).catch(function (error) {
           console.log(error);

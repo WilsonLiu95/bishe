@@ -14,37 +14,24 @@ import App from './App'
 Vue.use(VueRouter)
 Vue.use(ElementUI)
 
+import { Loading,Message } from 'element-ui';
 //开启debug模式
 Vue.config.debug = true;
 
 // ======================配置路由===============================
 var router = new VueRouter(routerConfig)
 
-// ======================配置mock数据和全局常量===============================
-window._const = {
-
-}
-window.util = {
-  getUserType: function () {
-    var hashArr = location.hash.split("/")
-    return ["student", "teacher"].indexOf(hashArr[1]) == -1 ? "" : hashArr[1]
-  },
-  hashArr: function (num) {
-    var hashArr = location.hash.split("/")
-    return hashArr[num]
-  },
-}
-
 
 // ======================配置HTTP请求===============================
-
+var loading
 // Add a request interceptor
 axios.interceptors.request.use(function (config) {
   // Do something before request is sent
-  Indicator.open({
-    text: '请求中...',
-    spinnerType: 'double-bounce'
-  });
+  loading = Loading.service({
+    fullscreen: true,
+    text:"请求中..."
+  })
+
   return config;
 }, function (error) {
   // Do something with request error
@@ -56,10 +43,10 @@ axios.interceptors.request.use(function (config) {
 axios.interceptors.response.use(function (response) {
   if (typeof (response.data.msg) == "string") {
     // 如果msg存在，且不为空，则弹出
-    // util.toast({
-    //   message: response.data.msg,
-    //   duration: 2000
-    //  })
+    Message({
+      Message:response.data.msg,
+      type: response.data.state == 0 ? "error" : "success" // 状态为0则为错误，其他都显示为成功
+    })
   }
 
   if (response.data.state == 301) {
@@ -69,19 +56,20 @@ axios.interceptors.response.use(function (response) {
       router.push(response.data.url)
     }
   }
-  // Do something with response data
-  Indicator.close();
+
+  loading.close();
+
   return response;
 }, function (error) {
   // Do something with response error
   return Promise.reject(error);
 });
 
-axios.defaults.baseURL = (process.env.NODE_ENV !== 'production' ? config.dev.httpUrl : config.build.httpUrl);
+axios.defaults.baseURL = (process.env.NODE_ENV !== 'production' ? config.dev.httpUrl : config.build.httpUrl); // 根据环境不同，配置不同的ajax请求前缀
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = true; // 跨域相关
 
-Vue.prototype.$http = axios
+Vue.prototype.$http = axios // 将axios绑定到vue上
 /* eslint-disable no-new */
 new Vue({
   router: router,
