@@ -36,7 +36,7 @@
           classExample.title = "退选通知" + i
           classExample.time = "2015-" + (Math.random() * 12).toFixed(0) + "-" + i
           classExample.status = Math.random() > 0.5;
-          message.totalMsg.push(classExample)
+          message.msgArr.push(classExample)
         }
         this.msg = message
       },
