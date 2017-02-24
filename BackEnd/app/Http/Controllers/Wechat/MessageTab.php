@@ -17,7 +17,7 @@ class MessageTab extends Controller
         // 必须首先鉴定消息是否属于该用户
         $message =$this->getMessage()->where("id",[request()->id]);
         if($message->exists()){
-            $message->update(['send_status'=>1]);
+            $message->update(['is_read'=>1]);
             return $this->json(1);
 
         }else{

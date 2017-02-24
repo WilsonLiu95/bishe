@@ -16,10 +16,10 @@ class CreateMessageTable extends Migration
             $table->increments('id');
             $table->tinyInteger('from_type');
             $table->tinyInteger('send_type');
-            $table->tinyInteger('status')->comment("消息状态,0:未读,1:已读");
-                        
+            $table->boolean('is_read')->comment("布尔值,是否已读");
             $table->integer('from_id');
             $table->integer('send_id');
+            
             $table->string('title', 32);
             $table->string('content', 256);
             $table->timestamps();
