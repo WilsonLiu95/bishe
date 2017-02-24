@@ -19,11 +19,14 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  .inline-filed-btn {
-    margin-top: 7px;
+  html,
+  body,
+  #app{
+    height: 100%;
+    margin: 0;
   }
 
-  .group-btn-right {
-
+  .inline-filed-btn {
+    margin-top: 7px;
   }
 </style>

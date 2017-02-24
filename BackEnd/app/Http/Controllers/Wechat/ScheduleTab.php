@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Wechat;
 
 
 use App\Model\Course;
+use App\Model\Message;
 use App\Model\Schedule;
 use App\Model\Student;
+use App\Model\Teacher;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -64,6 +66,19 @@ class ScheduleTab extends Controller
             "major_id"=>$user->major_id,
             "status"=> 1,
         ]);
+        // 课程修改后,发送信息给管理员
+        Teacher::where("major_id",$user->major_id)
+            ->where('is_admin',1)
+            ->get()->each(function($item) use ($user){
+                Message::create([
+                    'title' => "新课题待审核通知",
+                    'send_type' => 2,
+                    'send_id' => $item->id,
+                    'from_id' => $user->id,
+                    'from_type' => 2,
+                    'content' => $this->getUser()->name ."老师的新创建了《". request()->title ."》课题,请您审核。"
+                ]);
+            });
 
         return $this->toast($isCreate? 1:0, $isCreate?"创建成功":"创建失败");
     }

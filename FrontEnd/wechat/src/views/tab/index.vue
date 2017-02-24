@@ -1,7 +1,7 @@
 <template>
   <div class="index-page">
     <!--路由-->
-    <router-view class="test">
+    <router-view class="second-router">
     </router-view>
     <!--四栏tab-->
     <mt-tabbar v-model="selected" :fixed=true>
@@ -59,7 +59,10 @@
 </script>
 
 <style scoped>
-  .test {
+  .second-router{
+    /*height: 100%;*/
+  }
+  .tab-page-container {
     padding-bottom: 50px;
   }
   .msg-notify {

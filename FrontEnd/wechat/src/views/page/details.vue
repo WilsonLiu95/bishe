@@ -1,13 +1,12 @@
 <template>
   <div class="details-page">
     <!--第一部分 start 基本课程信息-->
-    <div class="part-one course-form">
+    <div class="detail-section">
       <mt-field label="课程" placeholder="课程名称" v-model="course.title" :readonly="!course.isowner || isDiabled"></mt-field>
       <mt-field label="导师" placeholder="导师姓名" v-model="course.teacher" readonly>
         <mt-button @click="jumpTeacherInfo" size="small" class="inline-filed-btn">查看</mt-button>
       </mt-field>
       <mt-field label="电话" placeholder="导师电话" v-model="course.teacher_phone" readonly>
-
         <mt-button class="inline-filed-btn" size="small" @click="concact">
           联系
         </mt-button>
@@ -16,7 +15,7 @@
     </div>
     <!--第一部分 end 基本课程信息-->
     <!--第二部分 start 审核结果 与 当前进度-->
-    <div v-if="course.isowner || course.isadmin" class="part-two">
+    <div v-if="course.isowner || course.isadmin" class="detail-section">
       <!--管理员和课题的主人都可以看到审核情况-->
       <div v-if="!isCheckModify">
         <mt-cell title="审核进度">{{["待审核","未通过审核","已通过"][course.check_status]}}</mt-cell>
@@ -28,7 +27,7 @@
         </mt-cell>
         <mt-field label="审核意见" placeholder="有待完善" type="textarea" rows="4" v-if="isCheckModify && course.isadmin" v-model="check.check_advice"></mt-field>
       </div>
-      <div v-if="course.status ==2 || course.status ==3">
+      <div class="div-schedule" v-if="course.status ==2 || course.status ==3">
         <mt-cell title="进度" :value="course.status ==2?('互选中,已有' + course.student_num+'人选定该课程'): '完成互选'"></mt-cell>
         <mt-cell title="名单" :label="course.student_list">
           <mt-button v-if="course.isowner && course.student_num " @click="jumpStudentList">
@@ -41,7 +40,7 @@
     <!--第二部分 end 审核结果-->
 
     <!--第三部分 start根据用户以及课程的status展示不同的部分-->
-    <div class="part-three">
+    <div class="detail-section">
       <!--已删除-->
       <div v-if="course.status == 0">
         <mt-button size="large" type="default">课程已被删除</mt-button>
@@ -67,7 +66,7 @@
     </div>
     <!--第三部分 end 根据用户以及课程的status展示不同的部分-->
     <!--第四部分 start 操作课程的按键组 如果是课程主人-->
-    <div class="part-four group-btn-right" v-if="course.isowner && course.status != 0">
+    <div class="detail-section group-btn-right" v-if="course.isowner && course.status != 0">
       <mt-button type="primary" v-if="isDiabled" @click="modifyCourse" size="normal">修改</mt-button>
       <mt-button type="primary" v-if="!isDiabled" @click="saveCourse" size="normal">保存</mt-button>
 
@@ -75,10 +74,10 @@
       <mt-button v-if="!isCheckModify && course.status == 1 &&  course.isowner && course.isadmin" @click="isCheckModify=true" size="normal"
         type="primary">开始审核</mt-button>
         <mt-button v-if="isCheckModify && course.status == 1 && course.isowner && course.isadmin" @click="submitCheck" size="normal"
-          type="primary">提交审核</mt-button>
+          type="danger">提交审核</mt-button>
 
-          <mt-button type="primary" v-if="course.student_num && course.status == 2" @click="jumpSelectStudent" size="normal">选定学生</mt-button>
-          <mt-button type="danger" v-if="course.status == 3" size="normal" @click="deleteStudent">退选已互选的学生</mt-button>
+          <mt-button type="primary" v-if="course.student_num && course.status == 2" @click="jumpSelectStudent" size="normal">选定</mt-button>
+          <mt-button type="danger" v-if="course.status == 3" size="normal" @click="deleteStudent">退选</mt-button>
           <mt-button type="danger" size="normal" @click="deleteCourse">删除</mt-button>
     </div>
   </div>
@@ -219,6 +218,9 @@
   };
 
 </script>
-<style>
+<style scoped>
 
+  .detail-section, .div-schedule {
+    margin: 5px 0 0 0;
+  }
 </style>

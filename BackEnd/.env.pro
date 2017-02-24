@@ -25,4 +25,3 @@ BASE_DOMAIN=bishe.wilsonliu.cn
 CORS_ORIGN=bishe.wilsonliu.cn
 WE_APPID=wx21978563925b71f6 
 WE_SECRET=4dc0059caf977240e6f92b011f2d87da
-unix_socket=

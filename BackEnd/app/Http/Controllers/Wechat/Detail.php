@@ -53,6 +53,9 @@ class Detail extends Controller
             if($sc->status == 0){
                 // 2代表选定后退选
                 $sc->update(['status'=>1]); // 更新字段为1
+                // 同时创建一则通知
+                $is_send_msg = 1;
+
             }else if($sc->status == 1){
                 return $this->toast(0,"您已经选定了该门课程,无需再选");
             }
@@ -64,7 +67,22 @@ class Detail extends Controller
             // 用户尚未选定过该课程
             $sc->status = 1;
             $sc->save(); // 新建schedule
+            // 同时创建一则通知
+            $is_send_msg = 1;
         }
+
+        if($is_send_msg){
+            // 选定成功则发送消息
+            Model\Message::create([
+                'title' => "课程被选定",
+                'send_type' => 1,
+                'send_id' => $course->teacher_id,
+                'from_id' => $this->getSessionInfo('id'),
+                'from_type' => 2,
+                'content' => "您的《". $course->title ."》已被". $this->getUser()->name . '选定。'
+            ]);
+        }
+
         return $this->toast(1,"选定成功,请主动联系老师,完成互选");
 
     }
@@ -83,6 +101,22 @@ class Detail extends Controller
         ]);
         if($course->status==1 && $course->check_status ==1){ // 未通过审核的课程修改后,即重新回到待审核
             $course->update(["check_status"=>0]);
+
+            // 课程修改后,发送信息给管理员
+           Model\Teacher::where("major_id",$course->major_id)
+                ->where('is_admin',1)
+                ->get()->each(function($item) use ($course){
+                   Model\Message::create([
+                       'title' => "审核通知",
+                       'send_type' => 1,
+                       'send_id' => $course->teacher_id,
+                       'from_id' => $item->id,
+                       'from_type' => 1,
+                       'content' => $this->getUser()->name ."老师的《". $course->title ."》已经重新修改,请您再次审核。"
+            ]);
+               });
+
+
         }
         return $this->toast(1,"修改成功");
     }
@@ -98,9 +132,17 @@ class Detail extends Controller
             // 接着退选选中该门课的学生
             $schedule_list = $course->schedule()
                 ->where("status",1)->get();
-            $schedule_list->each(function ($item) {
+            $schedule_list->each(function ($item) use($course){
                 // 将所有学生退选
                 // message 向所有学生发送消息
+                Model\Message::create([
+                    'title' => "退选通知",
+                    'send_type' => 2,
+                    'send_id' => $item->student_id,
+                    'from_id' => $course->teacher_id,
+                    'from_type' => 1,
+                    'content' =>  "《". $course->title ."》课题已被". $course->teacher->name ."老师删除,已为您自动退选。"
+                ]);
                 $item->update(['status'=>0]);
             });
         }
@@ -120,30 +162,90 @@ class Detail extends Controller
         $course = Model\Course::find(request()->id);
         $course->update(['status'=>3]);
 
-        $course->schedule()
+        $other_select_student = $course->schedule()
             ->where("student_id","!=",request()->student_id)
-            ->update(["status"=>0]); // 首先将其他所有人置为0,再将选中的个体置为2
-        $course->schedule()
-            ->where("student_id",request()->student_id)
-            ->update(["status"=>2]);
+            ->where("status",1); // 选定该门课的学生
+        $select  = $course->schedule()
+            ->where("student_id",request()->student_id)->first();
+
+
+        $other_select_student->get()->each(
+            function($item) use ($course,$select){
+                // 向其他互选中的学生发送信息
+                Model\Message::create([
+                    'title' => "退选通知",
+                    'send_type' => 2,
+                    'send_id' => $item->student_id,
+                    'from_id' => $course->teacher_id,
+                    'from_type' => 1,
+                    'content' =>  "《". $course->title ."》互选完成,". $course->teacher->name ."已与" . $select->student->name . '完成互选,已帮您自动退选。'
+                ]);
+            }
+        );
+        $other_select_student->update(["status"=>0]); // 首先将其他所有人置为0,再将选中的个体置为2
+
+        Model\Message::create([
+            'title' => "互选成功通知",
+            'send_type' => 2,
+            'send_id' => $select->student_id,
+            'from_id' => $course->teacher_id,
+            'from_type' => 1,
+            'content' =>  "《". $course->title ."》互选完成,". $course->teacher->name ."已与您完成互选"
+        ]);
+        $select->update(["status"=>2]);
+
+
+        $select_other_sc = $select->student->schedule()->where('status',1);
+
+        $select_other_sc->get()->each(function($sc)use($course){
+            Model\Message::create([
+                'title' => "退选通知",
+                'send_type' => 1,
+                'send_id' => $sc->course->teacher_id,
+                'from_id' => $sc->student_id,
+                'from_type' => 2,
+                'content' =>  $sc->student->name . "已于其他老师达成互选,系统已为其自动退选您的" . $sc->course->title
+            ]);
+        });
+        $select_other_sc->update(['status'=>0]); // 退选其他课程,并且发送消息
 
         return $this->toast(1,"已完成互选，马上为您自动跳转");
     }
     public function getDeleteStudent(){
         $course = Model\Course::find(request()->id);
         $course->update(["status"=>2]);
-        $course->schedule()
-            ->where("status",2)
-            ->update(['status'=>0]); // 老师方面退选学生,学生回到退选状态。
+        $sc = $course->schedule()
+            ->where("status",2)->first();
+        Model\Message::create([
+            'title' => "退选通知",
+            'send_type' => 2,
+            'send_id' => $sc->student_id,
+            'from_id' => $course->teacher_id,
+            'from_type' => 1,
+            'content' => $course->teacher->name . "老师主动将《".$course->title ."》为您退选,请您尽快选择其他课程。"
+        ]);
+        $sc->update(['status'=>0]); // 老师方面退选学生,学生回到退选状态。
+
         return $this->toast(1,"退选学生成功");
     }
     public function getCancelSelectCourse(){
         $student_id = $this->getSessionInfo("id");
-        Model\Course::find(request()->id)
-        ->schedule()
+        $sc = Model\Course::find(request()->id)
+            ->schedule()
             ->where("student_id",$student_id)
-        ->first()->update(['status'=>0])
-        ;
+            ->first();
+        $sc->update(['status'=>0]);
+
+
+        Model\Message::create([
+            'title' => "退选通知",
+            'send_type' => 1,
+            'send_id' => $sc->course->teacher_id,
+            'from_id' => $sc->student_id,
+            'from_type' => 2,
+            'content' =>  $sc->student->name . "已主动退选您的《" . $sc->course->title . "》课程。"
+        ]);
+
         return $this->toast(1,"退选课程成功");
     }
     public function postCheckCourse(){
@@ -165,11 +267,20 @@ class Detail extends Controller
                 ]
             );
         }
+        Model\Message::create([
+            'title' => "审核通知",
+            'send_type' => 2,
+            'send_id' => $course->teacher_id,
+            'from_id' => $this->getUser()->id,
+            'from_type' => 2,
+            'content' =>  "您的《" . $course->title . "》课程" . (request()->is_pass ? "通过" : "未通过") . "审核。 审核意见如下: ".
+                request()->check_advice
+        ]);
+
         return $this->toast(1,"审核完成");
-
-
-
     }
+
+
     private function isMaxSelectCourse(){
         $num = $this->getUser()->schedule()->whereIn('status',[1,2])->count();
         $max = $this->getGrade()->max_select_class;

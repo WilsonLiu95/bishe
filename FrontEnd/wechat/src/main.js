@@ -44,6 +44,7 @@ window.util = {
 
 // Add a request interceptor
 axios.interceptors.request.use(function (config) {
+
   // Do something before request is sent
   Indicator.open({
     text: '请求中...',
@@ -63,7 +64,7 @@ axios.interceptors.response.use(function (response) {
     util.toast({
       message: response.data.msg,
       duration: 2000
-     })
+    })
   }
 
   if (response.data.state == 301) {
@@ -85,6 +86,10 @@ axios.defaults.baseURL = (process.env.NODE_ENV !== 'production' ? config.dev.htt
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.defaults.withCredentials = true;
 
+// 调试需要
+axios.defaults.params = {
+  XDEBUG_SESSION_START: "PHPSTORM"
+}
 Vue.prototype.$http = axios
 /* eslint-disable no-new */
 new Vue({
