@@ -74,7 +74,8 @@ $factory->define(\App\Model\Message::class, function ($faker) {
         'send_type'=> $faker->shuffle([0,1,2])[0],
         'from_id' => $faker->numberBetween($min = 1, $max = 100),
         'send_id' => $faker->numberBetween($min = 1, $max = 100),
-        'send_status' => $faker->shuffle([0,1,2])[0],
+        'status' => $faker->shuffle([0,1])[0],
+        'title'=>$faker->word,
         'content' => $faker->text
     ];
 });

@@ -1,0 +1,36 @@
+<?php
+
+namespace App\Http\Controllers\Wechat;
+
+use App\Model\Message;
+use Illuminate\Http\Request;
+
+use App\Http\Requests;
+use App\Http\Controllers\Controller;
+
+class MessageTab extends Controller
+{
+    public function getIndex(){
+        return $this->json(1,$this->getMessage()->get());
+    }
+    public function getReadOneMsg(){
+        // 必须首先鉴定消息是否属于该用户
+        $message =$this->getMessage()->where("id",[request()->id]);
+        if($message->exists()){
+            $message->update(['send_status'=>1]);
+            return $this->json(1);
+
+        }else{
+            return $this->toast(0,"数据错误");
+        }
+
+//        return $this->toast(1,"已读",$message);
+
+    }
+    private function  getMessage(){
+        // 统一获取message信息,以保证排序等相同
+        $message = Message::where("send_id",$this->getSessionInfo("id"))
+            ->orderBy("created_at","ASC");
+        return $message;
+}
+}

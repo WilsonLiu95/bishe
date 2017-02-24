@@ -75,7 +75,7 @@ abstract class Controller extends BaseController
 		            ->where('status',1) // 		目前生效的年级
 		            ->first();
 	}
-	public function json($state=1,$data){
+	public function json($state=1,$data=array()){
 		$res = array(
 		            "state"=>$state,
 		            "data"=>$data

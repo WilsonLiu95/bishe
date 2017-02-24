@@ -8,7 +8,7 @@ module.exports = {
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
     assetsPublicPath: './',
-    httpUrl: 'http://bishe.wilsonliu.cn/qualityOfGraduateDesigning/BackEnd/public/index.php/admin/',
+    httpUrl: 'http://bishe.wilsonliu.cn/BackEnd/public/index.php/admin/',
     productionSourceMap: true,
     // Gzip off by default as many popular static hosts such as
     // Surge or Netlify already gzip all static assets for you.
@@ -22,7 +22,7 @@ module.exports = {
     port: 8080,
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    httpUrl: 'http://bishe.wilsonliu.cn:8000/admin/',
+    httpUrl: 'http://dev.wilsonliu.cn:8000/admin/',
     proxyTable: {},
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README

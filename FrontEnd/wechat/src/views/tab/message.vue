@@ -1,8 +1,14 @@
 <template>
   <div class="tab-page-container">
-    <mt-cell v-for="item in message" :title="item.title" :label="item.content.substr(0,20)" @click.native="getMsgDeatils(n-1)">
-      <span :class="{hasRead: !item.status }">{{item.time}}</span>
-    </mt-cell>
+    <div v-if="message.length">
+      <mt-cell v-for="(item,index) in message" :title="String(item.from_id)" :label="item.content.substr(0,20)" @click.native="getMsgDeatils(item,index)">
+        <span :class="{hasRead: !item.send_status }">{{item.created_at}}</span>
+      </mt-cell>
+    </div>
+    <div v-else>
+      <mt-cell title="提示">暂无消息</mt-cell>
+    </div>
+
   </div>
 
 </template>
@@ -14,7 +20,7 @@
     data() {
       return {
         userType: window.util.getUserType(),
-        message:[]
+        message: []
       }
     },
     created() {
@@ -22,25 +28,20 @@
     },
     methods: {
       getMsg() {
-        var message = []
-        for (var i = 0; i < 5; i++) {
-
-          var classExample = {
-            title: "退选通知",
-            time: "2015-05-05",
-            content: "你选择的《进击的巨人》课程已互选结束，很遗憾您并未成功互选，系统已自动帮您退选。",
-            status: 0,
-          }
-          classExample.title = "退选通知" + i
-          classExample.time = "2015-" + (Math.random() * 12).toFixed(0) + "-" + i
-          classExample.status = Math.random() > 0.5;
-          message.push(classExample)
-        }
-        this.message = message
+        this.$http.get("/message").then((res) => {
+          this.message = res.data.data
+        })
       },
-      getMsgDeatils(index) {
-        MessageBox.alert(this.msg.msgArr[index].content, this.msg.msgArr[index].title);
-        this.msg.msgArr[index].status = 1
+      getMsgDeatils(item,index) {
+        MessageBox.alert(item.content, item.from_id);
+
+        this.$http.get("/message/read-one-msg?id="+ item.id).then(res => {
+          if(res.data.state){
+            //  阅读成功 else 没有阅读成功，可能改信息并不属于该用户
+            item.send_status=1
+          }
+        })
+
       },
 
     },
