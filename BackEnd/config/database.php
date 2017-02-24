@@ -62,7 +62,7 @@ return [
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
             'strict'    => false,
-            'unix_socket' => env('unix_socket','/Applications/MAMP/tmp/mysql/mysql.sock'), // 每天机器都可能不一致，指定会造成无法连接。 坑了2次
+            'unix_socket' => env('unix_socket',''), // 每天机器都可能不一致，指定会造成无法连接。 坑了2次
         ],
 
         'pgsql' => [

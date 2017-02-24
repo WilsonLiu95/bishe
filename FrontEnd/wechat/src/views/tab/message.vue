@@ -1,8 +1,8 @@
 <template>
   <div class="tab-page-container">
     <div v-if="message.length">
-      <mt-cell v-for="(item,index) in message" :title="String(item.from_id)" :label="item.content.substr(0,20)" @click.native="getMsgDeatils(item,index)">
-        <span :class="{hasRead: !item.send_status }">{{item.created_at}}</span>
+      <mt-cell v-for="(item,index) in message" :title="item.title" :label="item.content.substr(0,20)" @click.native="getMsgDeatils(item,index)">
+        <span :class="{hasRead: !item.is_read }">{{item.created_at}}</span>
       </mt-cell>
     </div>
     <div v-else>
@@ -33,12 +33,11 @@
         })
       },
       getMsgDeatils(item,index) {
-        MessageBox.alert(item.content, item.from_id);
-
+        MessageBox.alert(item.content, item.title);
         this.$http.get("/message/read-one-msg?id="+ item.id).then(res => {
           if(res.data.state){
             //  阅读成功 else 没有阅读成功，可能改信息并不属于该用户
-            item.send_status=1
+            item.is_read=1
           }
         })
 
