@@ -35,8 +35,12 @@ class Detail extends Controller
     }
 
     public function getSelectCourse(){
+        $student_id = $this->getSessionInfo("id");
         if($this->isMaxSelectCourse()){
             return $this->toast(0,"已达到最大课程数,不可再选定课程");
+        }
+        if($this->isHasDone($student_id)){
+            return $this->toast(0,"您已完成互选,不可再选定其他课程");
         }
         $id =  request()->input("id");
         $course = Model\Course::find($id);
@@ -47,7 +51,7 @@ class Detail extends Controller
         // 可以被选定,再校验该用户是否已经选定
         $sc = Model\Schedule::firstOrNew([
             "course_id" => $id,
-            "student_id" => $this->getSessionInfo("id"),
+            "student_id" => $student_id,
         ]);
         if ($sc->exists){
             if($sc->status == 0){
@@ -77,7 +81,7 @@ class Detail extends Controller
                 'title' => "课程被选定",
                 'send_type' => 1,
                 'send_id' => $course->teacher_id,
-                'from_id' => $this->getSessionInfo('id'),
+                'from_id' => $student_id,
                 'from_type' => 2,
                 'content' => "您的《". $course->title ."》已被". $this->getUser()->name . '选定。'
             ]);
@@ -157,8 +161,14 @@ class Detail extends Controller
     }
 
 
-    public function getSelectStudent(){
-    // 选中学生
+    public function getSelectStudent(){// 选中学生
+
+        // 先校验学生是否还可以被选中
+
+        if($this->isHasDone(request()->student_id)){
+            return $this->toast(0,"学生已与其他人完成互选,不可再与您达成互选,系统将自动退订该学生");
+
+        }
         $course = Model\Course::find(request()->id);
         $course->update(['status'=>3]);
 
@@ -290,6 +300,14 @@ class Detail extends Controller
     private function isOwner($course_id){
         $course = Model\Course::find($course_id);
         return $course->teacher_id == $this->getSessionInfo("id");
+    }
+    private function isHasDone($student_id){
+        // 首先校验数据,确保无误
+        $this->checkOneStudent($student_id);
+        // 查看学生是否有在"完成互选"的进度
+        return Model\Schedule::where("student_id",$student_id)
+            ->where("status",2)->exists(); // 2为完成互选
+
     }
     private function isCourseAdmin($course_id){
         $course = Model\Course::find($course_id);

@@ -14,7 +14,7 @@
       <mt-tab-item id="message">
         <img slot="icon" :src="assets.message">
         <span>消息</span>
-        <mt-badge class="msg-notify" size="normal" type="error">2</mt-badge>
+        <mt-badge v-if="unreadMsgNum" class="msg-notify" size="normal" type="error">{{unreadMsgNum}}</mt-badge>
       </mt-tab-item>
       <mt-tab-item id="account">
         <img slot="icon" :src="assets.account"> <span>我的</span>
@@ -24,19 +24,20 @@
 </template>
 
 <script>
-
   export default {
     name: "index",
     data() {
       return {
         // 引入资源
         assets: {
-          class:require("assets/class.svg"),
+          class: require("assets/class.svg"),
           schedule: require("assets/schedule.svg"),
           message: require("assets/message.svg"),
           account: require("assets/account.svg"),
         },
         selected: "course", // 默认课程页面
+        isGetNotify: false,
+        unreadMsgNum: 1,
       }
     },
     watch: {
@@ -48,10 +49,17 @@
       // 创建的时候监听路由变化，以编程方式响应跳转到相应的页面
       var hashArr = location.hash.split("/")
       this.selected = hashArr[2]
+      this.getUnreadMsgNum()
     },
     computed: {
     },
     methods: {
+      getUnreadMsgNum(){
+
+        this.$http.get('message/unread-number').then((res)=>{
+          this.unreadMsgNum = res.data.data
+        })
+      }
     },
 
   };
@@ -59,18 +67,12 @@
 </script>
 
 <style scoped>
-  .second-router{
-    /*height: 100%;*/
-  }
   .tab-page-container {
     padding-bottom: 50px;
   }
+
   .msg-notify {
     position: absolute;
     top: 5px;
-    left: 55%;
-  }
-  .message {
-    position: relative;
   }
 </style>

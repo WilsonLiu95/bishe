@@ -12,7 +12,7 @@
 
 </script>
 
-<style>
+<style scoped>
   #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -21,12 +21,8 @@
 
   html,
   body,
-  #app{
+  #app {
     height: 100%;
-    margin: 0;
-  }
-
-  .inline-filed-btn {
-    margin-top: 7px;
+    /*margin: 0;*/
   }
 </style>

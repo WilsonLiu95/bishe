@@ -6,19 +6,15 @@
         <mt-cell v-for="(item,index) in message" :title="item.title" :label="item.content.substr(0,20)" @click.native="getMsgDeatils(item,index)">
           <span :class="{hasRead: !item.is_read }">{{item.created_at}}</span>
         </mt-cell>
-
-        <a v-if="!allLoaded" class='msg-tips test'>
+        <a v-if="!allLoaded" class='msg-tips'>
           <div v-if="isloading">
-            <mt-spinner type="double-bounce">刷新</mt-spinner>
-          </div>
-          <div v-else>
-            <span>下拉刷新</span>
+            <mt-spinner class="spinner" type="fading-circle"></mt-spinner>
+            <span>刷新中...</span>
           </div>
         </a>
-        <a v-if="allLoaded" class='msg-tips test'>
+        <a v-if="allLoaded" class='msg-tips'>
           <span>已全部加载完成</span>
-
-        </div>
+      </div>
       </a>
 
     </div>
@@ -26,8 +22,6 @@
   </div>
 </template>
 <script>
-  import { MessageBox } from 'mint-ui';
-
   export default {
     name: "message-tab",
     data() {
@@ -73,10 +67,11 @@
         })
       },
       getMsgDeatils(item, index) {
-        MessageBox.alert(item.content, item.title);
+        util.box.alert(item.content, item.title);
         this.$http.get("/message/read-one-msg?id=" + item.id).then(res => {
           if (res.data.state) {
             //  阅读成功 else 没有阅读成功，可能改信息并不属于该用户
+            this.$parent.unreadMsgNum--
             item.is_read = 1
           }
         })
@@ -94,12 +89,15 @@
     color: red
   }
 
-  .test {
+  .msg-tips {
+    text-align: center;
     min-height: 120px;
     display: block;
   }
 
-  .msg-tips {
-    text-align: center;
+
+  .spinner div {
+    display: block;
+    margin: 0 auto;
   }
 </style>

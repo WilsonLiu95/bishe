@@ -2,35 +2,37 @@
   <div class="details-page">
     <!--第一部分 start 基本课程信息-->
     <div class="detail-section">
-      <mt-field label="课程" placeholder="课程名称" v-model="course.title" :readonly="!course.isowner || isDiabled"></mt-field>
-      <mt-field label="导师" placeholder="导师姓名" v-model="course.teacher" readonly>
+      <mt-field label="课程" placeholder="课程名称" v-model="course.title" :disabled="!course.isowner || isDiabled"></mt-field>
+      <mt-field label="导师" placeholder="导师姓名" v-model="course.teacher" disabled>
         <mt-button @click="jumpTeacherInfo" size="small" class="inline-filed-btn">查看</mt-button>
       </mt-field>
-      <mt-field label="电话" placeholder="导师电话" v-model="course.teacher_phone" readonly>
+      <mt-field label="电话" placeholder="导师电话" v-model="course.teacher_phone" disabled>
         <mt-button class="inline-filed-btn" size="small" @click="concact">
           联系
         </mt-button>
       </mt-field>
-      <mt-field label="详情" placeholder="课题详情" type="textarea" rows="8" v-model="course.details" :readonly="!course.isowner || isDiabled"></mt-field>
+      <mt-field label="详情" placeholder="课题详情" type="textarea" rows="8" v-model="course.details" :disabled="!course.isowner || isDiabled"></mt-field>
     </div>
     <!--第一部分 end 基本课程信息-->
     <!--第二部分 start 审核结果 与 当前进度-->
     <div v-if="course.isowner || course.isadmin" class="detail-section">
       <!--管理员和课题的主人都可以看到审核情况-->
-      <div v-if="!isCheckModify">
+      <!--不允许修改-->
+      <div v-if="isDiabledCheck">
         <mt-cell title="审核进度">{{["待审核","未通过审核","已通过"][course.check_status]}}</mt-cell>
-        <mt-field label="审核意见" placeholder="有待完善" type="textarea" rows="4" v-model="course.check_advice" readonly></mt-field>
+        <mt-field label="审核意见" placeholder="有待完善" type="textarea" rows="4" v-model="course.check_advice" disabled></mt-field>
       </div>
+      <!--允许修改-->
       <div v-else>
-        <mt-cell title="通过结果" v-if="isCheckModify && course.isadmin">
+        <mt-cell title="通过结果" v-if="!isDiabledCheck && course.isadmin">
           <mt-switch v-model="check.is_pass">{{check.is_pass?'通过':'不通过'}}</mt-switch>
         </mt-cell>
-        <mt-field label="审核意见" placeholder="有待完善" type="textarea" rows="4" v-if="isCheckModify && course.isadmin" v-model="check.check_advice"></mt-field>
+        <mt-field label="审核意见" placeholder="有待完善" type="textarea" rows="4" v-if="!isDiabledCheck && course.isadmin" v-model="check.check_advice"></mt-field>
       </div>
       <div class="div-schedule" v-if="course.status ==2 || course.status ==3">
         <mt-cell title="进度" :value="course.status ==2?('互选中,已有' + course.student_num+'人选定该课程'): '完成互选'"></mt-cell>
         <mt-cell title="名单" :label="course.student_list">
-          <mt-button v-if="course.isowner && course.student_num " @click="jumpStudentList">
+          <mt-button v-if="course.isowner && course.student_num " size="small" @click="jumpStudentList">
             查看
           </mt-button>
         </mt-cell>
@@ -49,8 +51,8 @@
       <div v-if="course.status == 1">
         <mt-button v-if="!course.isowner && !course.isadmin" size="large">课程审核中</mt-button>
         <div v-if="!course.isowner && course.isadmin">
-          <mt-button v-if="!isCheckModify" @click="isCheckModify=true" size="large" type="primary">开始审核</mt-button>
-          <mt-button v-if="isCheckModify" @click="submitCheck" size="large" type="primary">提交审核</mt-button>
+          <mt-button v-if="isDiabledCheck" @click="isDiabledCheck=false" size="large" type="primary">开始审核</mt-button>
+          <mt-button v-if="!isDiabledCheck" @click="submitCheck" size="large" type="primary">提交审核</mt-button>
         </div>
 
 
@@ -71,9 +73,9 @@
       <mt-button type="primary" v-if="!isDiabled" @click="saveCourse" size="normal">保存</mt-button>
 
       <!--同时是课题主人和管理员 才显示的审核的按钮-->
-      <mt-button v-if="!isCheckModify && course.status == 1 &&  course.isowner && course.isadmin" @click="isCheckModify=true" size="normal"
+      <mt-button v-if="isDiabledCheck && course.status == 1 &&  course.isowner && course.isadmin" @click="isDiabledCheck=false" size="normal"
         type="primary">开始审核</mt-button>
-        <mt-button v-if="isCheckModify && course.status == 1 && course.isowner && course.isadmin" @click="submitCheck" size="normal"
+        <mt-button v-if="!isDiabledCheck && course.status == 1 && course.isowner && course.isadmin" @click="submitCheck" size="normal"
           type="danger">提交审核</mt-button>
 
           <mt-button type="primary" v-if="course.student_num && course.status == 2" @click="jumpSelectStudent" size="normal">选定</mt-button>
@@ -89,8 +91,9 @@
     name: "details",
     data() {
       return {
-        isDiabled: true,
-        isCheckModify: false,
+        isDiabled: true, // 不能修改
+        isAbledCheck: false,
+        isDiabledCheck: true, // true表示 初始不能进行
         userType: util.getUserType(),
         check: {
           is_pass: false,
@@ -209,7 +212,7 @@
           check_advice: this.check.check_advice
         }).then((res) => {
           this.getDetail();
-          this.isCheckModify = false
+          this.isDiabledCheck = true
         })
 
       }
@@ -222,5 +225,19 @@
 
   .detail-section, .div-schedule {
     margin: 5px 0 0 0;
+  }
+  .group-btn-right {
+    margin: 5px 0;
+    display: flex;
+    justify-content:flex-end
+  }
+  .group-btn-right button {
+    margin: 0 2px;
+  }
+  .group-btn-right button:last-child{
+    margin-right: 20px;
+  }
+  .mint-cell-wrapper button {
+    margin: 7px 0 0 0;
   }
 </style>

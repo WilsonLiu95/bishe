@@ -93,12 +93,19 @@ abstract class Controller extends BaseController
 	}
 	
 	public function checkOneStudent($id){
-		$sc = Model\Schedule::where("student_id",$id)->get();
+		$sc = Model\Schedule::where("student_id",$id);
 		// 		获取所有相关的进度信息
-		        $sc->each(function($item) {
+		$sc->get()->each(function($item) {
+			// 该学生的 单个进度与单个课程进行校验 保证数据平稳退化
 			$this->checkOneSchdule($item->id);
+		});
+		// 去除单门课程异常后,整体考虑一遍
+		// 如果该学生有进度是已完成互选,则将其他互选中进度清空
+		if($sc->where("status",2)->exists){
+			$isUpdate = Model\Schedule::where("student_id",$id) // TODO: 不理解 未使用$sc 使用SC将造成无法成功更新
+				->where("status",1)->update(['status'=>0]);
+			echo $isUpdate;
 		}
-		);
 	}
 	
 	public function checkOneSchdule($id){
@@ -110,7 +117,6 @@ abstract class Controller extends BaseController
 		}
 		$course = $item->course()->first();
 		// 		有该课程情况下
-		// 		var_dump($item->course()->first()['status']);
 		if($course->status == 0){
 			if($course->check_status!=2){
 				// 				未通过审核情况下删除,此时不可能有人选中过
@@ -140,12 +146,12 @@ abstract class Controller extends BaseController
 		}
 	}
 	public  function checkOneTeacher($id){
-		// 		课程信息必须一致保持一致,即使出错也只能恢复到待审核状态,不可直接删除
-		        $course_list = Model\Course::where("teacher_id",$id)->get();
+		// 	课程信息必须一致保持一致,即使出错也只能恢复到待审核状态,不可直接删除
+		$course_list = Model\Course::where("teacher_id",$id)->get();
 		$course_list->each(function($item){
+			// 一一校对老师的课程数据
 			$this->checkOneCourse($item->id);
-		}
-		);
+		});
 		
 	}
 	public function checkOneCourse($id){

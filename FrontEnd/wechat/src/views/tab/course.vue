@@ -147,6 +147,9 @@
     background-color: #f6f8fa;
     padding: 20px 0 5px 0;
   }
+  .tab-line button {
+    margin: 0 2px;
+  }
 
   .mint-popup {
     width: 100%;

@@ -16,6 +16,10 @@ class MessageTab extends Controller
         $msg = $this->getMessage()->skip($seg * $one_page)->take($one_page)->get();
         return $this->json(1,$msg);
     }
+    public function getUnreadNumber(){
+        $count = $this->getMessage()->where("is_read",false)->count();
+        return $this->json(1,$count);
+    }
     public function getReadOneMsg(){
         // 必须首先鉴定消息是否属于该用户
         $message =$this->getMessage()->where("id",[request()->id]);
