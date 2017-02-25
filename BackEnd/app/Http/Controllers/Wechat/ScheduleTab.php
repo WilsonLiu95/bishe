@@ -49,6 +49,10 @@ class ScheduleTab extends Controller
     }
 
     public function postCreateCourse(){
+        // 简单的数据校验
+        if(!request()->title || ! request()->details){
+            return $this->toast(0,"请填写课题名称与详情");
+        }
         // 鉴权
         if(!$this->isTeacher()){
             return $this->toast(0,"非教师用户,无权限操作");
@@ -63,7 +67,7 @@ class ScheduleTab extends Controller
             "teacher_id"=> $user->id,
             "grade_id"=> $this->getGrade()->id,
             "institute_id" =>$user->institute_id,
-            "major_id"=>$user->major_id,
+            "major_id"=> $user->major_id,
             "status"=> 1,
         ]);
         // 课程修改后,发送信息给管理员

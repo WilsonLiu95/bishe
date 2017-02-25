@@ -101,10 +101,10 @@ abstract class Controller extends BaseController
 		});
 		// 去除单门课程异常后,整体考虑一遍
 		// 如果该学生有进度是已完成互选,则将其他互选中进度清空
-		if($sc->where("status",2)->exists){
-			$isUpdate = Model\Schedule::where("student_id",$id) // TODO: 不理解 未使用$sc 使用SC将造成无法成功更新
+		if($sc->where("status",2)->exists()){
+			Model\Schedule::where("student_id",$id) // TODO: 不理解 未使用$sc 使用SC将造成无法成功更新
 				->where("status",1)->update(['status'=>0]);
-			echo $isUpdate;
+
 		}
 	}
 	

@@ -49,6 +49,8 @@
   }
 
 </script>
-<style>
-
+<style scoped>
+  .mint-cell-wrapper button {
+    margin: 7px 0 0 0;
+  }
 </style>
