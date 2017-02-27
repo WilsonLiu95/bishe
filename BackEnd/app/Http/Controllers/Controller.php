@@ -24,6 +24,7 @@ abstract class Controller extends BaseController
 				return response()->json([
 				            "state" => 301,
 				            "url" => $url,
+                            'msg'=>$msg,
 				            "type"=> $isUrl ? "url" : "route"]);
 	}
 	public function toast($state=1,$msg="",$data=array()){
