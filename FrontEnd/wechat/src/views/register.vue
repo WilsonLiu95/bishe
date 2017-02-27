@@ -15,9 +15,9 @@
     data() {
       return {
         data: {
-          name: "刘盛",
-          job_num: "1995",
-          phone: "18571639914",
+          name: "测试账号",
+          job_num: "44",
+          phone: "18571635614",
         }
       }
     },
