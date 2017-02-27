@@ -24,7 +24,7 @@ var router = new VueRouter(routerConfig)
 
 // ======================配置mock数据和全局常量===============================
 window._const = {
-
+  msg: [] // 保存所有消息
 }
 window.util = {
   getUserType() {
@@ -36,12 +36,12 @@ window.util = {
     return hashArr[num]
   },
   v: validator,
-  is(type,value,option) {
+  is(type, value, option) {
     if (value === undefined || value === null) {
       return false
     }
     var args = [].slice.call(arguments).slice(2);
-    return validator[type](value,args)
+    return validator[type](value, args)
   },
   toast: Toast,
   box: MessageBox,
@@ -52,12 +52,14 @@ window.util = {
 
 // Add a request interceptor
 axios.interceptors.request.use(function (config) {
-
+  if (!config.noIndicator) {
+    Indicator.open({
+      text: '请求中...',
+      spinnerType: 'double-bounce'
+    });
+  }
   // Do something before request is sent
-  Indicator.open({
-    text: '请求中...',
-    spinnerType: 'double-bounce'
-  });
+
   return config;
 }, function (error) {
   // Do something with request error
@@ -67,7 +69,7 @@ axios.interceptors.request.use(function (config) {
 // Add a response interceptor
 
 axios.interceptors.response.use(function (response) {
-  if (typeof (response.data.msg) == "string") {
+  if (typeof (response.data.msg) == "string" && response.data.msg !== "") {
     // 如果msg存在，且不为空，则弹出
     util.toast({
       message: response.data.msg,

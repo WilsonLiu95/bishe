@@ -42,22 +42,33 @@
     },
     watch: {
       selected: function (selected) {
+        if (selected == 'message') { // 进入message页面，则主动拉取一次
+          this.getUnreadMsgNum()
+        }
         this.$router.push("./" + selected) // 改变hash是为了重载该tab的组件，同时其他组件由于没有匹配路由规则被销毁
       }
     },
     created() {
+      this.getUnreadMsgNum()
       // 创建的时候监听路由变化，以编程方式响应跳转到相应的页面
       var hashArr = location.hash.split("/")
       this.selected = hashArr[2]
-      this.getUnreadMsgNum()
+
+      setInterval(() => { this.getUnreadMsgNum() }, 15000) // 30S轮询向后台请求看看是否有新的message
     },
     computed: {
     },
     methods: {
-      getUnreadMsgNum(){
+      getUnreadMsgNum() {
+        this.$http.get('message/unread-number', {
+          noIndicator: true
+        }).then((res) => {
+          if (this.unreadMsgNum !== res.data.data) {
+            // 如果未读数量没有改变
+            this.unreadMsgNum = res.data.data
+            window._const.msg = []
+          }
 
-        this.$http.get('message/unread-number').then((res)=>{
-          this.unreadMsgNum = res.data.data
         })
       }
     },

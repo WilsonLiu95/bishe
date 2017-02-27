@@ -13,7 +13,8 @@
           </div>
         </a>
         <a v-if="allLoaded" class='msg-tips'>
-          <span>已全部加载完成</span>
+          <span v-if="message.length">已全部加载完成</span>
+          <span v-if="!message.length">暂无消息</span>
         </a>
       </div>
     </div>
@@ -34,11 +35,13 @@
     },
     mounted() {
       this.wrapperHeight = document.documentElement.clientHeight - this.$refs.wrapper.getBoundingClientRect().top;
-      if (window._const.msg) {
+      if (window._const.msg.length) {
         this.message = window._const.msg
         this.allLoaded = true
+      } else {
+        // 没有则请求
+        this.getMsg(0)
       }
-      this.getMsg(0)
     },
     methods: {
       getMsg(seg) {

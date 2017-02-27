@@ -12,7 +12,6 @@ class Register extends Controller
     use BaseTrait;
     public function postIndex(Request $request)
     {
-
         $sid = session()->get("openid");
 
         // 是否已经绑定过
@@ -41,9 +40,19 @@ class Register extends Controller
         }else{
             return $this->toast(0,"不存在该账户,请确认姓名与学号");
         }
-        
+        // 注入session
+        session()->put("isLogin", true);
         session()->put("isTeacher", $isTeacher);
         session()->put("id",$user["id"]);
+
         return $this->redirect($isTeacher ? "teacher":"student",false,$msg);
+    }
+    public function getIsLogin(){
+        if($this->getSessionInfo("isLogin")){
+            return $this->redirect($this->isTeacher()?'teacher':'student');
+        }else{
+            return "未登录";
+        }
+
     }
 }

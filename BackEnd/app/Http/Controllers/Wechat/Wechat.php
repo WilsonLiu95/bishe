@@ -37,13 +37,15 @@ class Wechat extends Controller
 
         $student = Model\Student::where("openid",$body->openid);
         if ($student->exists()){
+            session()->put("isLogin", true);
             session()->put("isTeacher", 0); 
             session()->put("id",$student->first()["id"]);
             return $this->redirect(env('BASE_PATH') . "/#/student/course",1);
         }
         $teacher = Model\Teacher::where("openid",$body->openid);
         if ($teacher->exists()){
-            session()->put("isTeacher", 1); 
+            session()->put("isLogin", true);
+            session()->put("isTeacher", 1);
             session()->put("id",$teacher->first()["id"]);
             return $this->redirect(env('BASE_PATH') . "/#/teacher/course",1);
         }

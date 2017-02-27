@@ -3,7 +3,7 @@
 2. composer install (按照相应的依赖，如果没有安装composer，请先安装)
 3. 本地开发则复制`.env.dev`,线上则复制`.env.pro`,改名为`.env`
 4. `php artisan  key:generate` 重置`.env`中的密钥
-5. 检测并改正`.env`中相应的数据库配置及其他配置 
+5. 检测并改正`.env`中相应的数据库配置及其他配置,同时记得打开redis服务器
 6. `php artisan db:seed` 初始化数据库(如果数据库已存在则 `php artisan migrate:refresh --seed`)
 7. `php artisan serve --host=127.0.0.1` 启动服务器，访问 `http://localhost:8000/test` 看是否启动成功
 8. 本地配置host， 将`bishe.wilsonliu.cn`映射到`127.0.0.1` 
