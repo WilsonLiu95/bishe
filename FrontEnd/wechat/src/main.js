@@ -95,9 +95,9 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 axios.defaults.withCredentials = true;
 
 // 调试需要
-axios.defaults.params = {
-  XDEBUG_SESSION_START: "PHPSTORM"
-}
+// axios.defaults.params = {
+//   XDEBUG_SESSION_START: "PHPSTORM"
+// }
 Vue.prototype.$http = axios
 /* eslint-disable no-new */
 new Vue({
