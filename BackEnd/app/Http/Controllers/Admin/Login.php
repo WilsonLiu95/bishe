@@ -18,9 +18,7 @@ class Login extends Controller
 		if($admin->count()){
 			session()->flush();
 			session()->set("isLogin",true);
-			session()->set("type",0);
-			$this->redirect['url'] = "admin";
-			return response()->json($this->redirect);
+			return $this->redirect("admin");
 		}
 		return $this->toast(0,"账号密码错误,请重试");
 	}

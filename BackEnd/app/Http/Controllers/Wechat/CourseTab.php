@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Wechat;
 
 use App\Model\Course;
 use App\Model\Schedule;
-
+use App\Http\Controllers\Wechat\BaseTrait;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Input;
 
 class CourseTab extends Controller
 {
+    use BaseTrait;
     public function getIndex()
     {
         $page = Input::get('page', 1);

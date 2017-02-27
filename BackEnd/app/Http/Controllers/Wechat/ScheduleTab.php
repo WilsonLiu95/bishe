@@ -6,15 +6,15 @@ namespace App\Http\Controllers\Wechat;
 use App\Model\Course;
 use App\Model\Message;
 use App\Model\Schedule;
-use App\Model\Student;
 use App\Model\Teacher;
-use Illuminate\Http\Request;
 
+use App\Http\Controllers\Wechat\BaseTrait;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 class ScheduleTab extends Controller
 {
+    use BaseTrait;
     public function getIndex(){
         $res = array();
         $id = $this->getSessionInfo("id");

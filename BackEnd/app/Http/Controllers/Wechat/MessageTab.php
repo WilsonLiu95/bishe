@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Wechat;
 
 use App\Model\Message;
 use Illuminate\Http\Request;
-
+use App\Http\Controllers\Wechat\BaseTrait;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 class MessageTab extends Controller
 {
+    use BaseTrait;
     public function getIndex(){
         $seg = request()->seg;
         $one_page = 10;

@@ -4,18 +4,14 @@ namespace App\Http\Controllers\Wechat;
 
 use App\Model;
 use Illuminate\Http\Request;
-
+use App\Http\Controllers\Wechat\BaseTrait;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 
 class AccountTab extends Controller
 {
-    public function __construct(Request $request)
-    {
-        parent::__construct($request);
-    }
-
+    use BaseTrait;
     public function getIndex()
     {
         $data = $this->getUser()->account();
