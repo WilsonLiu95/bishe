@@ -20,7 +20,7 @@ class Test extends Controller
     public function getIndex(Request $request)
     {
 
-        return 111;
+        return "laravel启动成功";
     }
 
 
