@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Wechat;
 
 
 use App\Model;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Wechat\BaseTrait;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;

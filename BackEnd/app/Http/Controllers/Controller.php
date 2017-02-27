@@ -1,14 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Model;
-use App\Model\Admin;
-use App\Model\Student;
-use App\Model\Teacher;
+
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Http\Request;
 abstract class Controller extends BaseController
 {
 	use DispatchesJobs, ValidatesRequests;
@@ -20,7 +16,7 @@ abstract class Controller extends BaseController
 		        );
 		return response()->json($res);
 	}
-	public function redirect($url,$isUrl,$msg){
+	public function redirect($url,$isUrl=false,$msg=""){
 				return response()->json([
 				            "state" => 301,
 				            "url" => $url,
