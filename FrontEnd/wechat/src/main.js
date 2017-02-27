@@ -10,9 +10,9 @@ import axios from 'axios'
 import routerConfig from './router'
 import config from '../config'
 import App from './App'
-import { Indicator } from 'mint-ui';
+import { Indicator, Toast, MessageBox } from 'mint-ui'
+import validator from 'validator'
 
-import { Toast, MessageBox } from 'mint-ui';
 Vue.use(VueRouter)
 Vue.use(MintUI)
 
@@ -27,13 +27,21 @@ window._const = {
 
 }
 window.util = {
-  getUserType: function () {
+  getUserType() {
     var hashArr = location.hash.split("/")
     return ["student", "teacher"].indexOf(hashArr[1]) == -1 ? "" : hashArr[1]
   },
-  hashArr: function (num) {
+  hashArr(num) {
     var hashArr = location.hash.split("/")
     return hashArr[num]
+  },
+  v: validator,
+  is(type,value,option) {
+    if (value === undefined || value === null) {
+      return false
+    }
+    var args = [].slice.call(arguments).slice(2);
+    return validator[type](value,args)
   },
   toast: Toast,
   box: MessageBox,

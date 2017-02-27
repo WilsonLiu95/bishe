@@ -14,9 +14,8 @@
         </a>
         <a v-if="allLoaded" class='msg-tips'>
           <span>已全部加载完成</span>
+        </a>
       </div>
-      </a>
-
     </div>
   </div>
   </div>
@@ -71,7 +70,9 @@
         this.$http.get("/message/read-one-msg?id=" + item.id).then(res => {
           if (res.data.state) {
             //  阅读成功 else 没有阅读成功，可能改信息并不属于该用户
-            this.$parent.unreadMsgNum--
+            if (this.$parent.unreadMsgNum > 0) {
+              this.$parent.unreadMsgNum--
+            }
             item.is_read = 1
           }
         })
@@ -94,7 +95,6 @@
     min-height: 120px;
     display: block;
   }
-
 
   .spinner div {
     display: block;
