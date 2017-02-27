@@ -35,15 +35,16 @@ abstract class Controller extends BaseController
 	}
 	// 	根据openid设置type与id,确保type与id确实存在于session中
 	    public function findUser(){
+			// openid一定存在,否则会被鉴权挡回去做微信认证
 		$openid = session()->get("openid");
 		
 		$student = Student::where("openid",$openid);
-		if ($student->count()){
+		if ($student->exists()){
 			session()->put("type",2);
 			session()->put("id",$student->get()[0]["id"]);
 		}
 		$teacher = Teacher::where("openid",$openid);
-		if ($teacher->count()){
+		if ($teacher->exists()){
 			session()->put("type",1);
 			session()->put("id",$teacher->get()[0]["id"]);
 		}
@@ -55,7 +56,7 @@ abstract class Controller extends BaseController
 		            2 => Student::class,
 		        );
 		// 		查找user的类
-		        $type = $this->getSessionInfo("type");
+		$type = $this->getSessionInfo("type");
 		return $userType[$type];
 		
 	}

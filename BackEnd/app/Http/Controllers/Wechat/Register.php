@@ -11,34 +11,37 @@ class Register extends Controller
 {
     public function postIndex(Request $request)
     {
-        $isExist = 0;
 
-        if (Model\Student::where("job_num", $request->job_num)->where("name", $request->name)->count()) {
-            $isExist = 1;
-            $user = Model\Student::where("job_num", $request->job_num)
-                ->where("name", $request->name);
-            $request->session()->put("type", 2);
-            $this->redirect['url'] = "student";
-        } else if (Model\Teacher::where("job_num", $request->job_num)->where("name", $request->name)->count()) {
-            $isExist = 1;
+        $sid = session()->get("openid");
 
-            $user = Model\Teacher::where("job_num", $request->job_num)
-                ->where("name", $request->name);
-            $request->session()->put("type",1); // admin类型为0,老师类型为1,学生的类型为2
-            $this->redirect['url'] = "teacher";
-        };
-        // 不存在对应的账号
-        if (!$isExist) {
+        // 是否已经绑定过
+        $hasRegisterStudent = Model\Student::where('openid',$sid);
+        $hasRegisterTeacher =  Model\Teacher::where('openid',$sid);
+
+        // 是否存在该用户信息
+        $isExistStudent = Model\Student::where("job_num", $request->job_num)->where("name", $request->name);
+        $isExistTeacher =  Model\Teacher::where("job_num", $request->job_num)->where("name", $request->name);
+
+        if($hasRegisterStudent->exists() || $hasRegisterTeacher->exists()){
+            // 如果已注册绑定过
+            $isTeacher = $hasRegisterTeacher->exists();
+            $user = $isTeacher ?  $hasRegisterTeacher->first():$hasRegisterStudent->first() ;
+
+            $this->redirect['msg'] = '您已经注册过,请勿重复注册,即将为您跳转';
+        }else if($isExistStudent->exists() || $isExistTeacher->exists()){
+
+            $isTeacher = $isExistTeacher->exists();
+            $user = $isTeacher ?   $isExistTeacher->first() : $isExistStudent->first();
+            // 如果存在,则更新openid
+            $user->update([
+                "phone" => $request->phone,
+                "openid" => $sid]);
+        }else{
             return $this->toast(0,"不存在该账户,请确认姓名与学号");
         }
-
-        // 如果存在,则更新openid
-        $user->update(["phone" => $request->phone,
-            "openid" => $request->session()->get("openid")]);
-        session()->put("id",$user->get()[0]["id"]);
-
-
-        $this->redirect["data"] = session()->all();
+        $this->redirect['url'] = $isTeacher ? "teacher":"student";
+        session()->put("type", $isTeacher? 1:2);
+        session()->put("id",$user["id"]);
         return response()->json($this->redirect);
     }
 }
