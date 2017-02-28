@@ -18,7 +18,7 @@ class Login extends Controller
 		if($admin->count()){
 			session()->flush();
 			session()->set("isLogin",true);
-			return $this->redirect("admin");
+			return $this->redirect(['name'=>"admin"],'登陆成功');
 		}
 		return $this->toast(0,"账号密码错误,请重试");
 	}

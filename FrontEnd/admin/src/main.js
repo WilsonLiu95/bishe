@@ -41,19 +41,19 @@ axios.interceptors.request.use(function (config) {
 // Add a response interceptor
 
 axios.interceptors.response.use(function (response) {
-  if (typeof (response.data.msg) == "string") {
+  if (response.data.msg && typeof (response.data.msg) == "string") {
     // 如果msg存在，且不为空，则弹出
     Message({
-      Message:response.data.msg,
+      message:response.data.msg,
       type: response.data.state == 0 ? "error" : "success" // 状态为0则为错误，其他都显示为成功
     })
   }
 
   if (response.data.state == 301) {
-    if (response.data.type == "url") {
+    if (response.data.url) {
       location.href = response.data.url;
-    } else if (response.data.type == "route") {
-      router.push(response.data.url)
+    } else {
+      router.push(response.data.option)
     }
   }
 
