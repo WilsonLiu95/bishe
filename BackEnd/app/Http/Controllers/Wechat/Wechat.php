@@ -27,7 +27,7 @@ class Wechat extends Controller
 
         if (isset($body->errcode)){
             // 说明验证码无效
-            return $this->redirect(env('BASE_PATH') . "/#/register", true,"系统错误，请重新登录");
+            return $this->toast(0,"系统错误，请重新登录");
         }
         // 微信授权成功
 
@@ -36,20 +36,28 @@ class Wechat extends Controller
         session()->put("openid",$body->openid);
 
         $student = Model\Student::where("openid",$body->openid);
-        if ($student->exists()){
-            session()->put("isLogin", true);
-            session()->put("isTeacher", 0); 
-            session()->put("id",$student->first()["id"]);
-            return $this->redirect(env('BASE_PATH') . "/#/student/course",1);
-        }
         $teacher = Model\Teacher::where("openid",$body->openid);
-        if ($teacher->exists()){
-            session()->put("isLogin", true);
+        if ($student->exists()){
+            session()->put("isTeacher", 0); 
+            $user = $student->first();
+        } else if ($teacher->exists()){
             session()->put("isTeacher", 1);
-            session()->put("id",$teacher->first()["id"]);
-            return $this->redirect(env('BASE_PATH') . "/#/teacher/course",1);
+            $user = $teacher->first();
+        }else{
+            // 该微信用户未注册
+        return response()->json([
+            'state'=>301,
+            'url'=> env("BASE_PATH")
+        ]);        
+            // return $this->redirect(['name'=>'register'],"请先行注册");
         }
-        // 该微信用户未注册
-        return $this->redirect(env('BASE_PATH') . "/#/register", true,"请先行注册");
+        // 登录成功
+        session()->put("isLogin", true);
+        session()->put("id",$user["id"]);
+        return response()->json([
+            'state'=>301,
+            'url'=> env("BASE_PATH")
+        ]);        
+        // return $this->redirect(["name" => "course"],'成功登陆',["isTeacher" => $this->isTeacher()]);
     }
 }

@@ -45,7 +45,7 @@
         if (selected == 'message') { // 进入message页面，则主动拉取一次
           this.getUnreadMsgNum()
         }
-        this.$router.push("./" + selected) // 改变hash是为了重载该tab的组件，同时其他组件由于没有匹配路由规则被销毁
+        this.$router.push({ name: selected }) // 改变hash是为了重载该tab的组件，同时其他组件由于没有匹配路由规则被销毁
       }
     },
     created() {
@@ -55,8 +55,6 @@
       this.selected = hashArr[2]
 
       setInterval(() => { this.getUnreadMsgNum() }, 15000) // 30S轮询向后台请求看看是否有新的message
-    },
-    computed: {
     },
     methods: {
       getUnreadMsgNum() {

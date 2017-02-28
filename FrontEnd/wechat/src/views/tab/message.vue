@@ -1,6 +1,5 @@
 <template>
   <div class="tab-page-container">
-    <!--<mt-cell label="消息页面">下拉获取更多</mt-cell>-->
     <div class="page-infinite-wrapper" ref="wrapper" :style="{ height: wrapperHeight + 'px' }">
       <div class="page-infinite-list" v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="50">
         <mt-cell v-for="(item,index) in message" :title="item.title" :label="item.content.substr(0,20)" @click.native="getMsgDeatils(item,index)">

@@ -48,7 +48,7 @@ class Detail extends Controller
             return $this->toast(0,"课程未进入互选阶段");
         }
         // 可以被选定,再校验该用户是否已经选定
-        $sc = Model\Schedule::firstOrNew([
+        $sc = Model\Schescdule::firstOrNew([
             "course_id" => $id,
             "student_id" => $student_id,
         ]);

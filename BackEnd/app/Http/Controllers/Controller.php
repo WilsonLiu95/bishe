@@ -16,12 +16,13 @@ abstract class Controller extends BaseController
 		        );
 		return response()->json($res);
 	}
-	public function redirect($url,$isUrl=false,$msg=""){
+	public function redirect($option=array(), $msg="",$data = array()){
+		// 如果要填路径则$option为路径
 				return response()->json([
 				            "state" => 301,
-				            "url" => $url,
+				            "option"=>$option,
                             'msg'=>$msg,
-				            "type"=> $isUrl ? "url" : "route"]);
+							'data'=> $data]);
 	}
 	public function toast($state=1,$msg="",$data=array()){
 		$toast = array(

@@ -1,7 +1,7 @@
 <template>
   <div class="tab-page-container">
-    <div v-if="userType == 'teacher'">
-      <mt-cell v-for="(item,index) in course" :title="item.title" :label="getLabel(item,index)" :to="{name:'details', params:{'0': userType,courseId:item.id}}"
+    <div v-if="isTeacher">
+      <mt-cell v-for="(item,index) in course" :title="item.title" :label="getLabel(item,index)" :to="{name:'details', params:{courseId:item.id}}"
         is-link>
         <span>{{getStatus(item,index)}}</span>
         </mt-cell>
@@ -18,8 +18,8 @@
           </div>
         </div>
     </div>
-    <div v-if="userType == 'student'">
-      <mt-cell v-for="(item,index) in course" :title="item.title" :label="item.teacher" :to="{name:'details', params:{'0': userType,courseId:item.id}}"
+    <div v-else>
+      <mt-cell v-for="(item,index) in course" :title="item.title" :label="item.teacher" :to="{name:'details', params:{courseId:item.id}}"
         is-link>
         <span>{{getStatus(item,index)}}</span>
         </mt-cell>
@@ -35,7 +35,7 @@
     name: "schedule-tab",
     data() {
       return {
-        userType: window.util.getUserType(),
+        isTeacher: util.isTeacher(),
         course: [],
         max: 3,
       }

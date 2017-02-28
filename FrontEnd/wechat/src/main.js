@@ -24,16 +24,20 @@ var router = new VueRouter(routerConfig)
 
 // ======================配置mock数据和全局常量===============================
 window._const = {
-  msg: [] // 保存所有消息
+  msg: [], // 保存所有消息
+  isTeacher: '',
+  search: "", // 搜索信息
+  page: '', // 用户在哪一页
 }
 window.util = {
-  getUserType() {
-    var hashArr = location.hash.split("/")
-    return ["student", "teacher"].indexOf(hashArr[1]) == -1 ? "" : hashArr[1]
-  },
-  hashArr(num) {
-    var hashArr = location.hash.split("/")
-    return hashArr[num]
+  isTeacher(){
+    if(_const.isTeacher){
+      return _const.isTeacher;
+    }else{
+      axios.get('/account/is-teacher').then(res=>{
+        _const.isTeacher = res.data.data
+      })
+    }
   },
   v: validator,
   is(type, value, option) {
@@ -78,10 +82,10 @@ axios.interceptors.response.use(function (response) {
   }
 
   if (response.data.state == 301) {
-    if (response.data.type == "url") {
+    if (response.data.url) {
       location.href = response.data.url;
-    } else if (response.data.type == "route") {
-      router.push(response.data.url)
+    } else {
+      router.push(response.data.option)
     }
   }
   // Do something with response data

@@ -5,7 +5,7 @@
     </mt-cell>
     <div v-if="studentList.length">
       <!--学生的链接使用index是为了-->
-      <mt-cell v-for="(student,index) in studentList" :title="student.student_name" :to="'/teacher/details/'+ $route.params.courseId +'/student-info/'+index"
+      <mt-cell v-for="(student,index) in studentList" :title="student.student_name" :to="'/details/'+ $route.params.courseId +'/student-info/'+index"
         is-link :value="student.job_num">
         </mt-cell>
     </div>
@@ -21,7 +21,6 @@
     name: "student-list",
     data() {
       return {
-        userType: util.getUserType(),
         studentList: {},
       }
     },

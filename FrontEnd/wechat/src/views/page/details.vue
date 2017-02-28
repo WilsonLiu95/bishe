@@ -58,7 +58,7 @@
 
       </div>
       <!--互选与已完成-->
-      <div v-if="course.status == 2 && userType == 'student'">
+      <div v-if="course.status == 2 && !isTeacher">
         <div v-if="course.isSelected">
           <mt-cell title="提示">已选定，请主动联系老师，完成互选</mt-cell>
           <mt-button size="large" type="danger" @click="cancelSelect">退选</mt-button>
@@ -94,7 +94,7 @@
         isDiabled: true, // 不能修改
         isAbledCheck: false,
         isDiabledCheck: true, // true表示 初始不能进行
-        userType: util.getUserType(),
+        isTeacher: util.isTeacher(),
         check: {
           is_pass: false,
           check_advice: '',
@@ -169,11 +169,9 @@
         })
       },
       jumpTeacherInfo() {
-        // debugger
         this.$router.push({
           name: "teacher-info",
           params: {
-            "0": this.$route.params[0],
             courseId: this.$route.params.courseId
           }
         })

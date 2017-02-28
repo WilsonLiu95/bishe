@@ -13,8 +13,8 @@
       }
     },
     created() {
-
       var code = location.search.split("&")[0].split("=")[1];
+      // debugger
       if (code) {
         this.$http.get("wechat?code=" + code).then(function (res) {
           console.log(res)

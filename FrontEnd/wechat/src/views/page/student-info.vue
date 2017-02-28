@@ -23,7 +23,6 @@
     name: "student-info",
     data() {
       return {
-        userType: window.util.getUserType(),
         account: {},
       }
     },

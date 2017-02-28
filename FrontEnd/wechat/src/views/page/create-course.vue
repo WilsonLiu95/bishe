@@ -19,12 +19,8 @@
     name: "create-course",
     data() {
       return {
-        userType: util.getUserType(),
         course: {}
       }
-    },
-    created() {
-
     },
     methods: {
       createCourse() {
@@ -35,7 +31,7 @@
           this.$http.post("schedule/create-course", this.course).then((res) => {
             if (res.data.state == 1) {
               // 操作成功
-              this.$router.push({path:"./schedule"})
+              this.$router.push({name:'schedule'})
             }
           })
         },

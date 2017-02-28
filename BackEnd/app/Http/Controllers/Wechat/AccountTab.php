@@ -43,6 +43,9 @@ class AccountTab extends Controller
         return $this->json(1,$account);
 
     }
+    public function getIsTeacher(){
+        return $this->json(1,$this->isTeacher());
+    }
 
 
 }

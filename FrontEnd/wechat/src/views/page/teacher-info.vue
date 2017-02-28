@@ -20,7 +20,6 @@
     name: "teacher-info",
     data() {
       return {
-        userType: window.util.getUserType(),
         account: {},
       }
     },
