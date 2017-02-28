@@ -50,6 +50,21 @@ window._const = {
   page: '', // 记忆在course页面的哪一页
 }
 window.util = {
+    isTeacher() { // 获取用户类型
+    return new Promise(function (resolve, reject) {
+      if (_const.isTeacher !== "") {
+        resolve(_const.isTeacher)
+      } else {
+        axios.get('/account/is-teacher')
+          .then(res => {
+            _const.isTeacher = res.data.data
+            resolve(res.data.data)
+          }, res => {
+            reject(res)
+          })
+      }
+    })
+  },
   v: validator,
   is(type, value, option) { // 封装了一次validator验证函数,输入非字符串时，validator会报错。同时封装一下接口
     if (value === undefined || value === null) {

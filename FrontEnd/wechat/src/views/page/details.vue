@@ -103,22 +103,13 @@
       }
     },
     created() {
-      this.getIsTeacher()
+      util.isTeacher().then(isTeacher => {
+        this.isTeacher = isTeacher
+      })
       this.getDetail();
 
     },
     methods: {
-      getIsTeacher() {
-        if (_const.isTeacher !== '') {
-          this.isTeacher =  _const.isTeacher
-        } else {
-          this.$http.get('/account/is-teacher')
-            .then(res => {
-              _const.isTeacher = res.data.data
-              this.isTeacher = res.data.data
-            })
-        }
-      },
       getDetail() {
         // 请求数据
         this.$http.get("detail?id=" + this.$route.params.courseId).then((res) => {

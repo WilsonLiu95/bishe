@@ -41,21 +41,12 @@
       }
     },
     created() {
-      this.getIsTeacher()
       this.getCourse()
+      util.isTeacher().then(isTeacher=>{
+        this.isTeacher = isTeacher
+      })
     },
     methods: {
-      getIsTeacher() {
-        if (_const.isTeacher !== "") {
-          this.isTeacher = _const.isTeacher
-        } else {
-          this.$http.get('/account/is-teacher')
-            .then(res => {
-              _const.isTeacher = res.data.data
-              this.isTeacher = res.data.data
-            })
-        }
-      },
       getCourse() {
         this.$http.get("schedule").then((res) => {
           this.course = res.data.data.course

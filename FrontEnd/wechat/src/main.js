@@ -30,6 +30,21 @@ window._const = {
   page: '', // 用户在哪一页
 }
 window.util = {
+  isTeacher() {
+    return new Promise(function (resolve, reject) {
+      if (_const.isTeacher !== "") {
+        resolve(_const.isTeacher)
+      } else {
+        axios.get('/account/is-teacher')
+          .then(res => {
+            _const.isTeacher = res.data.data
+            resolve(res.data.data)
+          }, res => {
+            reject(res)
+          })
+      }
+    })
+  },
   v: validator,
   is(type, value, option) {
     if (value === undefined || value === null) {
