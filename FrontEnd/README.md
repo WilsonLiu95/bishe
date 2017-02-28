@@ -44,29 +44,36 @@
 
 ```
 window._const = {
-  msg: [] // 保存所有消息
+  msg: [], // 保存所有消息，只有当消息加载完成时才会存储。当有新消息的时候，msg会清空
+  isTeacher: '', // 布尔值，用于判断用户类型
+  search: "", // course页面的search字段，用于记忆用户的搜索
+  page: '', // 记忆在course页面的哪一页
 }
-window.util = { // 工具方法
-  getUserType() {
-    var hashArr = location.hash.split("/")
-    return ["student", "teacher"].indexOf(hashArr[1]) == -1 ? "" : hashArr[1]
-  },
-  hashArr(num) {
-    var hashArr = location.hash.split("/")
-    return hashArr[num]
-  },
+window.util = {
   v: validator,
-  is(type, value, option) {
+  is(type, value, option) { // 封装了一次validator验证函数,输入非字符串时，validator会报错。同时封装一下接口
     if (value === undefined || value === null) {
       return false
     }
     var args = [].slice.call(arguments).slice(2);
     return validator[type](value, args)
   },
-  toast: Toast,
-  box: MessageBox,
+  toast: Toast, // 提示弹窗
+  box: MessageBox, // alert,message,confirm
 }
+
 ```
 
 ### 如何区分学生和老师
-根据url确定的学生和老师
+最开始通过url来区分，但是通过url区分会造成不安全，虽然后端会对请求进行权限判断，但是在页面显示上会造成困惑。
+因此将其改成通过在全局中存储`_const.isTeacher`来标识用户类型，同时通过`util.isTeacher`函数来保证变量必定存在。
+当然在`wechat.vue`与`register.vue`两个页面请求中返回的数据中同样存在重置`_const.isTeacher`的数据。故可以减少该请求。
+
+### main.js
+`main.js`中在ajax请求前后设置了请求动画，弹窗，url自动跳转三个部分，参见`axios.interceptors.response`。 
+
+```
+axios.defaults.baseURL = (process.env.NODE_ENV !== 'production' ? config.dev.httpUrl : config.build.httpUrl);// 同时根据不同环境引用不同的ajax请求前缀。
+axios.defaults.withCredentials = true; // 本地dev开发时，存在跨域。跨域请求时，将不带上cookie。需要设置这个参数为true才会带上cookie。坑了几天。
+
+```

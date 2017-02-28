@@ -17,7 +17,9 @@
       // debugger
       if (code) {
         this.$http.get("wechat?code=" + code).then(function (res) {
-          console.log(res)
+          if (res.state == 301) {
+            _const.isTeacher = res.data.isTeacher
+          }
         }).catch(function (error) {
           console.log(error);
         })

@@ -35,21 +35,31 @@
     name: "schedule-tab",
     data() {
       return {
-        isTeacher: util.isTeacher(),
+        isTeacher: false,
         course: [],
         max: 3,
       }
     },
     created() {
+      this.getIsTeacher()
       this.getCourse()
     },
     methods: {
-
+      getIsTeacher() {
+        if (_const.isTeacher !== "") {
+          this.isTeacher = _const.isTeacher
+        } else {
+          this.$http.get('/account/is-teacher')
+            .then(res => {
+              _const.isTeacher = res.data.data
+              this.isTeacher = res.data.data
+            })
+        }
+      },
       getCourse() {
         this.$http.get("schedule").then((res) => {
           this.course = res.data.data.course
           this.max = res.data.data.max
-
         })
       },
       getStatus(item, index) {

@@ -73,8 +73,8 @@
       <mt-button type="primary" v-if="!isDiabled" @click="saveCourse" size="normal">保存</mt-button>
 
       <!--同时是课题主人和管理员 才显示的审核的按钮-->
-      <mt-button v-if="isDiabledCheck && course.status == 1 &&  course.isowner && course.isadmin" @click="isDiabledCheck=false" size="normal"
-        type="primary">开始审核</mt-button>
+      <mt-button v-if="isDiabledCheck && course.status == 1 &&  course.isowner && course.isadmin" @click="isDiabledCheck=false"
+        size="normal" type="primary">开始审核</mt-button>
         <mt-button v-if="!isDiabledCheck && course.status == 1 && course.isowner && course.isadmin" @click="submitCheck" size="normal"
           type="danger">提交审核</mt-button>
 
@@ -94,7 +94,7 @@
         isDiabled: true, // 不能修改
         isAbledCheck: false,
         isDiabledCheck: true, // true表示 初始不能进行
-        isTeacher: util.isTeacher(),
+        isTeacher: false,
         check: {
           is_pass: false,
           check_advice: '',
@@ -103,11 +103,22 @@
       }
     },
     created() {
+      this.getIsTeacher()
       this.getDetail();
-    },
-    computed: {
+
     },
     methods: {
+      getIsTeacher() {
+        if (_const.isTeacher !== '') {
+          this.isTeacher =  _const.isTeacher
+        } else {
+          this.$http.get('/account/is-teacher')
+            .then(res => {
+              _const.isTeacher = res.data.data
+              this.isTeacher = res.data.data
+            })
+        }
+      },
       getDetail() {
         // 请求数据
         this.$http.get("detail?id=" + this.$route.params.courseId).then((res) => {
@@ -220,21 +231,25 @@
 
 </script>
 <style scoped>
-
-  .detail-section, .div-schedule {
+  .detail-section,
+  .div-schedule {
     margin: 5px 0 0 0;
   }
+
   .group-btn-right {
     margin: 5px 0;
     display: flex;
-    justify-content:flex-end
+    justify-content: flex-end
   }
+
   .group-btn-right button {
     margin: 0 2px;
   }
-  .group-btn-right button:last-child{
+
+  .group-btn-right button:last-child {
     margin-right: 20px;
   }
+
   .mint-cell-wrapper button {
     margin: 7px 0 0 0;
   }

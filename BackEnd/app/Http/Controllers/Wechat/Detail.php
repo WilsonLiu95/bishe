@@ -34,6 +34,9 @@ class Detail extends Controller
     }
 
     public function getSelectCourse(){
+        if($this->isTeacher()){
+            return $this->toast(0,"操作错误");
+        }
         $student_id = $this->getSessionInfo("id");
         if($this->isMaxSelectCourse()){
             return $this->toast(0,"已达到最大课程数,不可再选定课程");
@@ -48,7 +51,7 @@ class Detail extends Controller
             return $this->toast(0,"课程未进入互选阶段");
         }
         // 可以被选定,再校验该用户是否已经选定
-        $sc = Model\Schescdule::firstOrNew([
+        $sc = Model\Schedule::firstOrNew([
             "course_id" => $id,
             "student_id" => $student_id,
         ]);

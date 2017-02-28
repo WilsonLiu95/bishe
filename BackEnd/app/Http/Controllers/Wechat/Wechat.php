@@ -47,17 +47,18 @@ class Wechat extends Controller
             // 该微信用户未注册
         return response()->json([
             'state'=>301,
-            'url'=> env("BASE_PATH")
+            'url'=> env("BASE_PATH"),
+            'data'=>["isTeacher"=>$this->isTeacher()]
         ]);        
-            // return $this->redirect(['name'=>'register'],"请先行注册");
         }
         // 登录成功
         session()->put("isLogin", true);
         session()->put("id",$user["id"]);
         return response()->json([
             'state'=>301,
-            'url'=> env("BASE_PATH")
+            'url'=> env("BASE_PATH"),
+            'data'=>["isTeacher"=>$this->isTeacher()]
         ]);        
-        // return $this->redirect(["name" => "course"],'成功登陆',["isTeacher" => $this->isTeacher()]);
+
     }
 }

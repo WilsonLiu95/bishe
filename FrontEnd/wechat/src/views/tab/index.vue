@@ -37,7 +37,7 @@
         },
         selected: "course", // 默认课程页面
         isGetNotify: false,
-        unreadMsgNum: 1,
+        unreadMsgNum: 0,
       }
     },
     watch: {

@@ -21,8 +21,12 @@
         }
       }
     },
-    created(){
-      this.$http.get('register/is-login') // 判断是否已经登录，登录过则自动跳转
+    created() {
+      this.$http.get('register/is-login').then(res => {
+        if (res.state == 301) {
+          _const.isTeacher = res.data.isTeacher
+        }
+      }) // 判断是否已经登录，登录过则自动跳转
     },
     computed: {
       isPhone() {
@@ -32,8 +36,12 @@
     methods: {
       register() {
         if (this.data.name && this.data.job_num && this.isPhone) {
-          this.$http.post("register", this.data)
-        }else{
+          this.$http.post("register", this.data).then(res => {
+            if (res.state == 301) {
+              _const.isTeacher = res.data.isTeacher
+            }
+          })
+        } else {
           util.toast("数据错误，请正确填写")
         }
 

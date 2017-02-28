@@ -4,7 +4,7 @@ export default {
 
     // ========================================微信端========================================
     // 功能区
-    { path: '/', redirect: "/register" },
+    { path: '', redirect: "/register" },
     { name: "register" ,path: '/register', component: require('_views/register.vue') },
     { name: "wechat" ,path: '/wechat', component: require('_views/wechat.vue') },
 
