@@ -5,7 +5,7 @@ export default {
     { path: '/', redirect: "/login" },
     { path: '/login', component: require('_views/login.vue') },
     {
-      path: '/admin', component: require('_views/admin.vue'), // 通过这个识别老师和学生
+      name: 'admin',path: '/admin', component: require('_views/admin.vue'), // 通过这个识别老师和学生
       children: [
         { path: '', redirect: "deal" }, // 重定向到默认的course§
         { path: "deal", component: require('_views/deal.vue') },

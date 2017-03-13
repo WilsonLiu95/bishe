@@ -3,19 +3,14 @@
 namespace App\Http\Controllers\Wechat;
 
 use App\Model;
-use Illuminate\Http\Request;
-
+use App\Http\Controllers\Wechat\BaseTrait;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 
 class AccountTab extends Controller
 {
-    public function __construct(Request $request)
-    {
-        parent::__construct($request);
-    }
-
+    use BaseTrait;
     public function getIndex()
     {
         $data = $this->getUser()->account();
@@ -23,14 +18,7 @@ class AccountTab extends Controller
     }
     public function postModify()
     {
-        if($this->isTeacher()){
-            // 老师
-            $update = Input::only("intro","qq","email","phone");
-        } else if($this->getSessionInfo("type") == 2){
-          // 学生
-            $update = Input::only("intro","qq","email","phone");
-        }
-
+        $update = Input::only("intro","qq","email","phone");
         $this->getUser()->update($update);
         return $this->toast(1,"账户信息修改成功");
     }
@@ -47,6 +35,9 @@ class AccountTab extends Controller
         }
         return $this->json(1,$account);
 
+    }
+    public function getIsTeacher(){
+        return $this->json(1,$this->isTeacher());
     }
 
 

@@ -1,6 +1,5 @@
 <template>
   <div class="tab-page-container">
-    <!--<mt-cell label="消息页面">下拉获取更多</mt-cell>-->
     <div class="page-infinite-wrapper" ref="wrapper" :style="{ height: wrapperHeight + 'px' }">
       <div class="page-infinite-list" v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="50">
         <mt-cell v-for="(item,index) in message" :title="item.title" :label="item.content.substr(0,20)" @click.native="getMsgDeatils(item,index)">
@@ -13,11 +12,17 @@
           </div>
         </a>
         <a v-if="allLoaded" class='msg-tips'>
+
           <span>已全部加载完成</span>
       </a>
+      <a v-else>
+          <span v-if="message.length">已全部加载完成</span>
+          <span v-if="!message.length">暂无消息</span>
+        </a>
       </div>
       
 
+      </div>
     </div>
   </div>
   </div>
@@ -36,11 +41,13 @@
     },
     mounted() {
       this.wrapperHeight = document.documentElement.clientHeight - this.$refs.wrapper.getBoundingClientRect().top;
-      if (window._const.msg) {
+      if (window._const.msg.length) {
         this.message = window._const.msg
         this.allLoaded = true
+      } else {
+        // 没有则请求
+        this.getMsg(0)
       }
-      this.getMsg(0)
     },
     methods: {
       getMsg(seg) {
@@ -72,7 +79,9 @@
         this.$http.get("/message/read-one-msg?id=" + item.id).then(res => {
           if (res.data.state) {
             //  阅读成功 else 没有阅读成功，可能改信息并不属于该用户
-            this.$parent.unreadMsgNum--
+            if (this.$parent.unreadMsgNum > 0) {
+              this.$parent.unreadMsgNum--
+            }
             item.is_read = 1
           }
         })
@@ -95,7 +104,6 @@
     min-height: 120px;
     display: block;
   }
-
 
   .spinner div {
     display: block;

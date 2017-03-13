@@ -10,9 +10,9 @@ import axios from 'axios'
 import routerConfig from './router'
 import config from '../config'
 import App from './App'
-import { Indicator } from 'mint-ui';
+import { Indicator, Toast, MessageBox } from 'mint-ui'
+import validator from 'validator'
 
-import { Toast, MessageBox } from 'mint-ui';
 Vue.use(VueRouter)
 Vue.use(MintUI)
 
@@ -24,16 +24,34 @@ var router = new VueRouter(routerConfig)
 
 // ======================配置mock数据和全局常量===============================
 window._const = {
-
+  msg: [], // 保存所有消息
+  isTeacher: '',
+  search: "", // 搜索信息
+  page: '', // 用户在哪一页
 }
 window.util = {
-  getUserType: function () {
-    var hashArr = location.hash.split("/")
-    return ["student", "teacher"].indexOf(hashArr[1]) == -1 ? "" : hashArr[1]
+  isTeacher() {
+    return new Promise(function (resolve, reject) {
+      if (_const.isTeacher !== "") {
+        resolve(_const.isTeacher)
+      } else {
+        axios.get('/account/is-teacher')
+          .then(res => {
+            _const.isTeacher = res.data.data
+            resolve(res.data.data)
+          }, res => {
+            reject(res)
+          })
+      }
+    })
   },
-  hashArr: function (num) {
-    var hashArr = location.hash.split("/")
-    return hashArr[num]
+  v: validator,
+  is(type, value, option) {
+    if (value === undefined || value === null) {
+      return false
+    }
+    var args = [].slice.call(arguments).slice(2);
+    return validator[type](value, args)
   },
   toast: Toast,
   box: MessageBox,
@@ -44,12 +62,14 @@ window.util = {
 
 // Add a request interceptor
 axios.interceptors.request.use(function (config) {
-
+  if (!config.noIndicator) {
+    Indicator.open({
+      text: '请求中...',
+      spinnerType: 'double-bounce'
+    });
+  }
   // Do something before request is sent
-  Indicator.open({
-    text: '请求中...',
-    spinnerType: 'double-bounce'
-  });
+
   return config;
 }, function (error) {
   // Do something with request error
@@ -59,7 +79,7 @@ axios.interceptors.request.use(function (config) {
 // Add a response interceptor
 
 axios.interceptors.response.use(function (response) {
-  if (typeof (response.data.msg) == "string") {
+  if (typeof (response.data.msg) == "string" && response.data.msg !== "") {
     // 如果msg存在，且不为空，则弹出
     util.toast({
       message: response.data.msg,
@@ -68,10 +88,10 @@ axios.interceptors.response.use(function (response) {
   }
 
   if (response.data.state == 301) {
-    if (response.data.type == "url") {
+    if (response.data.url) {
       location.href = response.data.url;
-    } else if (response.data.type == "route") {
-      router.push(response.data.url)
+    } else {
+      router.push(response.data.option)
     }
   }
   // Do something with response data
@@ -82,14 +102,14 @@ axios.interceptors.response.use(function (response) {
   return Promise.reject(error);
 });
 
-axios.defaults.baseURL = (process.env.NODE_ENV !== 'production' ? config.dev.httpUrl : config.build.httpUrl);
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-axios.defaults.withCredentials = true;
 
-// 调试需要
-axios.defaults.params = {
-  XDEBUG_SESSION_START: "PHPSTORM"
-}
+axios.defaults.baseURL = (process.env.NODE_ENV !== 'production' ? config.dev.httpUrl : config.build.httpUrl);// 同时根据不同环境引用不同的ajax请求前缀。
+axios.defaults.withCredentials = true; // 本地dev开发时，存在跨域。跨域请求时，将不带上cookie。需要设置这个参数为true才会带上cookie。坑了几天。
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+// phpstorm断点调试 需要此参数
+// axios.defaults.params = {
+//   XDEBUG_SESSION_START: "PHPSTORM"
+// }
 Vue.prototype.$http = axios
 /* eslint-disable no-new */
 new Vue({

@@ -2,8 +2,8 @@
   <div class="create-course">
     <!--表单部分-->
     <div class="part-one course-form">
-      <mt-field label="课程" placeholder="课程名称" v-model="course.title"></mt-field>
-      <mt-field label="详情" placeholder="课题详情" type="textarea" rows="8" v-model="course.details"></mt-field>
+      <mt-field label="课程" placeholder="课程名称" v-model="course.title" :state="course.title ? 'success' : 'error'"></mt-field>
+      <mt-field label="详情" placeholder="课题详情" type="textarea" rows="8" :state="course.details ? 'success' : 'error'" v-model="course.details"></mt-field>
     </div>
     <div class="part-two">
       <mt-button type="primary" size="large" class="details-notify-btn" @click="createCourse">
@@ -19,20 +19,19 @@
     name: "create-course",
     data() {
       return {
-        userType: util.getUserType(),
         course: {}
       }
     },
-    created() {
-
-    },
     methods: {
       createCourse() {
+        if(!this.course.title || !this.course.details){
+          return util.toast("请正确填写数据")
+        }
         util.box.confirm('确定创建该课题？并提交审核？').then(action => {
           this.$http.post("schedule/create-course", this.course).then((res) => {
             if (res.data.state == 1) {
               // 操作成功
-              this.$router.push({path:"./schedule"})
+              this.$router.push({name:'schedule'})
             }
           })
         },

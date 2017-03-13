@@ -20,7 +20,6 @@
     name: "teacher-info",
     data() {
       return {
-        userType: window.util.getUserType(),
         account: {},
       }
     },
@@ -49,6 +48,8 @@
   }
 
 </script>
-<style>
-
+<style scoped>
+  .mint-cell-wrapper button {
+    margin: 7px 0 0 0;
+  }
 </style>

@@ -15,7 +15,7 @@
 
       <!--start 课表清单-->
       <div class="page-tab-container" v-if="isInit">
-        <mt-cell v-for="item in course.data" :title="item.title" :label="getLabel(item) " :to="'/'+ userType + '/details/' + item.id"
+        <mt-cell v-for="item in course.data" :title="item.title" :label="getLabel(item) " :to="'/details/' + item.id"
           is-link>
           {{ item.teacher_name}}
           </mt-cell>
@@ -39,7 +39,6 @@
           previous: require("assets/previous.svg"),
           next: require("assets/next.svg"),
         },
-        userType: util.getUserType(),
         isInit: false, // 用来说明组件是否初始化
         isPopupVisible: false,
         search: window._const.search ? window._const.search : "",

@@ -58,7 +58,7 @@
 
       </div>
       <!--互选与已完成-->
-      <div v-if="course.status == 2 && userType == 'student'">
+      <div v-if="course.status == 2 && !isTeacher">
         <div v-if="course.isSelected">
           <mt-cell title="提示">已选定，请主动联系老师，完成互选</mt-cell>
           <mt-button size="large" type="danger" @click="cancelSelect">退选</mt-button>
@@ -73,8 +73,8 @@
       <mt-button type="primary" v-if="!isDiabled" @click="saveCourse" size="normal">保存</mt-button>
 
       <!--同时是课题主人和管理员 才显示的审核的按钮-->
-      <mt-button v-if="isDiabledCheck && course.status == 1 &&  course.isowner && course.isadmin" @click="isDiabledCheck=false" size="normal"
-        type="primary">开始审核</mt-button>
+      <mt-button v-if="isDiabledCheck && course.status == 1 &&  course.isowner && course.isadmin" @click="isDiabledCheck=false"
+        size="normal" type="primary">开始审核</mt-button>
         <mt-button v-if="!isDiabledCheck && course.status == 1 && course.isowner && course.isadmin" @click="submitCheck" size="normal"
           type="danger">提交审核</mt-button>
 
@@ -94,7 +94,7 @@
         isDiabled: true, // 不能修改
         isAbledCheck: false,
         isDiabledCheck: true, // true表示 初始不能进行
-        userType: util.getUserType(),
+        isTeacher: false,
         check: {
           is_pass: false,
           check_advice: '',
@@ -103,9 +103,11 @@
       }
     },
     created() {
+      util.isTeacher().then(isTeacher => {
+        this.isTeacher = isTeacher
+      })
       this.getDetail();
-    },
-    computed: {
+
     },
     methods: {
       getDetail() {
@@ -169,11 +171,9 @@
         })
       },
       jumpTeacherInfo() {
-        // debugger
         this.$router.push({
           name: "teacher-info",
           params: {
-            "0": this.$route.params[0],
             courseId: this.$route.params.courseId
           }
         })
@@ -222,21 +222,25 @@
 
 </script>
 <style scoped>
-
-  .detail-section, .div-schedule {
+  .detail-section,
+  .div-schedule {
     margin: 5px 0 0 0;
   }
+
   .group-btn-right {
     margin: 5px 0;
     display: flex;
-    justify-content:flex-end
+    justify-content: flex-end
   }
+
   .group-btn-right button {
     margin: 0 2px;
   }
-  .group-btn-right button:last-child{
+
+  .group-btn-right button:last-child {
     margin-right: 20px;
   }
+
   .mint-cell-wrapper button {
     margin: 7px 0 0 0;
   }

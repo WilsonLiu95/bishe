@@ -4,14 +4,13 @@ namespace App\Http\Controllers\Wechat;
 
 
 use App\Model;
-use Illuminate\Http\Request;
-
+use App\Http\Controllers\Wechat\BaseTrait;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 class Detail extends Controller
 {
-
+    use BaseTrait;
     public function getIndex()
     {
         $id =  request()->input("id");
@@ -35,6 +34,9 @@ class Detail extends Controller
     }
 
     public function getSelectCourse(){
+        if($this->isTeacher()){
+            return $this->toast(0,"操作错误");
+        }
         $student_id = $this->getSessionInfo("id");
         if($this->isMaxSelectCourse()){
             return $this->toast(0,"已达到最大课程数,不可再选定课程");

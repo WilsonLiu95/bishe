@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Wechat;
 
 use App\Model\Message;
-use Illuminate\Http\Request;
-
+use App\Http\Controllers\Wechat\BaseTrait;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 class MessageTab extends Controller
 {
+    use BaseTrait;
     public function getIndex(){
         $seg = request()->seg;
         $one_page = 10;
@@ -30,13 +30,11 @@ class MessageTab extends Controller
         }else{
             return $this->toast(0,"数据错误");
         }
-
-//        return $this->toast(1,"已读",$message);
-
     }
     private function  getMessage(){
         // 统一获取message信息,以保证排序等相同
-        $message = Message::where("send_type",$this->getSessionInfo("type"))
+        $send_type = $this->getSessionInfo("isTeacher") ? 1:2;
+        $message = Message::where("send_type",$send_type)
             ->where("send_id",$this->getSessionInfo("id"))
             ->orderBy("created_at","ASC");
         return $message;

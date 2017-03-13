@@ -62,7 +62,6 @@
               this.$router.push({
                 name: "details",
                 params: {
-                  "0": "teacher",
                   courseId: this.$route.params.courseId
                 }
               })
