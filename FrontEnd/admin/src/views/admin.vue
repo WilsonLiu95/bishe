@@ -1,18 +1,22 @@
 <template>
   <div class="tab-page-container">
-
-    <el-menu theme="dark"  class="el-menu-demo" mode="horizontal" @select="handleSelect" :router="true">
-      <el-menu-item index=".">华科毕设管理系统</el-menu-item>
-      <el-menu-item index="./deal">统计</el-menu-item>
-      <el-menu-item index="./export">导出</el-menu-item>
+    
+    <!--系统导航栏-->
+    <el-menu theme="dark" class="menu" mode="horizontal" @select="handleSelect" :router="true">
+      <el-menu-item index=".">华科毕设选题管理系统</el-menu-item>
+      <el-menu-item index="./manage">管理</el-menu-item>
+      <el-menu-item index="./logout">退出</el-menu-item>
     </el-menu>
+
+    
     <router-view></router-view>
-    <!--<div class="line"></div>-->
 
-  </div>
+  </div>  
 </template>
-<script>
 
+<!--====================================================-->
+
+<script>
   export default {
     name: "admin-page",
     data() {
@@ -26,8 +30,10 @@
       },
     }
   }
-
 </script>
-<style>
 
+<!--====================================================-->
+
+<style>
+ 
 </style>

@@ -8,3 +8,9 @@
   </article>
 </template>
 
+<style>
+  .view-404{
+    text-align: center;
+  }
+</style>
+

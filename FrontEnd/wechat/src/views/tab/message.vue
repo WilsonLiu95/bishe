@@ -14,8 +14,9 @@
         </a>
         <a v-if="allLoaded" class='msg-tips'>
           <span>已全部加载完成</span>
-      </div>
       </a>
+      </div>
+      
 
     </div>
   </div>
