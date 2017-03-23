@@ -96,9 +96,9 @@ class Detail extends Controller
     public function postModifyCourse()
     {
         if (!$this->isOwner(request()->id) || is_null(request()->id))
-        {
-            return $this->toast(0,'不可修改不属于您的课程');
-        }
+    {
+        return $this->toast(0,'不可修改不属于您的课程');
+    }
         $course = Model\Course::find(request()->id);
 
         $course->update([
