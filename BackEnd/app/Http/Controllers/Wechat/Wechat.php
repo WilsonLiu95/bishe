@@ -44,20 +44,31 @@ class Wechat extends Controller
             session()->put("isTeacher", 1);
             $user = $teacher->first();
         }else{
-            // 该微信用户未注册
-        return response()->json([
+
+
+        $url = env("BASE_PATH");
+
+        return response()->json([ // 该微信用户未注册
             'state'=>301,
-            'url'=> env("BASE_PATH"),
-            'data'=>["isTeacher"=>$this->isTeacher()]
+            'url'=> $url,
         ]);        
         }
         // 登录成功
         session()->put("isLogin", true);
         session()->put("id",$user["id"]);
+
+
+        if($this->isTeacher()){
+            if(!$user->is_admin){ // 如果是老师且非管理员,则进行 进度 页面
+                $url = env("BASE_PATH") . '#/tab/schedule';
+            }
+            $data['isTeacher'] = $this->isTeacher();
+            $data['isAdmin'] = $user->is_admin;
+        }
         return response()->json([
             'state'=>301,
-            'url'=> env("BASE_PATH"),
-            'data'=>["isTeacher"=>$this->isTeacher()]
+            'url'=> $url,
+            'data'=> $data
         ]);        
 
     }

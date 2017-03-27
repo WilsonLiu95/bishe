@@ -5,7 +5,7 @@
     </router-view>
     <!--四栏tab-->
     <mt-tabbar v-model="selected" :fixed=true>
-      <mt-tab-item id="course">
+      <mt-tab-item id="course" v-if="!(isTeacher && !isAdmin)">
         <img slot="icon" :src="assets.class"> <span>课题</span>
       </mt-tab-item>
       <mt-tab-item id="schedule">
@@ -38,6 +38,8 @@
         selected: "course", // 默认课程页面
         isGetNotify: false,
         unreadMsgNum: 0,
+        isTeacher: true,
+        isAdmin: false,
       }
     },
     watch: {
@@ -55,8 +57,18 @@
       this.selected = hashArr[2]
 
       setInterval(() => { this.getUnreadMsgNum() }, 15000) // 30S轮询向后台请求看看是否有新的message
+      this.getUserType()
     },
     methods: {
+      getUserType(){
+        window.util.isTeacher().then(user=>{
+          this.isTeacher = user.isTeacher
+          this.isAdmin = user.isAdmin
+          if(this.isTeacher && !this.isAdmin){
+            // this.selected = 'schdeule'
+          }
+        })
+      },
       getUnreadMsgNum() {
         this.$http.get('message/unread-number', {
           noIndicator: true

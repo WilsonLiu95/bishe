@@ -48,7 +48,7 @@ class ScheduleTab extends Controller
         return $this->json(1,$res);
     }
 
-    public function postCreateCourse(){
+    public function postCreateCourse(){ // 创建课题
         // 简单的数据校验
         if(!request()->title || ! request()->details){
             return $this->toast(0,"请填写课题名称与详情");
