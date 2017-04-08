@@ -35,7 +35,7 @@
           message: require("assets/message.svg"),
           account: require("assets/account.svg"),
         },
-        selected: "course", // 默认课程页面
+        selected: "schedule", // 默认课程页面
         isGetNotify: false,
         unreadMsgNum: 0,
         isTeacher: true,
