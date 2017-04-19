@@ -33,6 +33,7 @@ Route::group(['prefix' => 'admin'], function(){
     Route::group(['middleware' => 'AuthOfAdmin'], function(){
         // 加个中间件认证 
         Route::controller("/deal","Admin\Deal");
+        Route::controller("/manage","Admin\Manage");
         
     });
 });

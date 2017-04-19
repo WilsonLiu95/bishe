@@ -1,11 +1,8 @@
 <template>
   <div class="container">
-
-    <!--注册及课题信息表-->
+    <!--注册及课题统计信息表-->
     <h2 class="title">毕设信息统计</h2>
-
     <hr>
-
     <el-table :data="reg_table" class="reg_table" border>
       <el-table-column label="注册统计">
         <el-table-column prop="tea_register" label="导师">
@@ -26,46 +23,44 @@
     <div class="mid_container">
       <!--添加信息按钮-->
       <el-button type="primary" @click="dialogOpen(1)" class="teaAdd">添加</el-button>
-
       <!--对话框-->
       <el-dialog v-model="dialogFormVisible" @close="dialogClose">
         <h3 v-if="dialogType=='change'">导师信息修改</h3>
         <h3 v-if="dialogType=='add'">导师信息添加</h3>
         <el-form :model="dialogForm">
           <el-form-item label="姓名" :label-width="formLabelWidth">
-            <el-input v-model="dialogForm.name" :disabled="dialogType=='change'" auto-complete="off"></el-input>
+            <el-input v-model="dialogForm.name" :disabled="dialogType=='change'" auto-complete="off">
+            </el-input>
           </el-form-item>
           <el-form-item label="教工号" :label-width="formLabelWidth">
-            <el-input v-model="dialogForm.job_num" :disabled="dialogType=='change'" auto-complete="off"></el-input>
+            <el-input v-model="dialogForm.job_num" :disabled="dialogType=='change'" auto-complete="off">
+            </el-input>
           </el-form-item>
           <el-form-item label="专业方向" :label-width="formLabelWidth">
-            <el-input v-model="dialogForm.major_id" :disabled="dialogType=='change'" auto-complete="off"></el-input>
+            <el-input v-model="dialogForm.major_id" :disabled="dialogType=='change'" auto-complete="off">
+            </el-input>
           </el-form-item>
           <el-form-item label="课题数" :label-width="formLabelWidth" v-if="this.dialogType=='change'">
-            <el-input v-model="dialogForm.course_num" :disabled="dialogType=='change'" auto-complete="off"></el-input>
+            <el-input v-model="dialogForm.course_num" :disabled="dialogType=='change'" auto-complete="off">
+            </el-input>
           </el-form-item>
           <el-form-item label="是否为组长" :label-width="formLabelWidth">
             <el-input v-model="dialogForm.is_admin" auto-complete="off"></el-input>
           </el-form-item>
         </el-form>
-
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
           <el-button type="primary" @click="teaChange">确 定</el-button>
         </div>
       </el-dialog>
-
       <!--文件导入-->
       <el-upload class="upload" action="" accept="application/vnd.ms-excel" :on-preview="handlePreview" :on-remove="handleRemove"
         :file-list="fileList" v-if="hasImportTeacher == false">
         <el-button type="primary">导入文件</el-button>
-      </el-upload>
-      <!--<div slot="tip" class="upload_tip">只能上传excel文件，且不超过500kb</div>-->
-
-      <!--信息搜索-->
-      <el-input placeholder="搜索（请输入“姓名”或“教工号”）" icon="search" v-model="searchInput" :on-icon-click="teaSearch" class="search">
-      </el-input>
-
+        </el-upload>
+        <!--信息搜索-->
+        <el-input placeholder="搜索（请输入“姓名”或“教工号”）" icon="search" v-model="searchInput" :on-icon-click="teaSearch" class="search">
+        </el-input>
     </div>
 
     <!--导师信息表-->
@@ -74,8 +69,7 @@
       </el-table-column>
       <el-table-column prop="job_num" label="教工号">
       </el-table-column>
-      <el-table-column prop="major_id" label="专业方向" :filters="[{ text: '1:计算机', value: '1' }, { text: '2:通信', value: '2'}, { text: '3:材料', value: '3' },{text: '4:管理',value: '4'}]"
-        :filter-method="filterTag">
+      <el-table-column prop="major_id" label="专业方向" :filters="majorFilter" :filtered-value="filterValue" :filter-method="filterTag">
         <template scope="scope">
           <el-tag :type="scope.row.major_id =='1' ? 'primary' : 'success'" close-transition>
             {{scope.row.major_id}}
@@ -86,7 +80,7 @@
         </el-table-column>
         <el-table-column prop="is_admin" label="是否为组长">
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="150" align="center">
           <template scope="scope">
             <el-button size="small" @click="dialogOpen(2,scope.row.id)">编辑</el-button>
             <el-button size="small" type="danger" @click="teaDelete(scope.row.id)">移除</el-button>
@@ -96,11 +90,9 @@
 
     <!--分页组件-->
     <div class="block">
-      <el-pagination @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage"
-        layout="prev, pager, next, jumper" :total="page_num">
-        </el-pagination>
+      <el-pagination :current-page="currentPage" @current-change="changePage" layout="total, prev, pager, next, jumper" :total="teaTotal">
+      </el-pagination>
     </div>
-
   </div>
 </template>
 
@@ -113,10 +105,11 @@
       return {
         searchInput: '',
         currentPage: 1,
-        page_num: 100,
+        teaTotal: 100,
         dialogFormVisible: false,
         hasImportTeacher: true,
         dialogType: 'add',
+        formLabelWidth: '120px',
         dialogForm: {
           name: '',
           job_num: '',
@@ -125,17 +118,20 @@
           is_admin: '',
         },
         current_teacher_id: '',
-        formLabelWidth: '120px',
         reg_table: [],
-        teacher_table: []
+        teacher_table: [],
+        major_map: [],
+        majorFilter: [{
+          text: '',
+          value: ''
+        }],
+        filterValue:[],
       }
     },
-
     created() {
       this.getRegTable()
       this.getTeacherTable()
     },
-
     methods: {
       getRegTable() {
         this.$http.get('deal').then(res => {
@@ -143,8 +139,25 @@
         })
       },
       getTeacherTable() {
-        this.$http.get('deal/tea-table').then(res => {
-          this.teacher_table = res.data.data
+        this.$http.get('deal/teacher?page=' + this.currentPage).then(res => {
+          this.teacher_table = res.data.data.teacher.data
+          this.teaTotal = res.data.data.teacher.total
+          this.major_map = res.data.data.tran
+          for(var i=0;i<this.teacher_table.length;i++) {
+            for(var key in this.major_map) {
+              if(this.teacher_table[i].major_id == key) {
+                this.teacher_table[i].major_id = this.major_map[key]
+              }  
+            }
+          }
+          var majorFilter = []
+          for (var key in res.data.data.tran) {
+            majorFilter.push({
+              value: key,
+              text: res.data.data.tran[key]
+            })
+          }
+          this.majorFilter = majorFilter
         })
       },
       dialogOpen(i, teacher_id) {
@@ -158,17 +171,16 @@
           this.$http.get('deal/tea-dialog?id=' + teacher_id).then(res => {
             this.dialogForm = res.data.data
           })
-
         }
-      }, 
+      },
       dialogClose() {
         this.dialogFormVisible = false;
-        this.dialogType  = '';
+        this.dialogType = '';
         this.dialogForm = {};
       },
       teaChange() {
         this.dialogFormVisible = false;
-        if(this.dialogType=='change') {
+        if (this.dialogType == 'change') {
           this.$http.post('deal/tea-edit', {
             id: this.current_teacher_id,
             is_admin: this.dialogForm.is_admin
@@ -176,46 +188,68 @@
             this.getTeacherTable()
           })
         }
-        if(this.dialogType=='add') {
-           this.$http.post('deal/tea-add', {
-             name: this.dialogForm.name,
-             job_num: this.dialogForm.job_num,
-             major_id: this.dialogForm.major_id,
-             is_admin: this.dialogForm.is_admin
+        if (this.dialogType == 'add') {
+          this.$http.post('deal/tea-add', {
+            name: this.dialogForm.name,
+            job_num: this.dialogForm.job_num,
+            major_id: this.dialogForm.major_id,
+            is_admin: this.dialogForm.is_admin
           }).then(res => {
-             this.getTeacherTable()
+            this.getTeacherTable()
           })
         }
       },
       teaDelete(teacher_id) {
-         this.current_teacher_id = teacher_id;
-         this.$http.post('deal/tea-delete?id=' + this.current_teacher_id).then(res => {
-            this.getTeacherTable()
-         })
+        this.current_teacher_id = teacher_id;
+        this.$http.post('deal/tea-delete?id=' + this.current_teacher_id).then(res => {
+          this.getTeacherTable()
+        })
       },
       teaSearch() {
-         if(this.searchInput != '') {
-            this.$http.get('deal/tea-search?searcher='+this.searchInput).then(res => {
-              this.teacher_table = res.data.data
-            })
-         }
+        if (this.searchInput != '') {
+          this.$http.get('deal/tea-search?searcher=' + this.searchInput + '&page='+this.currentPage).then(res => {
+            this.teacher_table = res.data.data.data
+            this.teaTotal = res.data.data.total
+          })
+        }
+        if (this.searchInput == '') {
+          this.getTeacherTable()
+        }
+      },
+      changePage(page) {
+        this.currentPage = page;
+        if(this.filterValue.length == 0){
+          this.getTeacherTable()
+        }
+        if(this.filterValue.length != 0){
+          this.filterTag()
+        }
       },
 
-      sizeChange() {
-        
+
+      handleRemove() {
+        //文件导入的
       },
-      currentChange() {
-        
+      handlePreview() {
+        //文件导入的
       },
 
-      handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
-      handlePreview(file) {
-        console.log(file);
-      },
-      filterTag(value, row) {
-        return row.major_id == value;
+      //专业筛选
+      filterTag() {
+        this.$http.post('deal/major-filter',{
+          value: this.filterValue,
+          page: this.currentPage
+        }).then(res=>{
+          this.teacher_table = res.data.data.teacher.data
+          this.teaTotal = res.data.data.teacher.total
+          for(var i=0;i<this.teacher_table.length;i++) {
+            for(var key in this.major_map) {
+              if(this.teacher_table[i].major_id == key) {
+                this.teacher_table[i].major_id = this.major_map[key]
+              }  
+            }
+          }
+        })
       },
     }
   }
