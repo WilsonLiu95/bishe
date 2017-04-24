@@ -54,12 +54,11 @@ class Wechat extends Controller
         session()->put("isLogin", true);
         session()->put("id",$user["id"]);
 
-
+        $data['isTeacher'] = $this->isTeacher();
         if($this->isTeacher()){
             if(!$user->is_admin){ // 如果是老师且非管理员,则进行 进度 页面
                 $url = env("BASE_PATH") . '#/tab/schedule';
             }
-            $data['isTeacher'] = $this->isTeacher();
             $data['isAdmin'] = $user->is_admin;
         }
         return response()->json([

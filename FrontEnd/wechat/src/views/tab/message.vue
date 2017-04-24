@@ -16,7 +16,6 @@
           <span>已全部加载完成</span>
       </a>
       <a v-else>
-          <span v-if="message.length">已全部加载完成</span>
           <span v-if="!message.length">暂无消息</span>
         </a>
       </div>
