@@ -37,13 +37,13 @@
       return {
         isTeacher: false,
         course: [],
-        max: 3,
+        max: 0,
       }
     },
     created() {
       this.getCourse()
-      util.isTeacher().then(isTeacher=>{
-        this.isTeacher = isTeacher
+      util.isTeacher().then(user=>{
+        this.isTeacher = user.isTeacher
       })
     },
     methods: {

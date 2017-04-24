@@ -22,8 +22,16 @@ module.exports = {
     port: 8080,
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    httpUrl: 'http://dev.wilsonliu.cn:8000/wechat/',
-    proxyTable: {},
+    httpUrl: '/wechat/',
+    proxyTable: {
+      '/wechat': {
+        target: 'http://dev.wilsonliu.cn:8000',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/wechat': '/wechat'
+        }
+      }
+    },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README
     // (https://github.com/webpack/css-loader#sourcemaps)

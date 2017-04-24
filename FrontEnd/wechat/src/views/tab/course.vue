@@ -55,6 +55,11 @@
       }
     },
     created() {
+      window.util.isTeacher().then(user=>{
+        if(user.isTeacher && !user.isAdmin){
+          this.$router.push({name:'schedule'})
+        }
+      })
       if (window._const.search && this.search != window._const.search) {
         this.search = window._const.search
       }

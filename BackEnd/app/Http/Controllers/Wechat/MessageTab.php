@@ -13,16 +13,20 @@ class MessageTab extends Controller
     public function getIndex(){
         $seg = request()->seg;
         $one_page = 10;
-        $msg = $this->getMessage()->skip($seg * $one_page)->take($one_page)->get();
+        $msg = $this->getMessage()
+            ->skip($seg * $one_page) // 每次发送10条信息
+            ->take($one_page)->get();
         return $this->json(1,$msg);
     }
-    public function getUnreadNumber(){
-        $count = $this->getMessage()->where("is_read",false)->count();
+    public function getUnreadNumber(){ // 获取未读的信息条数
+        $count = $this->getMessage()
+            ->where("is_read",false)->count();
         return $this->json(1,$count);
     }
-    public function getReadOneMsg(){
+    public function getReadOneMsg(){ // 读取特定的消息
         // 必须首先鉴定消息是否属于该用户
-        $message =$this->getMessage()->where("id",[request()->id]);
+        $message =$this->getMessage()
+            ->where("id",[request()->id]);
         if($message->exists()){
             $message->update(['is_read'=>1]);
             return $this->json(1);

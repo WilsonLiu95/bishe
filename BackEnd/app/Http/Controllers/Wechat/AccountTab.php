@@ -37,7 +37,11 @@ class AccountTab extends Controller
 
     }
     public function getIsTeacher(){
-        return $this->json(1,$this->isTeacher());
+        $data['isTeacher'] = $this->isTeacher();
+        if($data['isTeacher']){
+            $data['isAdmin'] = Model\Teacher::find($this->getSessionInfo('id'))->is_admin;
+        }
+        return $this->json(1,$data);
     }
 
 
