@@ -162,11 +162,8 @@ class Detail extends Controller
         return $this->json(1,$course);
     }
 
-
     public function getSelectStudent(){// 选中学生
-
         // 先校验学生是否还可以被选中
-
         if($this->isHasDone(request()->student_id)){
             return $this->toast(0,"学生已与其他人完成互选,不可再与您达成互选,系统将自动退订该学生");
 

@@ -46,10 +46,10 @@ trait BaseTrait {
         return $this->getSessionInfo('isTeacher');
     }
     public function getGrade(){
+        // 采用软删除，同时只有一个年份
         return $this->getUser()
             ->institute
             ->grade()
-            ->where('status',1) // 		目前生效的年级
             ->first();
     }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-page-container">
+  <div class="tab-page-container message-tab">
     <div class="page-infinite-wrapper" ref="wrapper" :style="{ height: wrapperHeight + 'px' }">
       <div class="page-infinite-list" v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="50">
         <mt-cell v-for="(item,index) in message" :title="item.title" :label="item.content.substr(0,20)" @click.native="getMsgDeatils(item,index)">
@@ -19,8 +19,6 @@
           <span v-if="!message.length">暂无消息</span>
         </a>
       </div>
-      
-
       </div>
     </div>
   </div>
@@ -107,5 +105,8 @@
   .spinner div {
     display: block;
     margin: 0 auto;
+  }
+  .mint-msgbox{
+    border: 1px solid  #D3DCE6;
   }
 </style>

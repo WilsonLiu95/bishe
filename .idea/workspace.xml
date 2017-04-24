@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ed0e97d2-7928-444c-bc24-a1cf1ab00e62" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/FrontEnd/npm-debug.log" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/bishe.iml" afterPath="$PROJECT_DIR$/.idea/bishe.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/BackEnd/app/Http/Controllers/Wechat/Wechat.php" afterPath="$PROJECT_DIR$/BackEnd/app/Http/Controllers/Wechat/Wechat.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/FrontEnd/admin/src/views/admin.vue" afterPath="$PROJECT_DIR$/FrontEnd/admin/src/views/admin.vue" />
-    </list>
+    <list default="true" id="ed0e97d2-7928-444c-bc24-a1cf1ab00e62" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -49,6 +44,7 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/BackEnd/app/Http/Controllers/Wechat/Wechat.php" />
+        <option value="$PROJECT_DIR$/FrontEnd/wechat/src/views/tab/message.vue" />
       </list>
     </option>
   </component>
@@ -335,12 +331,12 @@
       <option name="presentableId" value="Default" />
       <updated>1489371743769</updated>
       <workItem from="1489371746058" duration="19000" />
-      <workItem from="1493001196290" duration="940000" />
+      <workItem from="1493001196290" duration="1001000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="959000" />
+    <option name="totallyTimeSpent" value="1020000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1200" extended-state="6" />

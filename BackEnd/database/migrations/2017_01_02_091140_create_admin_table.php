@@ -19,7 +19,6 @@ class CreateAdminTable extends Migration
             $table->string("password",32);
             $table->timestamps();
         });
-
     }
 
     /**

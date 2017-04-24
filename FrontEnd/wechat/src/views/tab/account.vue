@@ -10,11 +10,11 @@
       <mt-field label="姓名" v-model="account.name" placeholder="请输入用户名" disabled></mt-field>
       <mt-field label="工号" v-model="account.job_num" placeholder="请输入工号" disabled></mt-field>
 
-      <mt-field label="手机号" placeholder="请输入手机号" type="tel" v-model="account.phone" :state="getState('isPhone')" :disabled=isDiabled></mt-field>
-      <mt-field label="QQ" placeholder="请输入QQ号" type="tel" v-model="account.qq" :state="getState('isQQ')" :disabled=isDiabled></mt-field>
-      <mt-field label="邮箱" placeholder="请输入邮箱" type="email" v-model="account.email" :state="getState('isEmail')" :disabled=isDiabled></mt-field>
+      <mt-field label="手机号" placeholder="请输入手机号" type="tel" v-model="account.phone" :state="getState('isPhone')" :disabled="isDiabled"></mt-field>
+      <mt-field label="QQ" placeholder="请输入QQ号" type="tel" v-model="account.qq" :state="getState('isQQ')" :disabled="isDiabled"></mt-field>
+      <mt-field label="邮箱" placeholder="请输入邮箱" type="email" v-model="account.email" :state="getState('isEmail')" :disabled="isDiabled"></mt-field>
 
-      <mt-field label="自我介绍" placeholder="介绍一下你自己吧~ 让老师了解你" type="textarea" v-model="account.intro" rows="5" :disabled=isDiabled></mt-field>
+      <mt-field label="自我介绍" placeholder="介绍一下你自己吧~ 让老师了解你" type="textarea" v-model="account.intro" rows="5" :disabled="isDiabled"></mt-field>
     </div>
   </div>
 </template>

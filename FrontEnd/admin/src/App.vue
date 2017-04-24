@@ -7,7 +7,7 @@
 
 <script>
   export default {
-
+    name: 'app-container'
   };
 
 </script>
@@ -18,7 +18,4 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-
-
-
 </style>

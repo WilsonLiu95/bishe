@@ -29,7 +29,6 @@ $factory->define(\App\Model\Major::class, function ($faker) {
     return [
         'id'=>1,
         'name' => 2013,
-        'status'=> 1,
         'max_create_class'=>6,
         'max_select_class'=>2,
         'institute_id' => 1,

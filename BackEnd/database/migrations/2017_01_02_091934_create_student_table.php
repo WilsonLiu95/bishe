@@ -24,6 +24,7 @@ class CreateStudentTable extends Migration
             $table->string('qq',16);
             $table->string('email',32);
             $table->string('intro',256);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

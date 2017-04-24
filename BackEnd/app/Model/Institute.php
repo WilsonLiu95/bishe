@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Institute extends Model
 {
     protected $table = 'institute';
-
     /**
      * 可以被批量赋值的属性。
      *
@@ -27,6 +26,11 @@ class Institute extends Model
     public function student()
     {
         return $this->hasMany('App\Model\Student');
+    }
+
+    public function course()
+    {
+        return $this->hasMany('App\Model\Course');
     }
     public function grade()
     {

@@ -31,9 +31,9 @@ Route::group(['prefix' => 'admin'], function(){
     // 管理员的接口走这里
     Route::controller("/login","Admin\Login"); // 管理端登录
     Route::group(['middleware' => 'AuthOfAdmin'], function(){
-        // 加个中间件认证 
-        Route::controller("/deal","Admin\Deal");
-        Route::controller("/manage","Admin\Manage");
-        
+        // 加个中间件认证
+        Route::controller("/home","Admin\Home");
+        Route::controller("/student","Admin\StudentPage");
+        Route::controller("/course","Admin\CoursePage");
     });
 });

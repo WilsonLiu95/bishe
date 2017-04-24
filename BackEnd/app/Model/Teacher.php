@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Teacher extends Model
 {
     protected $table = 'teacher';
-
+    use SoftDeletes;
     /**
      * 可以被批量赋值的属性。
      *
@@ -19,6 +20,7 @@ class Teacher extends Model
      *
      * @var array
      */
+    protected $dates = ['deleted_at'];
     protected $guarded = ['created_at','updated_at'];
 
 

@@ -14,7 +14,7 @@ import App from './App'
 Vue.use(VueRouter)
 Vue.use(ElementUI)
 
-import { Loading,Message } from 'element-ui';
+import { Loading, Message } from 'element-ui';
 //开启debug模式
 Vue.config.debug = true;
 
@@ -24,27 +24,28 @@ var router = new VueRouter(routerConfig)
 
 // ======================配置HTTP请求===============================
 var loading
-// Add a request interceptor
-axios.interceptors.request.use(function (config) {
+  // Add a request interceptor
+axios.interceptors.request.use(function(config) {
   // Do something before request is sent
-  loading = Loading.service({
-    fullscreen: true,
-    text:"请求中..."
-  })
-
+  if (!config.noLoading) {
+    loading = Loading.service({
+      fullscreen: true,
+      text: "请求中..."
+    })
+  }
   return config;
-}, function (error) {
+}, function(error) {
   // Do something with request error
   return Promise.reject(error);
 });
 
 // Add a response interceptor
 
-axios.interceptors.response.use(function (response) {
-  if (response.data.msg && typeof (response.data.msg) == "string") {
+axios.interceptors.response.use(function(response) {
+  if (response.data.msg && typeof(response.data.msg) == "string") {
     // 如果msg存在，且不为空，则弹出
     Message({
-      message:response.data.msg,
+      message: response.data.msg,
       type: response.data.state == 0 ? "error" : "success" // 状态为0则为错误，其他都显示为成功
     })
   }
@@ -57,10 +58,12 @@ axios.interceptors.response.use(function (response) {
     }
   }
 
-  loading.close();
+  if (!config.noLoading) {
+    loading.close();
+  }
 
   return response;
-}, function (error) {
+}, function(error) {
   // Do something with response error
   return Promise.reject(error);
 });
@@ -70,9 +73,8 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 axios.defaults.withCredentials = true; // 跨域相关
 
 Vue.prototype.$http = axios // 将axios绑定到vue上
-/* eslint-disable no-new */
+  /* eslint-disable no-new */
 new Vue({
   router: router,
   render: h => h(App)
 }).$mount('#app');
-
