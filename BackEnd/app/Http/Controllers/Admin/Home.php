@@ -64,29 +64,33 @@ class Home extends Controller
 
     public function getIndex()
     {
-        if ($this->grade_id === null) {
+        $grade_id = request()->only('grade_id');
+        $isExists = DB::table('grade')
+            ->where('institute_id', $this->institute_id)
+            ->where('id', $grade_id)
+            ->exists();
+        if (!$isExists) {
             return $this->json(0);
         }
-
-        $teacher['tea_register'] = $this->instituteHandle->teacher()->where('openid', '!=', '')->count() . '/' .
+        $data['tea_register'] = $this->instituteHandle->teacher()->where('openid', '!=', '')->count() . '/' .
             $this->instituteHandle->teacher()->count();
-        $teacher['stu_register'] = $this->instituteHandle->student()
-                ->where('grade_id', $this->grade_id)
+        $data['stu_register'] = $this->instituteHandle->student()
+                ->where('grade_id', $grade_id)
                 ->where('openid', '!=', '')->count() . '/' .
             $this->instituteHandle->student()
-                ->where('grade_id', $this->grade_id)
+                ->where('grade_id', $grade_id)
                 ->count();
-        $teacher['course_total'] = $this->instituteHandle->course()
-            ->where('grade_id', $this->grade_id)
+        $data['course_total'] = $this->instituteHandle->course()
+            ->where('grade_id', $grade_id)
             ->whereIn('status', ['1', '2', '3'])->count();
-        $teacher['course_confirm'] = $this->instituteHandle->course()
-            ->where('grade_id', $this->grade_id)
+        $data['course_confirm'] = $this->instituteHandle->course()
+            ->where('grade_id', $grade_id)
             ->where('status', '3')->count();
-        $teacher['course_review'] = $this->instituteHandle->course()
-            ->where('grade_id', $this->grade_id)
+        $data['course_review'] = $this->instituteHandle->course()
+            ->where('grade_id', $grade_id)
             ->where('status', '1')
             ->count();
-        return $this->json(1, $teacher);
+        return $this->json(1, $data);
     }
 
 

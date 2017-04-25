@@ -1,48 +1,34 @@
 <template>
   <div class="tab-page-container">
-    <h2 style="text-align:center">管理学生</h2>
+  <h2 style="text-align:center">管理老师</h2>
     <el-card class="box-card">
       <div slot="header"
            class="clearfix">
-        <el-select v-model="current_grade" placeholder="请选择">
-              <el-option-group
-      v-for="group in gradeList"
-      :label="group.label">
-      <el-option
-        v-if="gradeList.length"
-        v-for="item in group.options"
-        :label="item.label"
-        :value="item.value">
-      </el-option>
-    </el-option-group>
-        </el-select>
-        <el-input placeholder="搜索学生(支持姓名与工号搜索)"
+        <el-input placeholder="搜索老师(支持姓名与工号搜索)"
                   icon="search"
                   v-model="option.search.rule"
                   style="width:300px;"
                   class="search-input"
-                  :on-icon-click="()=>{init()}">
+                  :on-icon-click="()=>{init(false)}">
         </el-input>
         <el-button @click="addOne()"
-                  v-if="isCurrentGrade"
-                   type="primary">新增学生</el-button>
+                   type="primary">新增老师</el-button>
         <el-button @click="deleteTeacher(multipleSelection)"
-                   v-if="isCurrentGrade"
-                   type="danger">删除选定学生</el-button>
-        <el-upload :action="$http.defaults.baseURL + 'student/file'"
+                   type="danger">删除选定老师</el-button>
+        <el-upload :action="$http.defaults.baseURL + 'teacher/file'"
                    name="excel"
-                   v-if="isCurrentGrade"
                    :on-success='fileUpload'
                    :on-error='err=>{$message({ message: "导入失败", type: "error" })}'
                    style="width:300px;float: right;">
           <el-button size="small"
                      type="primary">点击上传</el-button>
           <div slot="tip"
-               class="el-upload__tip">上传学生的EXCEL，用于导入学生数据</div>
+               class="el-upload__tip">上传老师的EXCEL，用于导入老师数据</div>
         </el-upload>
       </div>
-      <el-table :data="student_list.data"
+      <el-table :data="teacher_list.data"
                 border
+                @filter-change="filterChange"
                 @sort-change="res=>{option.orderBy ={
                                 key: res.prop,
                                 order:res.order == 'descending' ? 'desc':'asc'
@@ -65,7 +51,6 @@
           <el-form-item label="电话号码">
             <span>{{ props.row.phone }}</span>
           </el-form-item>
-          <br>
           <el-form-item label="QQ">
             <span>{{ props.row.qq }}</span>
           </el-form-item>
@@ -84,25 +69,31 @@
                          width="180">
         </el-table-column>
         <el-table-column prop="job_num"
-                         label="学号"
+                         label="工号"
                          sortable
                          width="180">
         </el-table-column>
-        <el-table-column prop="phone"
-                         label="电话"
-                         width="180">
-        </el-table-column>
-        <el-table-column prop="email"
-                         label="邮箱"
-                         width="180">
-        </el-table-column>
         <el-table-column prop="openid"
-                         label="微信识别id(代表是否已注册绑定)">
+                         label="微信识别id(代表是否已注册绑定)"
+                         width="260">
         </el-table-column>
-
-        <el-table-column label="操作" 
-          v-if="isCurrentGrade">
+        <el-table-column prop="major"
+                         label="专业"
+                         column-key="major_id"
+                         :filters="major_filters"
+                         :formatter="(row,col)=>{return major_map[row.major_id]}"
+                         width="180">
+        </el-table-column>
+        <el-table-column prop="is_admin"
+                         label="是否为管理员"
+                         column-key="is_admin"
+                         sortable
+                         :formatter="(row,col)=>{return row.is_admin ? '专业课审核员':'否'}"
+                         width="180">
+        </el-table-column>
+        <el-table-column label="操作">
           <template scope="scope">
+  
             <el-button size="small"
                        type="primary"
                        @click="handleEdit(scope.$index, scope.row, 'classes')">修改</el-button>
@@ -118,24 +109,42 @@
                        :current-page="option.page"
                        :page-size="option.size"
                        layout="total,sizes,prev, pager, next, jumper"
-                       :total="student_list.total">
+                       :total="teacher_list.total">
         </el-pagination>
       </div>
     </el-card>
     <!--=========================================================dialog start===================================================================-->
-    <el-dialog title="学生"
+    <el-dialog title="老师"
                v-model="dialog">
       <!--班级对话框-->
-      <el-form :model="newStudent">
-        <el-form-item label="学生名">
-          <el-input placeholder="请输入学生名"
-                    v-model="newStudent.name"></el-input>
+      <el-form :model="newTeacher">
+        <el-form-item label="老师名">
+          <el-input placeholder="请输入老师名"
+                    v-model="newTeacher.name"></el-input>
         </el-form-item>
         <el-form-item label="学号">
           <el-input placeholder="请输入学号"
-                    v-model="newStudent.job_num"></el-input>
+                    v-model="newTeacher.job_num"></el-input>
         </el-form-item>
-
+  <el-form-item label="是否为专业课审核员">
+            <el-switch
+          v-model="newTeacher.is_admin"
+          on-text="是"
+          @change="state=>{
+            
+          }"
+          off-text="否">
+        </el-switch>
+  </el-form-item>
+<el-form-item label="所属专业">
+  <el-select v-model="newTeacher.major_id" placeholder="请选择专业">
+    <el-option
+      v-for="item in major_filters"
+      :label="item.text"
+      :value="item.value">
+    </el-option>
+  </el-select>
+</el-form-item>
       </el-form>
       <div slot="footer"
            class="dialog-footer">
@@ -149,12 +158,10 @@
 
 <script>
   export default {
-    name: "home-page",
+    name: "teacher-page",
     data() {
       return {
-        gradeList: [],
-        current_grade: '',
-        student_list: {},
+        teacher_list: {},
         option: {
           search: {
             key: ['name', 'job_num'],
@@ -166,26 +173,28 @@
             key: 'id',
             order: 'desc'
           },
-          filter: {
-            grade_id: []
-          },
+          filter: {},
         },
+      major_map: [],
+      major_filters: [],
       multipleSelection: [], // 多选列
-      newStudent: {
+      newTeacher: {
         name: '',
-        job_num: ''
+        job_num: '',
+        is_admin: false,
+        major_id: 0
       },
       dialog: false,
       dialogId: 0
       }
     },
     created() {
-      this.getGrade()
+      this.init(false)
     },
   mounted() {
     document.querySelector('.search-input input').addEventListener('keypress', (e) => {
       if (e.keyCode === 13) { // 绑定回车事件
-        this.init()
+        this.init(false)
       }
     })
   },
@@ -196,56 +205,63 @@
       for (var key in this.option) {
         tmp.push(this.option[key])
       }
-      tmp.push(this.option.filter.grade_id)
+      // tmp.push(this.option.search.rule)
       return tmp
-    },
-    isCurrentGrade(){
-      if(this.gradeList[0]){
-        return this.current_grade == this.gradeList[0]['options'][0]['value']
-      }else{
-        return false
-      }
     }
   },
   watch: {
     isRenewData() { // 监听相关依赖，如果有变化，则触发更新
-      this.init()
-    },
-    current_grade(grade){
-      if(grade){
-        this.option.filter.grade_id = [grade]
-      }
+      this.init(false)
     }
   },
-  methods: {
-  init() {
+    methods: {
+    fileUpload(res) {      
+      this.$message({ message: res.msg, type: res.status? 'success':"error" })
+      this.init(true)
+  },
+  filterChange(item) {
+    var tmp = {}
+    for (var key in this.option.filter) {
+      tmp[key] = this.option.filter[key]
+    }
+    for (var key in item) {
+      tmp[key] = item[key]
+    }
+
+    this.option.filter = tmp // 重新复制触发更新
+  },
+  makeFilters(key, data) {
+    var tmp = []
+    for (var index in data) {
+      tmp.push({
+        text: data[index],
+        value: Number(index)
+      })
+    }
+    this[key] = tmp
+  },
+  init(noLoading) {
     // 统一接口
-    this.$http.get('student/student-init', {
-      noLoading: true,
+    this.$http.get('teacher/teacher-init',  {
+      noLoading: noLoading,
       params:{
         option: JSON.stringify(this.option)
       }
     }).then(res => {
-      this.student_list = res.data.student_list
-    })
-  },
-  getGrade(){
-    this.$http.get('home/grade').then(res=>{
-      const gradeList = res.data.data
-      if(gradeList[0]['options'].length){
-          this.gradeList = gradeList
-      }else{
-        this.gradeList = gradeList.slice(1)
-      }
-      this.current_grade = this.gradeList[0]['options'][0]['value']
+      this.major_map = res.data.major_map
+      this.makeFilters('major_filters', this.major_map)
+      this.teacher_list = res.data.teacher_list
+      this.newTeacher.major_id = this.major_filters[0].value
     })
   },
   addOne() {
     this.dialog = true
     this.dialogId = 0
-    this.newStudent = {
+    this.newTeacher = {
       name: '',
-      job_num: ''
+      job_num: '',
+      is_admin: false,
+      major_id: this.major_filters[0].value,
     }
   },
   submitEdit() {
@@ -254,12 +270,12 @@
       cancelButtonText: '取消',
       type: 'warning'
     }).then(() => {
-      this.$http.post('student/student-submit', this.newStudent, {
+      this.$http.post('teacher/teacher-submit', this.newTeacher, {
         params: {
           id: this.dialogId,
         }
       }).then(res => {
-        this.init()
+        this.init(false)
         this.dialog = false
       })
     }).catch(() => {
@@ -273,18 +289,18 @@
   handleEdit(index, item, type) {
     this.dialog = true
     this.dialogId = item.id
-    for (var key in this.newStudent) {
-      this.newStudent[key] = item[key]
+    for (var key in this.newTeacher) {
+      this.newTeacher[key] = item[key]
     }
 
   },
-  deleteTeacher(student_list) {
-    this.$confirm('确认删除选中的学生？请仔细确认', '提示', {
+  deleteTeacher(teacher_list) {
+    this.$confirm('确认删除选中的老师？请仔细确认', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
     }).then(() => {
-      this.$http.post('student/delete', { student_list: student_list }).then(res => {
+      this.$http.post('teacher/delete', { teacher_list: teacher_list }).then(res => {
         this.init(true)
       })
     }).catch(() => {
@@ -293,7 +309,9 @@
         type: 'info',
       })
     })
+
   },
+
   handleSelectionChange(list) {
     var tmp = []
     list.forEach(item => {
@@ -301,17 +319,10 @@
     })
     this.multipleSelection = tmp
   },
-    fileUpload(res) {      
-      this.$message({ message: res.msg, type: res.status? 'success':"error" })
-      this.init(true)
-  },
   }
 }
 </script>
 <style>
- .home-table-title{
-   margin: 0 auto;
- }
  .box-card {
    margin-top: 10px;
  }
