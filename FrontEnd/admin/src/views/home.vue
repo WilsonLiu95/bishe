@@ -1,10 +1,8 @@
 <template>
   <div class="tab-page-container">
     <!--注册及课题统计信息表-->
+    <h2 style="text-align:center">毕设信息统计</h2>
 <el-card class="box-card">
-  <div slot="header" class="clearfix">
-    <h3 class="home-table-title" style="text-align:center;">毕设信息统计</h3>
-  </div>
     <el-table v-if="isExitGrade" :data="reg_table" class="reg_table" border>
       <el-table-column label="注册统计">
         <el-table-column prop="tea_register" label="导师">
@@ -25,6 +23,7 @@
       <h3>当前尚未创建新的年份</h3>
     </div>
 </el-card>
+<h2 style="text-align:center">管理老师</h2>
     <el-card class="box-card">
       <div slot="header"
            class="clearfix">
@@ -39,7 +38,7 @@
                    type="primary">新增老师</el-button>
         <el-button @click="deleteTeacher(multipleSelection)"
                    type="danger">删除选定老师</el-button>
-        <el-upload :action="$http.defaults.baseURL + 'home/file'"
+        <el-upload :action="$http.defaults.baseURL + 'teacher/file'"
                    name="excel"
                    :on-success='fileUpload'
                    :on-error='err=>{$message({ message: "导入失败", type: "error" })}'
@@ -280,7 +279,7 @@
   init(noLoading) {
     // 统一接口
     this.getRegTable()
-    this.$http.get('home/teacher-init',  {
+    this.$http.get('teacher/teacher-init',  {
       noLoading: noLoading,
       params:{
         option: JSON.stringify(this.option)
@@ -308,7 +307,7 @@
       cancelButtonText: '取消',
       type: 'warning'
     }).then(() => {
-      this.$http.post('home/teacher-submit', this.newTeacher, {
+      this.$http.post('teacher/teacher-submit', this.newTeacher, {
         params: {
           id: this.dialogId,
         }
@@ -338,7 +337,7 @@
       cancelButtonText: '取消',
       type: 'warning'
     }).then(() => {
-      this.$http.post('home/delete', { teacher_list: teacher_list }).then(res => {
+      this.$http.post('teacher/delete', { teacher_list: teacher_list }).then(res => {
         this.init(true)
       })
     }).catch(() => {

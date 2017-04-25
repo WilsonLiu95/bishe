@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class StudentPage extends Controller
+class StudentApi extends Controller
 {
     private $instituteHandle,$institute_id,$grade_id;
     function __construct()

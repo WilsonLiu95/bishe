@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Model\Course;
 use App\Model\Institute;
 use App\Model\Major;
+use App\Model\Schedule;
+use App\Model\Teacher;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class CoursePage extends Controller
+class CourseApi extends Controller
 {
     private $instituteHandle,$institute_id;
     private $grade_id;
@@ -27,17 +29,18 @@ class CoursePage extends Controller
         $option['where'] = [
             ['institute_id','=',1], // 限制为自己学院
         ];
-        $data['course_list'] = $this->makePage(Course::class, $option);
-
-        Course::where('course.institute_id',1)
-            ->where('course.grade_id', $option['filter']['grade_id'][0])
-            ->join("teacher",'course.teacher_id','=',"teacher.id")
-            ->select("course.*","teacher.name as teacher_name")
-//            ->where(function($query) use ($search) {
-//                $query->where("teacher.name","like","%". $search ."%")
-//                    ->orWhere("course.title","like","%". $search ."%");
-//            })
-            ->get();
+        $initCourse = $this->makePage(Course::class, $option);
+        $initCourse['data'] = array_map(function ($item){
+            $teacher = Teacher::find($item['teacher_id']);
+            $item['teacher_name'] = $teacher ? $teacher->name : '已不存在该老师';
+            $item['student_list'] = Schedule::where('course_id', $item['id'])
+                ->whereIn('status',[1,2])->get()->pluck('student_name');
+            return $item;
+        }, $initCourse['data']);
+        // 制作映射关系
+        $data['major_map'] = Major::where('institute_id', $this->institute_id)
+            ->lists('name', 'id')->toArray();
+        $data['course_list'] = $initCourse;
         return response()->json($data);
     }
 

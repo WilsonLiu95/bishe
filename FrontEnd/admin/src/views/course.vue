@@ -1,5 +1,6 @@
 <template>
   <div class="tab-page-container">
+    <h2 style="text-align:center">管理课题</h2>
     <el-card class="box-card">
       <div slot="header"
            class="clearfix">
@@ -14,7 +15,7 @@
       </el-option>
     </el-option-group>
         </el-select>
-        <el-input placeholder="搜索课程(支持老师姓名搜索)"
+        <el-input placeholder="搜索课程(支持课题名称搜索)"
                   icon="search"
                   v-model="option.search.rule"
                   style="width:300px;"
@@ -24,57 +25,75 @@
       </div>
       <el-table :data="course_list.data"
                 border
+                @filter-change="filterChange"
                 @sort-change="res=>{option.orderBy ={
                                 key: res.prop,
                                 order:res.order == 'descending' ? 'desc':'asc'
                               } }"
                 style="width: 100%">
-        <el-table-column type="selection"
-                         width="55">
-        </el-table-column>
     <el-table-column type="expand">
+      <!--详情-->
       <template scope="props">
         <el-form label-position="left" inline class="demo-table-expand">
-          <el-form-item label="姓名">
-            <span>{{ props.row.name }}</span>
+          <el-form-item label="课题名称">
+            <span>{{ props.row.title }}</span>
           </el-form-item>
-          <el-form-item label="学号">
-            <span>{{ props.row.job_num }}</span>
+          <el-form-item label="老师">
+            <span>{{ props.row.teacher_name }}</span>
           </el-form-item>
-          <br>
-          <el-form-item label="电话号码">
-            <span>{{ props.row.phone }}</span>
-          </el-form-item>
-          <br>
-          <el-form-item label="QQ">
-            <span>{{ props.row.qq }}</span>
-          </el-form-item>
-          <el-form-item label="邮箱">
-            <span>{{ props.row.email }}</span>
+          <el-form-item label="专业">
+            <span>{{ major_map[props.row.major_id] }}</span>
           </el-form-item>
           <br>
-          <el-form-item label="个人介绍">
-            <span>{{ props.row.intro }}</span>
+          <el-form-item label="审核状态">
+            <span>{{ check_map[props.row.check_status] }}</span>
+          </el-form-item>
+          <el-form-item label="审核意见">
+            <span>{{ props.row.check_advice }}</span>
+          </el-form-item>
+          <br>
+
+          <el-form-item label="课程状态">
+            <span>{{ status_map[props.row.status] }}</span>
+          </el-form-item>
+          <el-form-item label="选中该课的学生">
+            <span>{{ props.row.student_list.join(',') }}</span>
+          </el-form-item>
+          <br>
+          <el-form-item label="课程详情">
+            <span>{{ props.row.details }}</span>
           </el-form-item>
         </el-form>
       </template>
     </el-table-column>
         <el-table-column prop="title"
-                         label="姓名"
+                         label="课题名称"
                          width="180">
         </el-table-column>
-        <el-table-column prop="teacher_id"
+        <el-table-column prop="teacher_name"
                          label="老师"
                          width="180">
         </el-table-column>
-        <el-table-column prop="major_id"
+        <el-table-column prop="major"
                          label="专业"
-                         sortable
+                         column-key="major_id"
+                         :filters="major_filters"
+                         :formatter="(row,col)=>{return major_map[row.major_id]}"
                          width="180">
         </el-table-column>
-        <el-table-column prop="status"
-                         label="课程状态"
+        <el-table-column prop="status_text"
+                         label="状态"
+                         column-key="status"
+                         :filters="status_filters"
+                         :formatter="(row,col)=>{return status_map[row.status]}"
                          width="180">
+        </el-table-column>
+        <el-table-column prop="student_name"
+                         label="选择该课的学生"
+                         :formatter="(row,col)=>{
+                           return row.student_list.join(',')
+                           }"
+                         >
         </el-table-column>
       </el-table>
       <div class="block">
@@ -90,25 +109,38 @@
   </div>  
 </template>
 
-
 <script>
   export default {
     name: "home-page",
     data() {
       return {
         gradeList: [],
-        current_grade: 0,
+        current_grade: '',
         course_list: {},
+        major_map: {},
+        major_filters: [],
+        status_map:{
+          0: '已删除',
+          1: '审核中',
+          2: '互选中',
+          3: '完成互选'
+        },
+        check_map: {
+          0: '待审核',
+          1: '未通过审核',
+          2: '通过审核'
+        },
+        status_filters: [],
         option: {
           search: {
-            key: ['name', 'job_num'],
+            key: ['title'],
             rule: ""
           }, // 搜索框内容
           size: 20,
           page: 1,
           orderBy: {
             key: 'id',
-            order: 'desc'
+            order: 'asc'
           },
           filter: {
             grade_id: []
@@ -134,6 +166,7 @@
         tmp.push(this.option[key])
       }
       tmp.push(this.option.filter.grade_id)
+      tmp.push(this.option.filter.status)
       return tmp
     },
     isCurrentGrade(){
@@ -165,13 +198,42 @@
       }
     }).then(res => {
       this.course_list = res.data.course_list
+      this.major_map = res.data.major_map
+      this.makeFilters('major_filters', this.major_map)
+      this.makeFilters('status_filters', this.status_map)
     })
   },
   getGrade(){
     this.$http.get('home/grade').then(res=>{
-      this.gradeList = res.data.data
-        this.current_grade = this.gradeList[0]['options'][0]['value']
+      const gradeList = res.data.data
+      if(gradeList[0]['options'].length){
+          this.gradeList = gradeList
+      }else{
+        this.gradeList = gradeList.slice(1)
+      }
+      this.current_grade = this.gradeList[0]['options'][0]['value']
     })
+  },
+  filterChange(item) {
+    var tmp = {}
+    for (var key in this.option.filter) {
+      tmp[key] = this.option.filter[key]
+    }
+    for (var key in item) {
+      tmp[key] = item[key]
+    }
+
+    this.option.filter = tmp // 重新复制触发更新
+  },
+  makeFilters(key, data) {
+    var tmp = []
+    for (var index in data) {
+      tmp.push({
+        text: data[index],
+        value: Number(index)
+      })
+    }
+    this[key] = tmp
   },
   }
 }

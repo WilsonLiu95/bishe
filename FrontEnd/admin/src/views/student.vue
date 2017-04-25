@@ -1,5 +1,6 @@
 <template>
   <div class="tab-page-container">
+    <h2 style="text-align:center">管理学生</h2>
     <el-card class="box-card">
       <div slot="header"
            class="clearfix">
@@ -8,17 +9,12 @@
       v-for="group in gradeList"
       :label="group.label">
       <el-option
+        v-if="gradeList.length"
         v-for="item in group.options"
         :label="item.label"
         :value="item.value">
       </el-option>
     </el-option-group>
-
-          <!--<el-option
-            v-for="item in gradeList"
-            :label="item.name"
-            :value="item.id">
-          </el-option>-->
         </el-select>
         <el-input placeholder="搜索学生(支持姓名与工号搜索)"
                   icon="search"
@@ -88,23 +84,29 @@
                          width="180">
         </el-table-column>
         <el-table-column prop="job_num"
-                         label="工号"
+                         label="学号"
                          sortable
                          width="180">
         </el-table-column>
+        <el-table-column prop="phone"
+                         label="电话"
+                         width="180">
+        </el-table-column>
+        <el-table-column prop="email"
+                         label="邮箱"
+                         width="180">
+        </el-table-column>
         <el-table-column prop="openid"
-                         label="微信识别id(代表是否已注册绑定)"
-                         width="260">
+                         label="微信识别id(代表是否已注册绑定)">
         </el-table-column>
 
-        <el-table-column label="操作">
+        <el-table-column label="操作" 
+          v-if="isCurrentGrade">
           <template scope="scope">
-  
             <el-button size="small"
                        type="primary"
                        @click="handleEdit(scope.$index, scope.row, 'classes')">修改</el-button>
             <el-button size="small"
-                       v-if="isCurrentGrade"
                        type="danger"
                        @click="deleteTeacher([scope.row.id])">删除</el-button>
           </template>
@@ -145,14 +147,13 @@
   </div>  
 </template>
 
-
 <script>
   export default {
     name: "home-page",
     data() {
       return {
         gradeList: [],
-        current_grade: 0,
+        current_grade: '',
         student_list: {},
         option: {
           search: {
@@ -231,8 +232,13 @@
   },
   getGrade(){
     this.$http.get('home/grade').then(res=>{
-      this.gradeList = res.data.data
-        this.current_grade = this.gradeList[0]['options'][0]['value']
+      const gradeList = res.data.data
+      if(gradeList[0]['options'].length){
+          this.gradeList = gradeList
+      }else{
+        this.gradeList = gradeList.slice(1)
+      }
+      this.current_grade = this.gradeList[0]['options'][0]['value']
     })
   },
   addOne() {

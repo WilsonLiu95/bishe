@@ -12,7 +12,6 @@ export default {
         { path: "student", component: require('_views/student.vue') },
         { path: "course", component: require('_views/course.vue') },
         { path: "system-config", component: require('_views/system-config.vue') },
-        // { path: "manage", component: require('_views/manage.vue')},
       ]
     },
     { path: '*', component: require('_views/404.vue') }

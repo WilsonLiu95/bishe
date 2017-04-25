@@ -32,11 +32,22 @@ class Schedule extends Model
     }
     public function getStudentNameAttribute()
     {
-        return $this->student()->get()[0]['name'];
+        $student = $this->student()->get();
+        if(count($student)){
+            return $student[0]['name'];
+        }else{
+            return null;
+        }
     }
     public function getJobNumAttribute()
     {
-        return $this->student()->get()[0]['job_num'];
+        $student = $this->student()->get();
+        if(count($student)){
+            return $student[0]['job_num'];
+        }else{
+            return null;
+        }
+
     }
 
 }
