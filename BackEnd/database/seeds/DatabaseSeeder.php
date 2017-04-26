@@ -18,8 +18,6 @@ class DatabaseSeeder extends Seeder
         factory(\App\Model\Grade::class)->create();
         factory(\App\Model\Major::class,4)->create();
         factory(\App\Model\Admin::class)->create();
-
-
         factory(\App\Model\Teacher::class,100)->create();
 
         factory(\App\Model\Message::class,500)->create();

@@ -51,13 +51,14 @@
       }
     },
     created() {
-      this.getUnreadMsgNum()
       // 创建的时候监听路由变化，以编程方式响应跳转到相应的页面
       var hashArr = location.hash.split("/")
       this.selected = hashArr[2]
-
-      setInterval(() => { this.getUnreadMsgNum() }, 15000) // 30S轮询向后台请求看看是否有新的message
       this.getUserType()
+
+      setInterval(()=>{
+        this.getUnreadMsgNum()
+      },15000)
     },
     methods: {
       getUserType(){
@@ -78,7 +79,6 @@
             this.unreadMsgNum = res.data.data
             window._const.msg = []
           }
-
         })
       }
     },

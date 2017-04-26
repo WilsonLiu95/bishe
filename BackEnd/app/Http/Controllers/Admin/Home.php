@@ -52,7 +52,6 @@ class Home extends Controller
                 ];
             }else{
                 $data['config'] = [
-                    'is_open'=>$item->is_open,
                     'max_select_class'=>$item->max_select_class,
                     'max_create_class'=>$item->max_create_class
                 ];
