@@ -1,24 +1,24 @@
 <template>
   <div class="tab-page-container">
-    <mt-search v-model="search" placeholder="按导师姓名，或课题查询课程" :result.sync="course.data" :show=true>
+    <mt-search v-model="search" placeholder="按导师姓名，或课题查询课程" :result.sync="course.data" :show="true">
       <!--start 上一页-->
       <div class="nav tab-line">
-        <mt-button @click.native="jumpPage(-1)" size="normal">
+        <mt-button @click="jumpPage(-1)" size="normal">
           <img :src="assets.previous" height="20" width="20" slot="icon">
         </mt-button>
-        <mt-button @click.native="isPopupVisible = true" size="normal" v-if="isInit">第{{current_page}}页/共{{course.last_page}}页</mt-button>
-        <mt-button @click.native="jumpPage(+1)" size="normal">
+        <mt-button @click="popPickerPage" size="normal" v-if="isInit">第{{current_page}}页/共{{course.last_page}}页</mt-button>
+        <mt-button @click="jumpPage(+1)" size="normal">
           <img :src="assets.next" height="20" width="20" slot="icon">
         </mt-button>
       </div>
       <!--end 下一页-->
-
       <!--start 课表清单-->
-      <div class="page-tab-container" v-if="isInit">
+      <div v-if="isInit">
         <mt-cell v-for="item in course.data" :title="item.title" :label="getLabel(item) " :to="'/details/' + item.id"
           is-link>
           {{ item.teacher_name}}
           </mt-cell>
+          <h2 v-if="!course.total" style="text-align:center">暂无课题</h2>
       </div>
       <!--end 课表清单-->
     </mt-search>
@@ -70,18 +70,25 @@
         this.current_page = "1"
       }
     },
+    computed:{
+      isRequestNew(){
+        var tmp = []
+        // 如果 current_page 发生改变，就向后端发送请求。因为并非通过URL方式记录页面，所以无法通过链接保留页面参数
+        tmp.push(this.current_page)
+        tmp.push(this.search)
+        return tmp
+      }
+    },
     watch: {
-      // 如果 current_page 发生改变，就向后端发送请求。因为并非通过URL方式记录页面，所以无法通过链接保留页面参数
-      current_page: function (page) {
-        this.$http.get("/course?page=" + page + "&search=" + this.search).then((res) => {
-          this.slots[0].values = this.getArray(res.data.data.last_page)
-          this.course = res.data.data
-          this.isInit = true
-        })
-      },
-      search: function (search) {
+      isRequestNew(option){
+        if(this.course.total === 0){ // 如果当前没有数据，则不更新页面
+          return 
+        }
         window._const.search = this.search
         this.$http.get("/course?page=" + this.current_page + "&search=" + this.search).then((res) => {
+          if(res.data.data.total === 0){
+            this.current_page == "0"
+          }
           if (res.data.data.last_page < this.current_page) {
             // 有数据,才重置页面,可减少重复请求
             if (res.data.data.last_page != 0) {
@@ -92,7 +99,7 @@
           this.course = res.data.data
           this.isInit = true
         })
-      }
+      },
     },
     methods: {
       getArray(n) {
@@ -110,6 +117,12 @@
       jumpPage(n) {
         n = Number(n)
         var current_page = Number(this.current_page)
+        if(this.course.last_page == 0){
+          util.toast({
+            message: '当前暂无任何数据，不可翻页',
+          });
+          return
+        }
         if (n == 1 && current_page == this.course.last_page) {
           util.toast({
             message: '已到最后一页',
@@ -137,6 +150,15 @@
         }
 
         return stateArr[item.status]
+      },
+      popPickerPage(){
+        if(this.course.last_page == 0){
+          util.toast({
+            message: '当前暂无任何数据，不可翻页',
+          })
+        }else{
+          this.isPopupVisible = true
+        }
       }
     },
 

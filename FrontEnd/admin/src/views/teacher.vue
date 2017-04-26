@@ -295,7 +295,7 @@
 
   },
   deleteTeacher(teacher_list) {
-    this.$confirm('确认删除选中的老师？请仔细确认', '提示', {
+    this.$confirm('确认删除选中的老师？请仔细确认。', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'

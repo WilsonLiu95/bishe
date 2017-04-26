@@ -205,7 +205,7 @@
   },
   getGrade(){
     this.$http.get('home/grade').then(res=>{
-      const gradeList = res.data.data
+      const gradeList = res.data.data.gradeList
       if(gradeList[0]['options'].length){
           this.gradeList = gradeList
       }else{

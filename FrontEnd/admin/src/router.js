@@ -7,7 +7,7 @@ export default {
     {
       path: '/admin', component: require('_views/container.vue'), // 通过这个识别老师和学生
       children: [
-        { path: '', redirect: "home" }, 
+        { name: 'admin', path: '', redirect: "home" }, 
         { path: "home", component: require('_views/home.vue') },
         { path: "student", component: require('_views/student.vue') },
         { path: "teacher", component: require('_views/teacher.vue') },

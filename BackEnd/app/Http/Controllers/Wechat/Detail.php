@@ -14,7 +14,7 @@ class Detail extends Controller
     public function getIndex()
     {
         $id =  request()->input("id");
-        $this->checkOneCourse($id);// 校验课程数据
+        // $this->checkOneCourse($id);// 校验课程数据
 
         $course = Model\Course::find($id);
 
@@ -302,7 +302,7 @@ class Detail extends Controller
     }
     private function isHasDone($student_id){
         // 首先校验数据,确保无误
-        $this->checkOneStudent($student_id);
+        // $this->checkOneStudent($student_id);
         // 查看学生是否有在"完成互选"的进度
         return Model\Schedule::where("student_id",$student_id)
             ->where("status",2)->exists(); // 2为完成互选

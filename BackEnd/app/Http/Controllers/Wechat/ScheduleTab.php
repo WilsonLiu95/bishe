@@ -21,7 +21,7 @@ class ScheduleTab extends Controller
 
         $grade = $this->getGrade();
         if($this->isTeacher()){
-            $this->checkOneTeacher($id);
+            // $this->checkOneTeacher($id);
 
             $course = Course::where("teacher_id",$id)
                 ->where("status","!=",0)
@@ -33,7 +33,7 @@ class ScheduleTab extends Controller
             $res['max'] = $grade->max_create_class;
         }else{
             // 学生部分
-            $this->checkOneStudent($id); // 先校验数据
+            // $this->checkOneStudent($id); // 先校验数据
 
             $course = Schedule::where("student_id",$id)
                 ->whereIn("status",[1,2])

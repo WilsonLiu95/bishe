@@ -17,8 +17,6 @@ class CreateGradeTable extends Migration
             $table->integer('institute_id');
             $table->string('name',32);
             // 个性化配置
-            $table->boolean('is_open')
-                ->comment("系统是否开放");
             $table->integer('max_create_class')
                 ->comment("单个老师最多创建的课程数量");
             $table->integer('max_select_class')

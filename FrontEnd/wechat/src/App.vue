@@ -7,7 +7,10 @@
 
 <script>
   export default {
-
+    name: 'app',
+    created(){
+      this.$http.get('')
+    },
   };
 
 </script>

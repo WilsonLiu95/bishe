@@ -44,5 +44,4 @@ class AccountTab extends Controller
         return $this->json(1,$data);
     }
 
-
 }

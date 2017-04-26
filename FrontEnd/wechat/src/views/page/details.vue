@@ -54,8 +54,6 @@
           <mt-button v-if="isDiabledCheck" @click="isDiabledCheck=false" size="large" type="primary">开始审核</mt-button>
           <mt-button v-if="!isDiabledCheck" @click="submitCheck" size="large" type="primary">提交审核</mt-button>
         </div>
-
-
       </div>
       <!--互选与已完成-->
       <div v-if="course.status == 2 && !isTeacher">
@@ -63,7 +61,7 @@
           <mt-cell title="提示">已选定，请主动联系老师，完成互选</mt-cell>
           <mt-button size="large" type="danger" @click="cancelSelect">退选</mt-button>
         </div>
-        <mt-button v-else="course.isSelected" size="large" type="primary" @click="select">选定</mt-button>
+        <mt-button v-else size="large" type="primary" @click="select">选定</mt-button>
       </div>
     </div>
     <!--第三部分 end 根据用户以及课程的status展示不同的部分-->
@@ -103,11 +101,10 @@
       }
     },
     created() {
-      util.isTeacher().then(isTeacher => {
+      util.isTeacher().then(({isTeacher,isAdmin}) => {
         this.isTeacher = isTeacher
       })
       this.getDetail();
-
     },
     methods: {
       getDetail() {

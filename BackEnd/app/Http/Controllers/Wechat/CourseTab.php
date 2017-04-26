@@ -96,7 +96,7 @@ class CourseTab extends Controller
                 // 课程为互选完成,则必然有唯一的 互选学生
                 $course['student_name'] = $schedule->first()->student->name;
             }else{
-                $this->checkOneCourse($course['id']); // 数据错误,则进行校验更正
+                // $this->checkOneCourse($course['id']); // 数据错误,则进行校验更正
             }
 
         }

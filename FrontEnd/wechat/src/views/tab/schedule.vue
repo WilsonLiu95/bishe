@@ -4,7 +4,8 @@
       <mt-cell v-for="(item,index) in course" :title="item.title" :label="getLabel(item,index)" :to="{name:'details', params:{courseId:item.id}}"
         is-link>
         <span>{{getStatus(item,index)}}</span>
-        </mt-cell>
+      </mt-cell>
+      <h2 v-if="!course.length" style="text-align:center">暂未创建任何课程</h2>
         <div class="schedule-notify">
           <div v-if="max - course.length > 0">
             <mt-button size="large" type="primary" @click="$router.push({name:'create-course'})">创建</mt-button>
@@ -22,9 +23,10 @@
       <mt-cell v-for="(item,index) in course" :title="item.title" :label="item.teacher" :to="{name:'details', params:{courseId:item.id}}"
         is-link>
         <span>{{getStatus(item,index)}}</span>
-        </mt-cell>
+      </mt-cell>
+        <h2 v-if="!course.length" style="text-align:center">暂未选定任何课程</h2>
         <div class="schedule-notify">
-          <span>提示：按照院系规定你最多可同时向{{max}}个课题发出意向,</span>
+          <span>提示：按照院系规定你最多可同时向{{max}}个课题发出意向,最终将与一名老师达成互选。</span>
         </div>
     </div>
   </div>

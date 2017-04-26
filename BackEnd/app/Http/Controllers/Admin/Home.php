@@ -26,7 +26,7 @@ class Home extends Controller
         parent::__construct();
         $this->institute_id = session()->get('id');
         $this->instituteHandle = Institute::find($this->institute_id);
-        $this->grade_id = $this->instituteHandle->grade->count() == 1 ? $this->instituteHandle->grade()->value('id') : null;
+        $this->grade_id = $this->instituteHandle->grade->count() == 1 ? $this->instituteHandle->grade()->value('id') : 0;
     }
 
     public function getGrade()
@@ -51,6 +51,11 @@ class Home extends Controller
                     'value'=> $item->id
                 ];
             }else{
+                $data['config'] = [
+                    'is_open'=>$item->is_open,
+                    'max_select_class'=>$item->max_select_class,
+                    'max_create_class'=>$item->max_create_class
+                ];
                 $gradeList[0]['options'][] = [
                     'label'=> $item->name,
                     'value'=> $item->id
@@ -58,8 +63,9 @@ class Home extends Controller
             }
 
         }
+        $data['gradeList'] = $gradeList;
 
-        return $this->json(1, $gradeList);
+        return $this->json(1, $data);
     }
 
     public function getIndex()
@@ -92,6 +98,32 @@ class Home extends Controller
             ->count();
         return $this->json(1, $data);
     }
+    public function postModify(){
+        $config = request()->only('max_select_class','max_create_class');
+        $isSuccess = Grade::find($this->grade_id)->update($config);
+        return $this->toast($isSuccess, $isSuccess?'修改成功':'修改失败');
+    }
+    public function postFinishGrade(){
+        $isSuccess = Grade::find($this->grade_id)->delete();
+        return $this->toast($isSuccess, $isSuccess?'修改成功':'修改失败');
+    }
+    public function postCreateGrade(){
+        $this->validate(\request(),[
+            'gradeName'=>'required'
+        ]);
+        $canCreateGrade = !Grade::where('institute_id', $this->institute_id)->count();
+        if ($canCreateGrade){
+            $isSuccess = Grade::create([
+                'institute_id'=>$this->institute_id,
+                'max_select_class'=>2,
+                'max_create_class'=>5,
+                'name'=>request()->gradeName
+            ]);
+            return $this->toast($isSuccess, $isSuccess?'创建成功':'创建失败');
+        }else{
+            return $this->toast(0, '当前仍有未结束的学年');
+        }
 
+    }
 
 }
