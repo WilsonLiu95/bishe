@@ -12,7 +12,8 @@ use App\Http\Controllers\Controller;
 
 class TeacherApi extends Controller
 {
-    private $instituteHandle,$institute_id,$grade_id;
+    private $instituteHandle, $institute_id, $grade_id;
+
     function __construct()
     {
         parent::__construct();
@@ -21,6 +22,7 @@ class TeacherApi extends Controller
         $this->instituteHandle = Institute::find($this->institute_id);
         $this->grade_id = $this->instituteHandle->grade->count() == 1 ? $this->instituteHandle->grade()->value('id') : null;
     }
+
     public function getTeacherInit()
     {
         $option = \GuzzleHttp\json_decode(request()->input('option'), true);

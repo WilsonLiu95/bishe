@@ -12,7 +12,8 @@ use App\Http\Controllers\Controller;
 
 class StudentApi extends Controller
 {
-    private $instituteHandle,$institute_id,$grade_id;
+    private $instituteHandle, $institute_id, $grade_id;
+
     function __construct()
     {
         parent::__construct();

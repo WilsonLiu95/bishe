@@ -5,12 +5,6 @@
         <mt-cell v-for="(item,index) in message" :title="item.title" :label="item.content.substr(0,20)" @click.native="getMsgDeatils(item,index)">
           <span :class="{hasRead: !item.is_read }">{{item.created_at}}</span>
         </mt-cell>
-        <!--<a v-if="!allLoaded" class='msg-tips'>
-          <div v-if="isloading">
-            <mt-spinner class="spinner" type="fading-circle"></mt-spinner>
-            <span>刷新中...</span>
-          </div>
-        </a>-->
         <a v-if="isloading" class='msg-tips'>
             <mt-spinner class="spinner" type="fading-circle"></mt-spinner>
             <span>刷新中...</span>

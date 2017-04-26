@@ -25,13 +25,11 @@ class DatabaseSeeder extends Seeder
         factory(\App\Model\Course::class,500)->create()
             ->each(function($course){
                 if($course->status == 2){
-                    $schedule = factory(\App\Model\Schedule::class)->make(
-                        ['status'=>1]
-                    );
+                    $schedule = factory(\App\Model\Schedule::class)->make();
                     $course->schedule()->save($schedule);
                 }else if($course->status == 3){
                     $schedule = factory(\App\Model\Schedule::class)->make(
-                        ['status'=>2]
+                        ['is_finish_select'=>true]
                     );
                     $course->schedule()->save($schedule);
                 }

@@ -10,37 +10,45 @@ use App\Http\Controllers\Controller;
 class MessageTab extends Controller
 {
     use BaseTrait;
-    public function getIndex(){
+
+    public function getIndex()
+    {
         $seg = request()->seg;
         $one_page = 10;
         $msg = $this->getMessage()
-            ->skip($seg * $one_page) // 每次发送10条信息
+            ->skip($seg * $one_page)// 每次发送10条信息
             ->take($one_page)->get();
-        return $this->json(1,$msg);
+        return $this->json(1, $msg);
     }
-    public function getUnreadNumber(){ // 获取未读的信息条数
+
+    public function getUnreadNumber()
+    { // 获取未读的信息条数
         $count = $this->getMessage()
-            ->where("is_read",false)->count();
-        return $this->json(1,$count);
+            ->where("is_read", false)->count();
+        return $this->json(1, $count);
     }
-    public function getReadOneMsg(){ // 读取特定的消息
+
+    public function getReadOneMsg()
+    {   // 读取特定的消息
         // 必须首先鉴定消息是否属于该用户
-        $message =$this->getMessage()
-            ->where("id",[request()->id]);
-        if($message->exists()){
-            $message->update(['is_read'=>1]);
+        $message = $this->getMessage()
+            ->where("id", [request()->id]);
+        if ($message->exists()) {
+            $message->update(['is_read' => 1]);
             return $this->json(1);
 
-        }else{
-            return $this->toast(0,"数据错误");
+        } else {
+            return $this->toast(0, "数据错误");
         }
     }
-    private function  getMessage(){
+
+    private function getMessage()
+    {
         // 统一获取message信息,以保证排序等相同
-        $send_type = $this->getSessionInfo("isTeacher") ? 1:2;
-        $message = Message::where("send_type",$send_type)
-            ->where("send_id",$this->getSessionInfo("id"))
-            ->orderBy("created_at","ASC");
+        $send_type = $this->getSessionInfo("isTeacher") ? 1 : 2;
+        $message = Message::where("send_type", $send_type)
+            ->where("send_id", $this->getSessionInfo("id"))
+            ->orderBy("created_at", "ASC");
         return $message;
-}
+    }
 }

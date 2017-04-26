@@ -55,23 +55,24 @@
       var hashArr = location.hash.split("/")
       this.selected = hashArr[2]
       this.getUserType()
-
-      setInterval(()=>{
-        this.getUnreadMsgNum()
-      },15000)
+      // 轮询拉取未读消息条数
+      setTimeout(()=>{
+        this.getUnreadMsgNum().then(()=>{
+          setTimeout(()=>{
+            this.getUnreadMsgNum()
+          },15000)
+        })
+      },1000)
     },
     methods: {
       getUserType(){
         window.util.isTeacher().then(user=>{
           this.isTeacher = user.isTeacher
           this.isAdmin = user.isAdmin
-          if(this.isTeacher && !this.isAdmin){
-            // this.selected = 'schdeule'
-          }
         })
       },
       getUnreadMsgNum() {
-        this.$http.get('message/unread-number', {
+        return this.$http.get('message/unread-number', {
           noIndicator: true
         }).then((res) => {
           if (this.unreadMsgNum !== res.data.data) {

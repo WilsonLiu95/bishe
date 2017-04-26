@@ -140,7 +140,9 @@
       deleteCourse() {
         util.box.confirm('确定删除此课程?').then(action => {
           this.$http.get("detail/delete-course?id=" + this.$route.params.courseId).then((res) => {
-            this.getDetail()
+            if(res.data.state==1){
+              this.$router.go(-1)
+            }
           })
         }, action => {
           // 取消删除

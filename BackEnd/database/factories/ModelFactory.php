@@ -68,9 +68,7 @@ $factory->define(\App\Model\Teacher::class, function ($faker) {
 });
 $factory->define(\App\Model\Message::class, function ($faker) {
     return [
-        'from_type'=> $faker->shuffle([0,1,2])[0],
-        'send_type'=> $faker->shuffle([0,1,2])[0],
-        'from_id' => $faker->numberBetween($min = 1, $max = 100),
+        'send_type'=> $faker->shuffle([1,2])[0],
         'send_id' => $faker->numberBetween($min = 1, $max = 100),
         'is_read' => $faker->shuffle([0,1])[0],
         'title'=>$faker->word,
@@ -81,7 +79,6 @@ $factory->define(\App\Model\Message::class, function ($faker) {
 $factory->define(\App\Model\Schedule::class, function ($faker) {
     return [
         "course_id"=> $faker->numberBetween($min = 1, $max = 100),
-        'status' => $faker->shuffle([0,1,2])[0],
         'student_id' => $faker->numberBetween($min = 1, $max = 100),
     ];
 });
