@@ -3,16 +3,18 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Course extends Model
 {
     protected $table = 'course';
-
+    use SoftDeletes;
     /**
      * 可以被批量赋值的属性。
      *
      * @var array
      */
+    protected $dates = ['deleted_at'];
     protected $fillable = [];
     /**
      * 不可被批量赋值的属性。

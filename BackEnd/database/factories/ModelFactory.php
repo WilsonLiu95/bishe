@@ -38,7 +38,6 @@ $factory->define(\App\Model\Major::class, function ($faker) {
     return [
         'id' =>1,
         'name' => "电信学院",
-
     ];
 });
 
@@ -90,7 +89,7 @@ $factory->define(\App\Model\Schedule::class, function ($faker) {
 $factory->define(\App\Model\Course::class, function ($faker) {
 
     // 将课程状态与审核状态对应
-    $status = $faker->shuffle([0,1,2,3])[0];
+    $status = $faker->shuffle([1,2,3])[0];
     if($status !=1){
         $check_status = 2;
     }else{
@@ -104,7 +103,6 @@ $factory->define(\App\Model\Course::class, function ($faker) {
         'title'=>$faker->word,
         'status' => $status,
         'details' => $faker->text,
-
         'check_status'=> $check_status,
         'check_advice'=>$faker->word,
     ];

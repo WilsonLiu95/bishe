@@ -43,10 +43,6 @@
 
     <!--第三部分 start根据用户以及课程的status展示不同的部分-->
     <div class="detail-section">
-      <!--已删除-->
-      <div v-if="course.status == 0">
-        <mt-button size="large" type="default">课程已被删除</mt-button>
-      </div>
       <!--课程审核中-->
       <div v-if="course.status == 1">
         <mt-button v-if="!course.isowner && !course.isadmin" size="large">课程审核中</mt-button>
@@ -55,7 +51,7 @@
           <mt-button v-if="!isDiabledCheck" @click="submitCheck" size="large" type="primary">提交审核</mt-button>
         </div>
       </div>
-      <!--互选与已完成-->
+      <!--互选中-->
       <div v-if="course.status == 2 && !isTeacher">
         <div v-if="course.isSelected">
           <mt-cell title="提示">已选定，请主动联系老师，完成互选</mt-cell>
@@ -63,10 +59,13 @@
         </div>
         <mt-button v-else size="large" type="primary" @click="select">选定</mt-button>
       </div>
+      <div v-if="course.status == 3 && !isTeacher">
+        <mt-button size="large">已完成互选</mt-button>
+      </div>
     </div>
     <!--第三部分 end 根据用户以及课程的status展示不同的部分-->
     <!--第四部分 start 操作课程的按键组 如果是课程主人-->
-    <div class="detail-section group-btn-right" v-if="course.isowner && course.status != 0">
+    <div class="detail-section group-btn-right" v-if="course.isowner">
       <mt-button type="primary" v-if="isDiabled" @click="modifyCourse" size="normal">修改</mt-button>
       <mt-button type="primary" v-if="!isDiabled" @click="saveCourse" size="normal">保存</mt-button>
 
@@ -83,7 +82,7 @@
   </div>
 </template>
 <script>
-  // 课程 状态包含 0:已删除,1:待审核,2:互选中,3:互选完成
+  // 课程 状态包含 1:待审核,2:互选中,3:互选完成
   // schedule 状态包含 0:为选定后退选课程,1:为学生选定该课程，2:为互选成功，
   export default {
     name: "details",

@@ -22,11 +22,23 @@ class DatabaseSeeder extends Seeder
 
         factory(\App\Model\Teacher::class,100)->create();
 
-        factory(\App\Model\Message::class,1000)->create();
+        factory(\App\Model\Message::class,500)->create();
 
-        factory(\App\Model\Course::class,1000)->create()->each(function($course){
-            $schedule = factory(\App\Model\Schedule::class)->make();
-            $course->schedule()->save($schedule);
+        factory(\App\Model\Course::class,500)->create()
+            ->each(function($course){
+                if($course->status == 2){
+                    $schedule = factory(\App\Model\Schedule::class)->make(
+                        ['status'=>1]
+                    );
+                    $course->schedule()->save($schedule);
+                }else if($course->status == 3){
+                    $schedule = factory(\App\Model\Schedule::class)->make(
+                        ['status'=>2]
+                    );
+                    $course->schedule()->save($schedule);
+                }
+
+
         });
 
         factory(\App\Model\Student::class,100)->create();

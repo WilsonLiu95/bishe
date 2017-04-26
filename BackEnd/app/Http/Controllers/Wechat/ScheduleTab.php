@@ -24,7 +24,7 @@ class ScheduleTab extends Controller
             // $this->checkOneTeacher($id);
 
             $course = Course::where("teacher_id",$id)
-                ->where("status","!=",0)
+                ->whereIn("status",[1,2,3])
                 ->orderBy("status")
                 ->get();
             $course->each(function($item){
@@ -90,7 +90,7 @@ class ScheduleTab extends Controller
     public function isCreateClass(){
         // 判断是否可以创建课程
         $hasCreateNum = $this->getUser()->course()
-            ->where("status","!=",0)->count();
+            ->whereIn("status",[1,2,3])->count();
         if($hasCreateNum < $this->getGrade()->max_create_class){
             return true;
         }
