@@ -36,7 +36,6 @@ class MessageTab extends Controller
         if ($message->exists()) {
             $message->update(['is_read' => 1]);
             return $this->json(1);
-
         } else {
             return $this->toast(0, "数据错误");
         }
@@ -48,7 +47,7 @@ class MessageTab extends Controller
         $send_type = $this->getSessionInfo("isTeacher") ? 1 : 2;
         $message = Message::where("send_type", $send_type)
             ->where("send_id", $this->getSessionInfo("id"))
-            ->orderBy("created_at", "ASC");
+            ->orderBy("created_at", "desc");
         return $message;
     }
 }

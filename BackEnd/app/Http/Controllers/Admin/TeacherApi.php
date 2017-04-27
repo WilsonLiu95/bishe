@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Model\Institute;
 use App\Model\Major;
+use App\Model\Message;
 use App\Model\Teacher;
 use Illuminate\Http\Request;
 
@@ -63,11 +64,52 @@ class TeacherApi extends Controller
         $this->validate(request(), [
             'teacher_list' => 'required|array',
         ]);
-        $this->instituteHandle->teacher()
+        $teacher_list = $this->instituteHandle->teacher()
             ->whereIn('id', request()->teacher_list)
-            ->delete(); // 软删除老师
-        // TODO： 删除老师并删除老师相关的课程
+            ->get(); // 软删除老师
+        $teacher_list->each(function ($teacher) {
+            // 遍历老师列表，进行删除
+            $this->deleteOneTeacher($teacher->id);
+        });
         return $this->json(1, '删除成功');
+    }
+
+    private function deleteOneTeacher($teacher_id)
+    {
+        $teacher = Teacher::find($teacher_id);
+        if ($teacher && $this->grade_id) {
+            $courseHasFinish = $teacher->course()->where('status', 3)->where('grade_id', $this->grade_id)->get();
+            $courseSelect = $teacher->course()->where('status', 2)->where('grade_id', $this->grade_id)->get();
+            
+            $courseHasFinish->each(function ($course) use ($teacher) {
+                // 对已完成互选的课程进行遍历
+                $sc = $course->schedule()->first();
+                if ($sc) {
+                    Message::create([
+                        'title' => "退选通知",
+                        'send_type' => 2,
+                        'send_id' => $sc->student_id,
+                        'content' => "因为系统将" . $teacher->name . "老师删除，导致您的《" . $course->title . "》课程被自动退选。"
+                    ]);
+                    $course->schedule()->delete(); // 删除选课记录
+                }
+            });
+            $courseSelect->each(function ($course) use ($teacher) {
+                // 对互选中的课程进行遍历
+                $course->schedule()->get()->each(function ($sc) use ($course, $teacher) {
+                    // 对选择该课程的学生们进行遍历
+                    Message::create([
+                        'title' => "退选通知",
+                        'send_type' => 2,
+                        'send_id' => $sc->student_id,
+                        'content' => "因为系统将" . $teacher->name . "老师删除，导致您的《" . $course->title . "》课程被自动退选。"
+                    ]);
+                });
+                $course->schedule()->delete(); // 删除选课记录
+            });
+            $teacher->course()->delete(); // 将课程全部删除
+            $teacher->delete();
+        }
     }
 
     public function postFile()

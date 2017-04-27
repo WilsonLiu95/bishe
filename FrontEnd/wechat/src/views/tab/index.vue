@@ -56,19 +56,20 @@
       this.selected = hashArr[2]
       this.getUserType()
       // 轮询拉取未读消息条数
-      setTimeout(()=>{
-        this.getUnreadMsgNum().then(()=>{
-          setTimeout(()=>{
-            this.getUnreadMsgNum()
-          },15000)
-        })
-      },1000)
+      this.polling()
     },
     methods: {
       getUserType(){
         window.util.isTeacher().then(user=>{
           this.isTeacher = user.isTeacher
           this.isAdmin = user.isAdmin
+        })
+      },
+      polling(){ // 轮询请求后台
+        this.getUnreadMsgNum().then(()=>{
+          setTimeout(()=>{
+            this.polling()
+          },15000)
         })
       },
       getUnreadMsgNum() {

@@ -106,6 +106,11 @@ axios.interceptors.response.use(function(response) {
   Indicator.close();
   return response;
 }, function(error) {
+    util.toast({
+      message: error.message,
+      duration: 2000
+    })
+    Indicator.close();
   // Do something with response error
   return Promise.reject(error);
 });

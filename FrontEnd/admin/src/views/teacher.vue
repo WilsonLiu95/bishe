@@ -295,7 +295,7 @@
 
   },
   deleteTeacher(teacher_list) {
-    this.$confirm('确认删除选中的老师？请仔细确认。', '提示', {
+    this.$confirm('确认删除选中的老师？请仔细确认。删除后，系统将自动删除该老师本年度的相关课程，并退选选择该老师课程的学生。', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'

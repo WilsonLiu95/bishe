@@ -26,7 +26,7 @@
         <el-button @click="addOne()"
                   v-if="isCurrentGrade"
                    type="primary">新增学生</el-button>
-        <el-button @click="deleteTeacher(multipleSelection)"
+        <el-button @click="deleteStudent(multipleSelection)"
                    v-if="isCurrentGrade"
                    type="danger">删除选定学生</el-button>
         <el-upload :action="$http.defaults.baseURL + 'student/file'"
@@ -108,7 +108,7 @@
                        @click="handleEdit(scope.$index, scope.row, 'classes')">修改</el-button>
             <el-button size="small"
                        type="danger"
-                       @click="deleteTeacher([scope.row.id])">删除</el-button>
+                       @click="deleteStudent([scope.row.id])">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -278,8 +278,8 @@
     }
 
   },
-  deleteTeacher(student_list) {
-    this.$confirm('确认删除选中的学生？请仔细确认', '提示', {
+  deleteStudent(student_list) {
+    this.$confirm('确认删除选中的学生？请仔细确认。删除后，系统将自动将该学生所选课程退选', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
