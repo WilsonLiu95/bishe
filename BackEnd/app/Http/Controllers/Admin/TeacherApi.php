@@ -80,7 +80,7 @@ class TeacherApi extends Controller
         if ($teacher && $this->grade_id) {
             $courseHasFinish = $teacher->course()->where('status', 3)->where('grade_id', $this->grade_id)->get();
             $courseSelect = $teacher->course()->where('status', 2)->where('grade_id', $this->grade_id)->get();
-            
+
             $courseHasFinish->each(function ($course) use ($teacher) {
                 // 对已完成互选的课程进行遍历
                 $sc = $course->schedule()->first();

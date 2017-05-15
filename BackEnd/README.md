@@ -64,7 +64,3 @@ PC端不提供注册，只有登录。PC为教务科使用。
 微信开发的权限需要通过认证，认证后需要服务号才有全部权限。所以个人进行开发时，可以申请私人测试账号，测试账号拥有全部权限，但是需要用户先关注你的测试公众号，才能打开你的网页。
 - 测试号申请链接 http://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login`
 - 接口调试工具 http://mp.weixin.qq.com/debug/ 
-
-
-## TODO LIST
-1. 后端很多接口的数据未进行校验
