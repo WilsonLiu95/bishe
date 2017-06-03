@@ -65,17 +65,14 @@
       </template>
     </el-table-column>
         <el-table-column prop="name"
-                         label="姓名"
-                         width="180">
+                         label="姓名">
         </el-table-column>
         <el-table-column prop="job_num"
                          label="工号"
-                         sortable
-                         width="180">
+                         sortable>
         </el-table-column>
         <el-table-column prop="openid"
-                         label="微信识别id(代表是否已注册绑定)"
-                         width="260">
+                         label="微信openid">
         </el-table-column>
         <el-table-column prop="major"
                          label="专业"
@@ -89,9 +86,10 @@
                          column-key="is_admin"
                          sortable
                          :formatter="(row,col)=>{return row.is_admin ? '专业课审核员':'否'}"
-                         width="180">
+                         >
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作"
+                          width="180">
           <template scope="scope">
   
             <el-button size="small"

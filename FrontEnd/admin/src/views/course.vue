@@ -67,26 +67,22 @@
       </template>
     </el-table-column>
         <el-table-column prop="title"
-                         label="课题名称"
-                         width="180">
+                         label="课题名称">
         </el-table-column>
         <el-table-column prop="teacher_name"
-                         label="老师"
-                         width="180">
+                         label="老师">
         </el-table-column>
         <el-table-column prop="major"
                          label="专业"
                          column-key="major_id"
                          :filters="major_filters"
-                         :formatter="(row,col)=>{return major_map[row.major_id]}"
-                         width="180">
+                         :formatter="(row,col)=>{return major_map[row.major_id]}">
         </el-table-column>
         <el-table-column prop="status_text"
                          label="状态"
                          column-key="status"
                          :filters="status_filters"
-                         :formatter="(row,col)=>{return status_map[row.status]}"
-                         width="180">
+                         :formatter="(row,col)=>{return status_map[row.status]}">
         </el-table-column>
         <el-table-column prop="student_name"
                          label="选择该课的学生"

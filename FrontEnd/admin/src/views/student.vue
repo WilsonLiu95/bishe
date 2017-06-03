@@ -34,11 +34,11 @@
                    v-if="isCurrentGrade"
                    :on-success='fileUpload'
                    :on-error='err=>{$message({ message: "导入失败", type: "error" })}'
-                   style="width:300px;float: right;">
+                   style="width:150px;float: right;">
           <el-button size="small"
-                     type="primary">点击上传</el-button>
+                     type="primary">上传学生EXCEL</el-button>
           <div slot="tip"
-               class="el-upload__tip">上传学生的EXCEL，用于导入学生数据</div>
+               class="el-upload__tip">导入学生数据</div>
         </el-upload>
       </div>
       <el-table :data="student_list.data"
@@ -80,27 +80,24 @@
       </template>
     </el-table-column>
         <el-table-column prop="name"
-                         label="姓名"
-                         width="180">
+                         label="姓名">
         </el-table-column>
         <el-table-column prop="job_num"
                          label="学号"
-                         sortable
-                         width="180">
+                         sortable>
         </el-table-column>
         <el-table-column prop="phone"
-                         label="电话"
-                         width="180">
+                         label="电话">
         </el-table-column>
         <el-table-column prop="email"
-                         label="邮箱"
-                         width="180">
+                         label="邮箱">
         </el-table-column>
         <el-table-column prop="openid"
-                         label="微信识别id(代表是否已注册绑定)">
+                         label="微信openid">
         </el-table-column>
 
-        <el-table-column label="操作" 
+        <el-table-column label="操作"
+          width="140"
           v-if="isCurrentGrade">
           <template scope="scope">
             <el-button size="small"
