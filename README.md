@@ -19,6 +19,7 @@
 - mysql 持久数据化数据库
 
 后台详情请查看BackEnd目录下的README.md
+
 ## 时间线
 1. 2016-12-16 号开始
 2. 2016-01-11 号离校
@@ -27,3 +28,9 @@
 5. 2017-02-27 微信端完成 封版本1.0
 6. 2017-04-24 继续开始PC端
 7. 2017-04-27 完成整个系统
+## 应用连接
+微信端 http://bishe.wilsonliu.cn/FrontEnd/wechat/dist/#/tab/course
+
+PC端 http://bishe.wilsonliu.cn/FrontEnd/admin/dist/#/login
+
+注：微信端需要使用姓名与学号登录，请在PC端登录后手动添加自己的姓名与学号(随便填写一个就好了)，再用自己添加的账号进行登录。
